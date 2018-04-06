@@ -5,7 +5,8 @@
 
 	<label>Are you sure you want to delete the user
 	<?php 
-		$userLoggedIn = $_SESSION["UserLoggedIn"];
+		$session = $_SESSION["Session"];
+		$userLoggedIn = $session->user;
 		echo($userLoggedIn->username);
 	?>?
 	</label><br />
@@ -19,7 +20,6 @@
 	<?php
 		if (isset($_POST["UsernameToDelete"]) == true)
 		{
-			$userLoggedIn = $_SESSION["UserLoggedIn"];
 			$usernameToDelete = $_POST["UsernameToDelete"];
 			if ($usernameToDelete != $userLoggedIn->username)
 			{
@@ -29,7 +29,7 @@
 			{
 				$persistenceClient = $_SESSION["PersistenceClient"];
 				$persistenceClient->userDeleteByID($userLoggedIn->userID);
-				$_SESSION["UserLoggedIn"] = null;				
+				$_SESSION["Session"] = null;
 				header("Location: UserLogin.php");
 			}			
 		}

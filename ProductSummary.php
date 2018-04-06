@@ -7,7 +7,8 @@
 	<div>
 	<?php 
 		$persistenceClient = $_SESSION["PersistenceClient"];
-		$userLoggedIn = $_SESSION["UserLoggedIn"];
+		$session = $_SESSION["Session"];
+		$userLoggedIn = $session->user;
 		$productsAll = $persistenceClient->productsGetAll();
 		foreach ($productsAll as $product)
 		{	
@@ -16,14 +17,14 @@
 			
 			$productID = $product->productID;
 			echo " ";
-			$isProductOwnedByUserLoggedIn = $userLoggedIn->isProductWithIDOwned($productID);
-			if ($isProductOwnedByUserLoggedIn == true)
+			$isProductLicensedByUserLoggedIn = $userLoggedIn->isProductWithIDLicensed($productID);
+			if ($isProductLicensedByUserLoggedIn == true)
 			{
 				echo "(Owned)";
 			}
 			else
 			{
-				echo "<a href='Product.php?ProductID=" . $productID . "'>Details</a>";
+				echo "<a href='Product.php?productID=" . $productID . "'>Details</a>";
 			}
 			echo("<br />");
 		}

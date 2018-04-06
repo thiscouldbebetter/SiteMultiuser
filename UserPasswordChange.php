@@ -3,21 +3,32 @@
 <html>
 <body>
 
-<form action="UserNew.php" method="post">
-	<label><b>Register New User</b></label><br />
-	<label>Username:</label><br />
-	<input name="Username"></input><br />
-	<label>Email Address:</label><br />
-	<input name="EmailAddress"></input><br />
+<form action="" method="post">
 	<label>Password:</label><br />
 	<input name="Password" type="password"></input><br />
 	<label>Password Confirmation:</label><br />
 	<input name="PasswordConfirm" type="password"></input><br />
-	<button type="submit">Register as New User</button>
+	<button type="submit">Change Password</button>
 </form>
 
 <?php
+	$username = $_GET["username"];
+	$passwordResetCode = $_GET["passwordResetCode"];
+	$messagePasswordResetLinkNotValid = "The password reset link is not valid.";
+	
+	if (isset($username) == false || isset($passwordResetCode) == false)
+	{
+		echoStatusMessageAndExit($messagePasswordResetLinkNotValid);
+	}
+	
+	$persistenceClient = $_SESSION["PersistenceClient"];
+	$userFound = $persistenceClient->userGetByUsername($username);
 
+	if ($userFound == null || $userFound->passwordResetCode != $passwordResetCode)
+	{		
+		echoStatusMessageAndExit($messagePasswordResetLinkNotValid);
+	}
+		
 	$passwordCharactersRequired = 12;
 	$messagePasswordsMustMatch = 
 		"The values entered in the Password and Password Confirmation boxes must match.";
@@ -25,36 +36,19 @@
 		"Password must be at least " . $passwordCharactersRequired . " characters long, "
 		. "and must contain uppercase letters, lowercase letters, and numerals.";
 	$messageInitial = 
-		"Enter a username, email, and password to create a new user.  " 
+		"Enter and confirm a new password to change it.  " 
 		. $messagePasswordCriteria
 		. "  " . $messagePasswordsMustMatch;
 
 	if 
 	(
-		isset($_POST["Username"]) == false 
-		|| isset($_POST["Password"]) == false 
+		isset($_POST["Password"]) == false 
 		|| isset($_POST["PasswordConfirm"]) == false 
-		|| isset($_POST["EmailAddress"]) == false
 	)
 	{		
 		echoStatusMessageAndExit($messageInitial);
 	}
 		
-	$usernameEntered = $_POST["Username"];
-	$emailAddressEntered = $_POST["EmailAddress"];
-		
-	if ($usernameEntered == "" || $emailAddressEntered == "")
-	{
-		echoStatusMessageAndExit($messageInitial);
-	}
-	
-	$isEmailAddressWellFormed = filter_var($emailAddressEntered, FILTER_VALIDATE_EMAIL);
-	
-	if ($isEmailAddressWellFormed == false)
-	{
-		echoStatusMessageAndExit("Email address specified did not have a valid format.");
-	}
-	
 	$passwordEntered = $_POST["Password"];	
 	$doesPasswordMeetCriteria = false;
 	if (strlen($passwordEntered) >= $passwordCharactersRequired)
@@ -85,29 +79,16 @@
 		echoStatusMessageAndExit($messagePasswordsMustMatch);	
 	}
 	
-	$persistenceClient = $_SESSION["PersistenceClient"];
-	$userFound = $persistenceClient->userGetByUsername($usernameEntered);
-
-	if ($userFound != null)
-	{		
-		echoStatusMessageAndExit("A user with the specified username already exists.  Choose another username.");
-	}
-	
 	$passwordSalt = User::passwordSaltGenerate();
 	$passwordHashed = User::passwordHashWithSalt($passwordEntered, $passwordSalt);
-	$passwordResetCode = null;
-	$isActive = 1;
-	
-	$userNew = new User
-	(
-		null, $usernameEntered, $emailAddressEntered, 
-		$passwordSalt, $passwordHashed, $passwordResetCode, $isActive, array()
-	);
-	$persistenceClient->userSave($userNew);
+	$userFound->passwordSalt = $passwordSalt;
+	$userFound->passwordHashed = $passwordHashed;
+	$userFound->passwordResetCode = null;
+	$persistenceClient->userSave($userFound);
 
 	$sessionToken = "todo";
 	$now = new DateTime();
-	$sessionNew = new Session(null, $userNew, "sessionToken", $now, $now, null);
+	$sessionNew = new Session(null, $userFound, $sessionToken, $now, $now, null);
 	$persistenceClient->sessionSave($sessionNew);
 	
 	$_SESSION["Session"] = $sessionNew;

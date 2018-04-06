@@ -2,32 +2,54 @@
 
 <html>
 <body>
-
+	<label><b>User Details</b></label><br />
 	<label>Username:</label>
 	<label>
 	<?php 
-		$user = $_SESSION["UserLoggedIn"];
-		echo($user->username);
+		$session = $_SESSION["Session"];
+		$userLoggedIn = $session->user;
+		echo($userLoggedIn->username);
 	?>
 	</label>
 	<a href="UserLogout.php">Log Out</a> <a href="UserDelete.php">Delete</a>
 	<br />
 	
-	<label>Products Owned:</label>
+	<label>Licenses Owned:</label>
 	<div>
 	<?php 
 		$persistenceClient = $_SESSION["PersistenceClient"];
-		$products = $persistenceClient->productsGetAll();
-		foreach ($user->userProductsOwned as $userProduct)
+		$productsAll = $persistenceClient->productsGetAll();
+		$licenses = $userLoggedIn->licenses;
+		$numberOfLicenses = count($licenses);
+		if ($numberOfLicenses == 0)
 		{
-			$productID = $userProduct->productID;
-			$product = $products[$productID];
-			$productName = $product->name;
-			echo($productName);	
+			echo "(none)";
+			echo("<br />");
+		}
+		else
+		{
+			foreach ($licenses as $license)
+			{
+				$productID = $license->productID;
+				$product = $productsAll[$productID];
+				$productName = $product->name;
+				echo($productName);	
+				echo("<br />");
+			}
 		}
 	?>	
 	</div>
 	
+	<label>Current Order:</label>
+	<?php 	
+		$orderCurrent = $userLoggedIn->orderCurrent;		
+		$productBatchesInOrder = $orderCurrent->productBatches;		
+		$numberOfBatches = count($productBatchesInOrder);
+		echo("(" . $numberOfBatches . " item(s)) ");
+		echo("<a href='OrderCurrent.php'>Details</a>");		
+	?>	
+	<br />
+		
 	<a href="ProductSummary.php">Browse Available Products</a>
 	
 </body>
