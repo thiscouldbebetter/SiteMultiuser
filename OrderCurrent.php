@@ -24,35 +24,24 @@
 			{
 				$productBatch = $orderCurrent->productBatches[$i];
 				$productID = $productBatch->productID;
-				$product = $productsAll[$productID];
-				$productName = $product->name;
 				$controlID = "Product" . $productID . "Quantity";
 				if (isset($_POST[$controlID]) == true)
 				{
 					$quantityChanged = $_POST[$controlID];
-					if ($quantityChanged != null)
-					{
-						$productBatch->quantity = $quantityChanged;
-						
-					}
-					if ($productBatch->quantity <= 0)
-					{
-						array_splice($orderCurrent->productBatches, $i, 1);
-						$i--;
-						$persistenceClient->orderSave($order);
-					}	
+					unset($_POST[$controlID]) ;
+					$productBatch->quantity = $quantityChanged;
 				}
-				else
-				{
-					$quantity = $productBatch->quantity;					
-					echo($productName);				
-					$productQuantitySelect = " <input id='" . $controlID . "' name='" . $controlID . "' type='number' value='" . $quantity . "' onchange='document.forms[0].submit();'></input>\n";
-					echo("\n");
-					echo($productQuantitySelect);
-					$productRemoveLink = " <a href='' onclick='document.getElementById(\"" . $controlID . "\").value = 0;'>Remove</a>\n";
-					echo($productRemoveLink);
-					echo("<br />");
-				}
+
+				$product = $productsAll[$productID];
+				$productName = $product->name;
+				echo($productName);
+				echo("\n");
+				$quantity = $productBatch->quantity;
+				$productQuantitySelect = " <input id='" . $controlID . "' name='" . $controlID . "' type='number' value='" . $quantity . "' onchange='document.forms[0].submit();'></input>\n";
+				echo($productQuantitySelect);
+				$productRemoveLink = " <a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=0'>Remove</a>";
+				echo($productRemoveLink);
+				echo("<br />");
 			}
 		}
 	?>	

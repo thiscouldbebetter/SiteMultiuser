@@ -33,7 +33,7 @@
 				$productID = $license->productID;
 				$product = $productsAll[$productID];
 				$productName = $product->name;
-				echo($productName);	
+				echo($productName);
 				echo("<br />");
 			}
 		}
@@ -42,11 +42,11 @@
 	
 	<label>Current Order:</label>
 	<?php 	
-		$orderCurrent = $userLoggedIn->orderCurrent;		
-		$productBatchesInOrder = $orderCurrent->productBatches;		
+		$orderCurrent = $userLoggedIn->orderCurrent;
+		$productBatchesInOrder = $orderCurrent->productBatches;
 		$numberOfBatches = count($productBatchesInOrder);
 		echo("(" . $numberOfBatches . " item(s)) ");
-		echo("<a href='OrderCurrent.php'>Details</a>");		
+		echo("<a href='OrderCurrent.php'>Details</a>");
 	?>	
 	<br />
 		

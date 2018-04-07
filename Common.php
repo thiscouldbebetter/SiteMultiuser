@@ -19,14 +19,14 @@ class PersistenceClientMySQL
 		$this->databasePassword = $databasePassword;
 		$this->databaseName = $databaseName;
 	}
-	
+
 	private function connect()
 	{
 		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 		$databaseConnection = new mysqli($this->databaseServerName, $this->databaseUsername, $this->databasePassword, $this->databaseName);
 		return $databaseConnection;
 	}
-	
+
 	private function dateToString($date)
 	{
 		if ($date == null)
@@ -38,10 +38,10 @@ class PersistenceClientMySQL
 			$dateFormatString = "Y-m-d H:i:s";
 			$returnValue = $date->format($dateFormatString);
 		}
-		
+
 		return $returnValue;
 	}
-	
+
 	public function notificationSave($notification)
 	{
 		$databaseConnection = $this->connect();
@@ -50,14 +50,14 @@ class PersistenceClientMySQL
 		{
 			die("Could not connect to database.");
 		} 
-				
+
 		$queryText = 
 			"insert into Notification (Addressee, Subject, Body)"
 			. " values (?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("sss", $notification->addressee, $notification->subject, $notification->body);
 		$didSaveSucceed = $queryCommand->execute();
-		
+
 		if ($didSaveSucceed == false)
 		{
 			die("Could not write to database.");
@@ -104,16 +104,16 @@ class PersistenceClientMySQL
 				$order->OrderID = $orderID;
 			}
 		}
-		
+
 		$orderProducts = $order->productBatches;
 		foreach ($orderProducts as $productBatch)
 		{
 			$productBatch->orderID = $orderID;
 			$this->orderProductSave($productBatch);
 		}
-		
+
 		$databaseConnection->close();
-						
+
 		return $notification;
 	}
 	
@@ -125,14 +125,14 @@ class PersistenceClientMySQL
 		{
 			die("Could not connect to database.");
 		} 
-				
-		$queryText = 
+
+		$queryText =
 			"insert into Order_Product (OrderID, ProductID, Quantity)"
 			. " values (?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("ssi", $orderProduct->orderID, $order->productID, $order->quantity);
 		$didSaveSucceed = $queryCommand->execute();
-		
+
 		if ($didSaveSucceed == false)
 		{
 			die("Could not write to database.");
@@ -387,6 +387,22 @@ class Order
 		$this->orderID = $orderID;
 		$this->userID = $userID;		
 		$this->productBatches = $productBatches;
+	}
+
+	public function productBatchesWithQuantityZeroRemove()
+	{
+		for ($i = 0; $i < count($this->productBatches); $i++)
+		{
+
+			$productBatch = $this->productBatches[$i];
+			$quantity = $productBatch->quantity;
+			if ($quantity <= 0)
+			{
+				array_splice($this->productBatches, $i, 1);
+				$i--;
+			}
+		}
+
 	}
 	
 	public function toLicenses()

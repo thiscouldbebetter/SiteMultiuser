@@ -14,7 +14,7 @@
 		{	
 			$productName = $product->name;
 			echo($productName);
-			
+
 			$productID = $product->productID;
 			echo " ";
 			$isProductLicensedByUserLoggedIn = $userLoggedIn->isProductWithIDLicensed($productID);

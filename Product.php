@@ -12,7 +12,7 @@
 		$product = $persistenceClient->productGetByID($productID);
 		$productName = $product->name;
 		echo $productName;
-		echo " <a href='OrderProductAdd.php?productID=" . $productID . "'>Add to Current Order</a>";
+		echo " <a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=1'>Add to Current Order</a>";
 		
 	?>
 	</label>
