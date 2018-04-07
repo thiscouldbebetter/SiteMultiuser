@@ -37,8 +37,10 @@
 				echo($productName);
 				echo("\n");
 				$quantity = $productBatch->quantity;
-				$productQuantitySelect = " <input id='" . $controlID . "' name='" . $controlID . "' type='number' value='" . $quantity . "' onchange='document.forms[0].submit();'></input>\n";
+				$productQuantitySelect = " x <input id='" . $controlID . "' name='" . $controlID . "' type='number' value='" . $quantity . "' onchange='document.forms[0].submit();'></input>\n";
 				echo($productQuantitySelect);
+				$productPricePerUnit = $product->price;
+				echo("@ $" . $productPricePerUnit . " each = $" . ($productPricePerUnit * $quantity) );
 				$productRemoveLink = " <a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=0'>Remove</a>";
 				echo($productRemoveLink);
 				echo("<br />");

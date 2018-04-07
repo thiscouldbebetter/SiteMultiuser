@@ -13,7 +13,9 @@
 		foreach ($productsAll as $product)
 		{	
 			$productName = $product->name;
-			echo($productName);
+			$productPrice = $product->price;
+			$productAsString = $productName . " ($" . $productPrice . ")";
+			echo($productAsString);
 
 			$productID = $product->productID;
 			echo " ";

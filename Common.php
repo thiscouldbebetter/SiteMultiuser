@@ -86,10 +86,10 @@ class PersistenceClientMySQL
 		} 
 				
 		$queryText = 
-			"insert into _Order (UserID)"
-			. " values (?)";
+			"insert into _Order (UserID, Status, TimeCompleted)"
+			. " values (?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-		$queryCommand->bind_param("s", $order->userID);
+		$queryCommand->bind_param("sss", $order->userID, $order->status, $this->dateToString($order->timeCompleted));
 		$didSaveSucceed = $queryCommand->execute();
 		
 		if ($didSaveSucceed == false)
@@ -150,6 +150,23 @@ class PersistenceClientMySQL
 						
 		return $notification;
 	}
+
+	public function paypalClientDataGet()
+	{
+		$returnValue = null;
+
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from PaypalClientData";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->execute();
+		$queryCommand->bind_result($clientIDSandbox, $clientIDProduction, $isProductionEnabled);
+		$queryCommand->fetch();
+
+		$returnValue = new PaypalClientData($clientIDSandbox, $clientIDProduction, $isProductionEnabled);
+
+		return $returnValue;
+	}
 		
 	public function productGetByID($productID)
 	{	
@@ -161,11 +178,11 @@ class PersistenceClientMySQL
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $productID);
 		$queryCommand->execute();
-		$queryCommand->bind_result($productID, $name);
+		$queryCommand->bind_result($productID, $name, $price);
 				
 		while ($queryCommand->fetch())
 		{			
-			$returnValue = new Product($productID, $name);
+			$returnValue = new Product($productID, $name, $price);
 			break;
 		}
 		
@@ -183,11 +200,11 @@ class PersistenceClientMySQL
 		$queryText = "select * from Product";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->execute();
-		$queryCommand->bind_result($productID, $name);
+		$queryCommand->bind_result($productID, $name, $price);
 		
 		while ($queryCommand->fetch())
 		{			
-			$product = new Product($productID, $name);
+			$product = new Product($productID, $name, $price);
 			$returnValues[$productID] = $product;
 		}
 		
@@ -380,13 +397,38 @@ class Order
 {
 	public $orderID;
 	public $userID;
+	public $status;
+	public $timeCompleted;
 	public $productBatches;
 	
-	public function __construct($orderID, $userID, $productBatches)
+	public function __construct($orderID, $userID, $status, $timeCompleted, $productBatches)
 	{
 		$this->orderID = $orderID;
-		$this->userID = $userID;		
+		$this->userID = $userID;
+		$this->status = $status;
+		$this->timeCompleted = $timeCompleted;
 		$this->productBatches = $productBatches;
+	}
+
+	public function complete()
+	{
+		$this->status = "Complete";
+		$this->timeCompleted = new DateTime();
+	}
+
+	public function priceTotal($productsAll)
+	{
+		$returnValue = 0;
+
+		foreach ($this->productBatches as $productBatch)
+		{
+			$productID = $productBatch->productID;
+			$product = $productsAll[$productID];
+			$productPrice = $product->price;
+			$returnValue += $productPrice;
+		}
+
+		return $returnValue;
 	}
 
 	public function productBatchesWithQuantityZeroRemove()
@@ -432,17 +474,41 @@ class Order_Product
 		$this->productID = $productID;
 		$this->quantity = $quantity;
 	}
+
+	public function price($productsAll)
+	{
+		$product = $productsAll[$this->productID];
+		$pricePerUnit = $product->price;
+		$priceForBatch = $pricePerUnit * $this->quantity;
+		return $priceForBatch;
+	}
+}
+
+class PaypalClientData
+{
+	public $clientIDSandbox;
+	public $clientIDProduction;
+	public $isProductionEnabled;
+
+	public function __construct($clientIDSandbox, $clientIDProduction, $isProductionEnabled)
+	{
+		$this->clientIDSandbox = $clientIDSandbox;
+		$this->clientIDProduction = $clientIDProduction;
+		$this->isProductionEnabled = $isProductionEnabled;
+	}
 }
 
 class Product
 {
 	public $productID;
 	public $name;
+	public $price;
 	
-	public function __construct($productID, $name)
+	public function __construct($productID, $name, $price)
 	{
 		$this->productID = $productID;
 		$this->name = $name;
+		$this->price = $price;
 	}
 }
 
@@ -489,7 +555,7 @@ class User
 		$this->isActive = $isActive;
 		$this->licenses = $licenses;
 		
-		$this->orderCurrent = new Order(null, $this->userID, array());
+		$this->orderCurrent = new Order(null, $this->userID, "InProgress", null, array());
 	}
 	
 	public function isProductWithIDLicensed($productIDToCheck)

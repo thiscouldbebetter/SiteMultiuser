@@ -11,7 +11,9 @@
 		$productID = $_GET["productID"];
 		$product = $persistenceClient->productGetByID($productID);
 		$productName = $product->name;
-		echo $productName;
+		$productPrice = $product->price;
+		$productAsString = $productName . " ($" . $productPrice . ")";
+		echo $productAsString;
 		echo " <a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=1'>Add to Current Order</a>";
 		
 	?>

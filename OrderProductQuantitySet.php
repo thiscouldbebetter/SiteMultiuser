@@ -3,13 +3,13 @@
 <html>
 <body>
 
-<?php 	
+<?php
 	$productID = $_GET["productID"];
 	$session = $_SESSION["Session"];
 	$userLoggedIn = $session->user;	
 	$orderCurrent = $userLoggedIn->orderCurrent;
 	$orderID = $orderCurrent->orderID;
-	$productBatchesInOrder = $orderCurrent->productBatches;		
+	$productBatchesInOrder = $orderCurrent->productBatches;
 	$productBatchToSet = null;
 	foreach ($productBatchesInOrder as $productBatch)
 	{
