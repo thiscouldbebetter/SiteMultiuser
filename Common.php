@@ -17,6 +17,19 @@ if (isset($_SESSION) == false)
 	}
 }
 
+class PageWriter
+{
+	public static function elementHeadWrite($pageTitle)
+	{
+		$configuration = include("Configuration.php");
+		$siteTitle = $configuration["SiteTitle"];
+		echo("<head>");
+		echo("<title>" . $siteTitle . " - " . $pageTitle . "</title>");
+		echo("<link rel='stylesheet' href='Style.css'>");
+		echo("</head>");
+	}
+}
+
 class PersistenceClientMySQL
 {
 	public function __construct($databaseServerName, $databaseUsername, $databasePassword, $databaseName)

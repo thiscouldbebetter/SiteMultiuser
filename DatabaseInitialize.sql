@@ -25,3 +25,5 @@ create table Session(SessionID int not null auto_increment, UserID int, SessionT
 
 create table PaypalClientData (ClientIDSandbox text not null, ClientIDProduction text not null, IsProductionEnabled boolean not null);
 insert into PaypalClientData (ClientIDSandbox, ClientIDProduction, IsProductionEnabled) values ('[redacted]', '[redacted]', 0);
+
+grant select, update, insert, delete on *.* to 'web'@'localhost' identified by '[redacted]';

@@ -5,7 +5,8 @@ return array
 	"DatabaseServerName" => "localhost",
 	"DatabaseUsername" => "root",
 	"DatabasePassword" => "Password42",
-	"DatabaseName" => "Store"
+	"DatabaseName" => "Store",
+	"SiteTitle" => "OnlineStore"
 );
 
 ?>
