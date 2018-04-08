@@ -6,7 +6,9 @@
 
 <body>
 
-	<div>
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 		<p>User logged out.</p>
 		<a href='UserLogin.php'>Log In</a>
 		<?php	
@@ -15,6 +17,8 @@
 			die();
 		?>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
 
 </body>
 </html>

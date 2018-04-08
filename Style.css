@@ -1,1 +1,11 @@
+body {
+	text-align: center;
+}
 
+.divCentered {
+	text-align: left;
+	border:1px solid;
+	margin:0px auto;
+	display:table;
+	padding:32px;
+}

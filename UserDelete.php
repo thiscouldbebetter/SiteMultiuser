@@ -5,7 +5,10 @@
 <?php PageWriter::elementHeadWrite("Delete User"); ?>
 
 <body>
-	<div>
+
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 		<label>Are you sure you want to delete the user
 		<?php 
 			$session = $_SESSION["Session"];
@@ -38,6 +41,8 @@
 			}
 		?>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
 	
 </body>
 </html>

@@ -6,7 +6,9 @@
 
 <body>
 
-	<div>
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 		<?php
 			$productID = $_GET["productID"];
 			$session = $_SESSION["Session"];
@@ -42,6 +44,8 @@
 		?>
 		<a href='OrderCurrent.php'>Back to Current Order</a>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
 
 </body>
 </html>

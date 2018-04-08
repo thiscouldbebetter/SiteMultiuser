@@ -6,7 +6,7 @@ return array
 	"DatabaseUsername" => "root",
 	"DatabasePassword" => "Password42",
 	"DatabaseName" => "Store",
-	"SiteTitle" => "OnlineStore"
+	"SiteTitle" => "Online Store"
 );
 
 ?>

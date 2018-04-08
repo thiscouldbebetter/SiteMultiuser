@@ -6,7 +6,9 @@
 
 <body>
 
-	<div>
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 		<form action="UserLogin.php" method="post">
 			<label><b>Log In</b></label><br />
 			<label>Username:</label><br />
@@ -28,51 +30,52 @@
 
 			if (isset($_POST["Username"]) == false || isset($_POST["Password"]) == false)
 			{
-				echoStatusMessageAndExit($messageInstructions);
+				PageWriter::displayStatusMessage($messageInstructions);
 			}
-				
-			$usernameEntered = $_POST["Username"];
-			$passwordEntered = $_POST["Password"];
-					
-			if ($usernameEntered == "" || $passwordEntered == "")
-			{
-				echoStatusMessageAndExit(messageInstructions);
-			}
-
-			$persistenceClient = $_SESSION["PersistenceClient"];
-			$userFound = $persistenceClient->userGetByUsername($usernameEntered);
-			
-			if ($userFound == null)
-			{		
-				echoStatusMessageAndExit("Username or password not valid.");
-			}
-			else 
-			{
-				$passwordEnteredHashed = $userFound->passwordHash($passwordEntered);
-				if ($userFound->passwordHashed != $passwordEnteredHashed)
+			else
+			{	
+				$usernameEntered = $_POST["Username"];
+				$passwordEntered = $_POST["Password"];
+						
+				if ($usernameEntered == "" || $passwordEntered == "")
 				{
-					echoStatusMessageAndExit("Username or password not valid.");	
+					PageWriter::displayStatusMessage(messageInstructions);
+				}
+				else
+				{
+					$persistenceClient = $_SESSION["PersistenceClient"];
+					$userFound = $persistenceClient->userGetByUsername($usernameEntered);
+					
+					if ($userFound == null)
+					{		
+						PageWriter::displayStatusMessage("Username or password not valid.");
+					}
+					else 
+					{
+						$passwordEnteredHashed = $userFound->passwordHash($passwordEntered);
+						if ($userFound->passwordHashed != $passwordEnteredHashed)
+						{
+							PageWriter::displayStatusMessage("Username or password not valid.");	
+						}
+						else
+						{
+							$sessionToken = "todo";
+							$now = new DateTime();	
+							$sessionNew = new Session(null, $userFound, $sessionToken, $now, $now, null);
+							$_SESSION["Session"] = $sessionNew;
+							$persistenceClient->sessionSave($sessionNew);
+							
+							header("Location: User.php");
+							
+							$databaseConnection->close();
+						}
+					}
 				}
 			}
-
-			$sessionToken = "todo";
-			$now = new DateTime();	
-			$sessionNew = new Session(null, $userFound, $sessionToken, $now, $now, null);
-			$_SESSION["Session"] = $sessionNew;
-			$persistenceClient->sessionSave($sessionNew);
-			
-			header("Location: User.php");
-			
-			$databaseConnection->close();		
-			
-			function echoStatusMessageAndExit($statusMessage)
-			{
-				echo $statusMessage;		
-				die();
-			}		
-			
 		?>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
 
 </body>
 

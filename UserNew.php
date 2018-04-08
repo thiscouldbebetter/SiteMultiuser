@@ -6,7 +6,9 @@
 
 <body>
 
-	<div>
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 
 		<form action="UserNew.php" method="post">
 			<label><b>Register New User</b></label><br />
@@ -42,92 +44,97 @@
 				|| isset($_POST["EmailAddress"]) == false
 			)
 			{		
-				echoStatusMessageAndExit($messageInitial);
+				PageWriter::displayStatusMessage($messageInitial);
 			}
-				
-			$usernameEntered = $_POST["Username"];
-			$emailAddressEntered = $_POST["EmailAddress"];
-				
-			if ($usernameEntered == "" || $emailAddressEntered == "")
-			{
-				echoStatusMessageAndExit($messageInitial);
-			}
-			
-			$isEmailAddressWellFormed = filter_var($emailAddressEntered, FILTER_VALIDATE_EMAIL);
-			
-			if ($isEmailAddressWellFormed == false)
-			{
-				echoStatusMessageAndExit("Email address specified did not have a valid format.");
-			}
-			
-			$passwordEntered = $_POST["Password"];	
-			$doesPasswordMeetCriteria = false;
-			if (strlen($passwordEntered) >= $passwordCharactersRequired)
-			{
-				$doesPasswordContainUppercase = ( preg_match('/[A-Z]/', $passwordEntered) == 1 );
-				$doesPasswordContainLowercase = ( preg_match('/[a-z]/', $passwordEntered) == 1 );
-				$doesPasswordContainNumeral = ( preg_match('/[0-9]/', $passwordEntered) == 1 );
-				
-				if 
-				(
-					$doesPasswordContainUppercase == true 
-					&& $doesPasswordContainLowercase == true 
-					&& $doesPasswordContainNumeral == true
-				)
+			else
+			{		
+				$usernameEntered = $_POST["Username"];
+				$emailAddressEntered = $_POST["EmailAddress"];
+					
+				if ($usernameEntered == "" || $emailAddressEntered == "")
 				{
-					$doesPasswordMeetCriteria = true;
+					PageWriter::displayStatusMessage($messageInitial);
+				}
+				else
+				{
+					
+					$isEmailAddressWellFormed = filter_var($emailAddressEntered, FILTER_VALIDATE_EMAIL);
+					
+					if ($isEmailAddressWellFormed == false)
+					{
+						PageWriter::displayStatusMessage("Email address specified did not have a valid format.");
+					}
+					else
+					{	
+						$passwordEntered = $_POST["Password"];	
+						$doesPasswordMeetCriteria = false;
+						if (strlen($passwordEntered) >= $passwordCharactersRequired)
+						{
+							$doesPasswordContainUppercase = ( preg_match('/[A-Z]/', $passwordEntered) == 1 );
+							$doesPasswordContainLowercase = ( preg_match('/[a-z]/', $passwordEntered) == 1 );
+							$doesPasswordContainNumeral = ( preg_match('/[0-9]/', $passwordEntered) == 1 );
+							
+							if 
+							(
+								$doesPasswordContainUppercase == true 
+								&& $doesPasswordContainLowercase == true 
+								&& $doesPasswordContainNumeral == true
+							)
+							{
+								$doesPasswordMeetCriteria = true;
+							}
+						}
+						
+						if ($doesPasswordMeetCriteria == false)
+						{
+							PageWriter::displayStatusMessage("Password does not meet requirements.  " . $messagePasswordCriteria);		
+						}
+						else if ($passwordEntered != $_POST["PasswordConfirm"])
+						{
+							PageWriter::displayStatusMessage($messagePasswordsMustMatch);	
+						}
+						else
+						{
+							$persistenceClient = $_SESSION["PersistenceClient"];
+							$userFound = $persistenceClient->userGetByUsername($usernameEntered);
+
+							if ($userFound != null)
+							{		
+								PageWriter::displayStatusMessage("A user with the specified username already exists.  Choose another username.");
+							}
+							else
+							{
+								$passwordSalt = User::passwordSaltGenerate();
+								$passwordHashed = User::passwordHashWithSalt($passwordEntered, $passwordSalt);
+								$passwordResetCode = null;
+								$isActive = 1;
+								
+								$userNew = new User
+								(
+									null, $usernameEntered, $emailAddressEntered, 
+									$passwordSalt, $passwordHashed, $passwordResetCode, $isActive, array()
+								);
+								$persistenceClient->userSave($userNew);
+
+								$sessionToken = "todo";
+								$now = new DateTime();
+								$sessionNew = new Session(null, $userNew, "sessionToken", $now, $now, null);
+								$persistenceClient->sessionSave($sessionNew);
+								
+								$_SESSION["Session"] = $sessionNew;
+								header("Location: User.php");
+								
+								$databaseConnection->close();
+							}
+						}
+					}
 				}
 			}
-			
-			if ($doesPasswordMeetCriteria == false)
-			{
-				echoStatusMessageAndExit("Password does not meet requirements.  " . $messagePasswordCriteria);		
-			}
-			
-			$passwordConfirmationEntered = $_POST["PasswordConfirm"];
-			if ($passwordEntered != $passwordConfirmationEntered)
-			{
-				echoStatusMessageAndExit($messagePasswordsMustMatch);	
-			}
-			
-			$persistenceClient = $_SESSION["PersistenceClient"];
-			$userFound = $persistenceClient->userGetByUsername($usernameEntered);
 
-			if ($userFound != null)
-			{		
-				echoStatusMessageAndExit("A user with the specified username already exists.  Choose another username.");
-			}
-			
-			$passwordSalt = User::passwordSaltGenerate();
-			$passwordHashed = User::passwordHashWithSalt($passwordEntered, $passwordSalt);
-			$passwordResetCode = null;
-			$isActive = 1;
-			
-			$userNew = new User
-			(
-				null, $usernameEntered, $emailAddressEntered, 
-				$passwordSalt, $passwordHashed, $passwordResetCode, $isActive, array()
-			);
-			$persistenceClient->userSave($userNew);
-
-			$sessionToken = "todo";
-			$now = new DateTime();
-			$sessionNew = new Session(null, $userNew, "sessionToken", $now, $now, null);
-			$persistenceClient->sessionSave($sessionNew);
-			
-			$_SESSION["Session"] = $sessionNew;
-			header("Location: User.php");
-			
-			$databaseConnection->close();		
-			
-			function echoStatusMessageAndExit($statusMessage)
-			{
-				echo $statusMessage;		
-				die();
-			}
-			
 		?>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
 
 </body>
 </html>

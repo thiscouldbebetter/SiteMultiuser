@@ -6,7 +6,9 @@
 
 <body>
 
-	<div>
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 		<label><b>Product Details</b></label><br />
 		<label>Product:</label>
 		<label>
@@ -23,6 +25,8 @@
 		?>
 		</label>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
 	
 </body>
 </html>

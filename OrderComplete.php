@@ -5,7 +5,10 @@
 <?php PageWriter::elementHeadWrite("Order Complete"); ?>
 
 <body>
-	<div>
+
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 		<label><b>Completed Order:</b></label><br />
 		<div>
 		<?php 	
@@ -42,5 +45,8 @@
 		<div id="divStatusMessage">This order is complete.</div>
 		<a href="User.php">Return to User Page</a>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
+
 </body>
 </html>

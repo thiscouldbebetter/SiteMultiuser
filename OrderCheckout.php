@@ -5,7 +5,10 @@
 	<script src="https://www.paypalobjects.com/api/checkout.js"></script>
 </head>
 <body>
-	<div>
+	
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 		<label><b>Checkout Order:</b></label><br />
 		<div>
 		<?php 	

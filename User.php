@@ -1,11 +1,14 @@
 <?php include "Common.php"; ?>
 
 <html>
-<?php
-	PageWriter::elementHeadWrite("User Details"); 
-?>
+
+<?php PageWriter::elementHeadWrite("User Details"); ?>
+
 <body>
-	<div>
+
+	<?php PageWriter::headerWrite(); ?>
+	
+	<div class="divCentered">
 		<label><b>User Details</b></label><br />
 		<label>Username:</label>
 		<label>
@@ -15,7 +18,7 @@
 			echo($userLoggedIn->username);
 		?>
 		</label>
-		<a href="UserLogout.php">Log Out</a>
+		<a href="UserLogout.php">Log Out</a>&nbsp;
 		<a href="UserDelete.php">Delete</a>
 		<br />
 		
@@ -57,5 +60,8 @@
 			
 		<a href="ProductSummary.php">Browse Available Products</a>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
+
 </body>
 </html>

@@ -5,7 +5,10 @@
 <?php PageWriter::elementHeadWrite("Order Details"); ?>
 
 <body>
-	<div>
+
+	<?php PageWriter::headerWrite(); ?>
+
+	<div class="divCentered">
 		<label><b>Current Order:</b></label><br />
 		<form name="formOrderCurrent" action="" method="post">
 		<div>
@@ -56,6 +59,8 @@
 			
 		<a href="ProductSummary.php">Browse Available Products</a>
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
 	
 </body>
 </html>

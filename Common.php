@@ -19,6 +19,11 @@ if (isset($_SESSION) == false)
 
 class PageWriter
 {
+	public static function displayStatusMessage($statusMessage)
+	{
+		echo "<pre>" . wordwrap($statusMessage) . "</pre>";	
+	}		
+
 	public static function elementHeadWrite($pageTitle)
 	{
 		$configuration = include("Configuration.php");
@@ -27,6 +32,16 @@ class PageWriter
 		echo("<title>" . $siteTitle . " - " . $pageTitle . "</title>");
 		echo("<link rel='stylesheet' href='Style.css'>");
 		echo("</head>");
+	}
+
+	public static function footerWrite()
+	{
+		echo("<script id='scriptFooter' type='text/javascript' src='Footer.js'></script>");
+	}
+
+	public static function headerWrite()
+	{
+		echo("<script id='scriptHeader' type='text/javascript' src='Header.js'></script>");
 	}
 }
 
@@ -363,7 +378,7 @@ class PersistenceClientMySQL
 		}
 		else
 		{
-			$queryText = "update user set username = ?, emailAddress = ?, passwordSalt = ?, passwordHashed = ?, passwordResetCode = ?, isActive=?";
+			$queryText = "update User set username = ?, emailAddress = ?, passwordSalt = ?, passwordHashed = ?, passwordResetCode = ?, isActive=?";
 		}
 
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
