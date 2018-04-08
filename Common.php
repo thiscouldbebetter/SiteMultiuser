@@ -5,7 +5,14 @@ if (isset($_SESSION) == false)
 	session_start();
 	if (isset($_SESSION["PersistenceClient"]) == false)
 	{
-		$persistenceClient = new PersistenceClientMySQL("localhost", "root", "Password42", "Store");
+		$configuration = include("Configuration.php");
+		$persistenceClient = new PersistenceClientMySQL
+		(
+			$configuration["DatabaseServerName"], 
+			$configuration["DatabaseUsername"], 
+			$configuration["DatabasePassword"], 
+			$configuration["DatabaseName"]
+		);
 		$_SESSION["PersistenceClient"] = $persistenceClient;
 	}
 }
