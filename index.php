@@ -1,8 +1,8 @@
 <html>
 <?php 
 	include("Common.php"); 
-	PageWriter::elementHeadWrite("Welcome"); 
 ?>
+<head><?php PageWriter::elementHeadWrite("Welcome"); ?></head>
 <body>
 
 	<?php PageWriter::headerWrite(); ?>

@@ -2,7 +2,7 @@
 
 <html>
 
-<?php PageWriter::elementHeadWrite("User Login"); ?>
+<head><?php PageWriter::elementHeadWrite("User Login"); ?></head>
 
 <body>
 
@@ -25,7 +25,7 @@
 			$messagePasswordCriteria = 
 				"Passwords must be at least " . $passwordCharactersRequired . " characters long, "
 				. "and must contain uppercase letters, lowercase letters, and numerals.";
-				
+
 			$messageInstructions = "Enter a valid username and password to log in.  " . $messagePasswordCriteria;
 
 			if (isset($_POST["Username"]) == false || isset($_POST["Password"]) == false)
@@ -33,10 +33,10 @@
 				PageWriter::displayStatusMessage($messageInstructions);
 			}
 			else
-			{	
+			{
 				$usernameEntered = $_POST["Username"];
 				$passwordEntered = $_POST["Password"];
-						
+
 				if ($usernameEntered == "" || $passwordEntered == "")
 				{
 					PageWriter::displayStatusMessage(messageInstructions);
@@ -45,9 +45,9 @@
 				{
 					$persistenceClient = $_SESSION["PersistenceClient"];
 					$userFound = $persistenceClient->userGetByUsername($usernameEntered);
-					
+
 					if ($userFound == null)
-					{		
+					{
 						PageWriter::displayStatusMessage("Username or password not valid.");
 					}
 					else 
@@ -55,18 +55,18 @@
 						$passwordEnteredHashed = $userFound->passwordHash($passwordEntered);
 						if ($userFound->passwordHashed != $passwordEnteredHashed)
 						{
-							PageWriter::displayStatusMessage("Username or password not valid.");	
+							PageWriter::displayStatusMessage("Username or password not valid.");
 						}
 						else
 						{
 							$sessionToken = "todo";
-							$now = new DateTime();	
+							$now = new DateTime();
 							$sessionNew = new Session(null, $userFound, $sessionToken, $now, $now, null);
 							$_SESSION["Session"] = $sessionNew;
 							$persistenceClient->sessionSave($sessionNew);
-							
+
 							header("Location: User.php");
-							
+
 							$databaseConnection->close();
 						}
 					}

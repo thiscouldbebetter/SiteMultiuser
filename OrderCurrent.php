@@ -2,17 +2,17 @@
 
 <html>
 
-<?php PageWriter::elementHeadWrite("Order Details"); ?>
+<head><?php PageWriter::elementHeadWrite("Order Details"); ?></head>
 
 <body>
 
 	<?php PageWriter::headerWrite(); ?>
 
 	<div class="divCentered">
-		<label><b>Current Order:</b></label><br />
+		<label><b>Current Order:</b></label><br /><br />
 		<form name="formOrderCurrent" action="" method="post">
 		<div>
-		<?php 	
+		<?php 
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			$orderCurrent = $userLoggedIn->orderCurrent;
@@ -27,6 +27,7 @@
 			}
 			else
 			{
+				echo "<ul>";
 				for ($i = 0; $i < count($orderCurrent->productBatches); $i++)
 				{
 					$productBatch = $orderCurrent->productBatches[$i];
@@ -38,29 +39,31 @@
 						unset($_POST[$controlID]) ;
 						$productBatch->quantity = $quantityChanged;
 					}
-
 					$product = $productsAll[$productID];
 					$productName = $product->name;
-					echo($productName);
-					echo("\n");
+					$productAsString = $productName;
 					$quantity = $productBatch->quantity;
 					$productQuantitySelect = " x <input id='" . $controlID . "' name='" . $controlID . "' type='number' value='" . $quantity . "' onchange='document.forms[0].submit();'></input>\n";
-					echo($productQuantitySelect);
+					$productAsString = $productAsString . $productQuantitySelect;
 					$productPricePerUnit = $product->price;
-					echo("@ $" . $productPricePerUnit . " each = $" . ($productPricePerUnit * $quantity) );
+					$productAsString = $productAsString . "@ $" . $productPricePerUnit . " each = $" . ($productPricePerUnit * $quantity);
 					$productRemoveLink = " <a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=0'>Remove</a>";
-					echo($productRemoveLink);
-					echo("<br />");
+					$productAsString = $productAsString . $productRemoveLink;
+					$productAsListItem = "<li>" . $productAsString . "</li>";
+					echo($productAsListItem);
 				}
+				echo "</ul>";
 			}
-		?>	
-		</div>
-		<a href='OrderCheckout.php'>Checkout</a>
-			
-		<a href="ProductSummary.php">Browse Available Products</a>
+		?>
+		</div><br />
+
+		<?php if ($numberOfBatches > 0) echo"<a href='OrderCheckout.php'>Checkout</a>" ?><br />
+		<a href="ProductSummary.php">Browse Available Products</a><br />
+		<a href='User.php'>Back to Account Details</a><br />
+
 	</div>
 
 	<?php PageWriter::footerWrite(); ?>
-	
+
 </body>
 </html>

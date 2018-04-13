@@ -2,7 +2,7 @@
 
 <html>
 
-<?php PageWriter::elementHeadWrite("Reset Password"); ?>
+<head><?php PageWriter::elementHeadWrite("Reset Password"); ?></head>
 
 <body>
 
@@ -32,7 +32,7 @@
 			{
 				$usernameEntered = $_POST["Username"];
 				$emailAddressEntered = $_POST["EmailAddress"];
-				
+
 				if ($usernameEntered == "" || $emailAddressEntered == "")
 				{
 					PageWriter::displayStatusMessage($messageInstructions);
@@ -41,27 +41,27 @@
 				{
 					$persistenceClient = $_SESSION["PersistenceClient"];
 					$userFound = $persistenceClient->userGetByUsername($usernameEntered);
-					
+
 					$messageUsernameOrEmailAddressInvalid = 
 						"Either no user with the specified username exists, "
 						. "or the email address specified did not match the one associated with the username.";
-					
+
 					if ($userFound == null)
-					{		
+					{
 						PageWriter::displayStatusMessage($messageUsernameOrEmailAddressInvalid);
 					}
 					else if ($userFound->emailAddress != $emailAddressEntered)
 					{
-						PageWriter::displayStatusMessage($messageUsernameOrEmailAddressInvalid);	
+						PageWriter::displayStatusMessage($messageUsernameOrEmailAddressInvalid);
 					}
 					else
 					{
 						$passwordResetCode = User::passwordResetCodeGenerate();
-						
+
 						$userFound->passwordResetCode = $passwordResetCode;
 						$persistenceClient->userSave($userFound);
 						$passwordResetURL = "http://localhost/OnlineStore/UserPasswordChange.php?username=" . $userFound->username . "&passwordResetCode=" . $passwordResetCode; // todo
-							
+
 						$notificationMessage = 
 							"A request has been made to reset your password.\n"
 							. "If you made this request, visit the link below to reset your password:\n"
@@ -73,9 +73,9 @@
 
 						$notificationToSend = new Notification($userFound->emailAddress, "Password Reset", $notificationMessage);
 						$persistenceClient->notificationSave($notificationToSend); // todo
-						
+
 						PageWriter::displayStatusMessage("A password reset link has been sent via email to the specified address.");
-					}						
+					}
 				}
 			}
 		?>

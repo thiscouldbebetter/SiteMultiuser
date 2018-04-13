@@ -2,14 +2,14 @@
 
 <html>
 
-<?php PageWriter::elementHeadWrite("User Details"); ?>
+<head><?php PageWriter::elementHeadWrite("Account Details"); ?></head>
 
 <body>
 
 	<?php PageWriter::headerWrite(); ?>
-	
+
 	<div class="divCentered">
-		<label><b>User Details</b></label><br />
+		<label><b>Acount Details</b></label><br /><br />
 		<label>Username:</label>
 		<label>
 		<?php 
@@ -17,47 +17,32 @@
 			$userLoggedIn = $session->user;
 			echo($userLoggedIn->username);
 		?>
-		</label>
-		<a href="UserLogout.php">Log Out</a>&nbsp;
-		<a href="UserDelete.php">Delete</a>
-		<br />
-		
+		</label><br /><br />
+
 		<label>Licenses Owned:</label>
-		<div>
 		<?php 
-			$persistenceClient = $_SESSION["PersistenceClient"];
-			$productsAll = $persistenceClient->productsGetAll();
 			$licenses = $userLoggedIn->licenses;
 			$numberOfLicenses = count($licenses);
-			if ($numberOfLicenses == 0)
-			{
-				echo "(none)";
-				echo("<br />");
-			}
-			else
-			{
-				foreach ($licenses as $license)
-				{
-					$productID = $license->productID;
-					$product = $productsAll[$productID];
-					$productName = $product->name;
-					echo($productName);
-					echo("<br />");
-				}
-			}
-		?>	
-		</div>
-		
+			echo("(" . $numberOfLicenses . " item(s)) ");
+			echo("<a href='UserLicenses.php'>Details</a>");
+		?>
+		<br /><br />
+
 		<label>Current Order:</label>
-		<?php 	
+		<?php
 			$orderCurrent = $userLoggedIn->orderCurrent;
 			$productBatchesInOrder = $orderCurrent->productBatches;
 			$numberOfBatches = count($productBatchesInOrder);
 			echo("(" . $numberOfBatches . " item(s)) ");
-			echo("<a href='OrderCurrent.php'>Details</a>");
-		?>	
+		?>
+		<a href='OrderCurrent.php'>Details</a><br />
+
 		<br />
-			
+
+		<a href='ProductSummary.php'>Browse Available Products</a><br />
+		<a href="UserLogout.php">Log Out</a><br />
+		<a href="UserDelete.php">Delete Account</a><br />
+
 		<a href="ProductSummary.php">Browse Available Products</a>
 	</div>
 

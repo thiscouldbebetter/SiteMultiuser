@@ -21,17 +21,15 @@ class PageWriter
 {
 	public static function displayStatusMessage($statusMessage)
 	{
-		echo "<pre>" . wordwrap($statusMessage) . "</pre>";	
-	}		
+		echo "<pre>" . wordwrap($statusMessage) . "</pre>";
+	}
 
 	public static function elementHeadWrite($pageTitle)
 	{
 		$configuration = include("Configuration.php");
 		$siteTitle = $configuration["SiteTitle"];
-		echo("<head>");
 		echo("<title>" . $siteTitle . " - " . $pageTitle . "</title>");
 		echo("<link rel='stylesheet' href='Style.css'>");
-		echo("</head>");
 	}
 
 	public static function footerWrite()
@@ -98,19 +96,19 @@ class PersistenceClientMySQL
 			die("Could not write to database.");
 		}
 		else
-		{			
+		{
 			$notificationID = mysqli_insert_id($databaseConnection);
 			if ($notificationID != null)
 			{
 				$notification->NotificationID = $notificationID;
 			}
 		}
-		
+
 		$databaseConnection->close();
-						
+
 		return $notification;
 	}
-		
+
 	public function orderSave($order)
 	{
 		$databaseConnection = $this->connect();
@@ -119,20 +117,20 @@ class PersistenceClientMySQL
 		{
 			die("Could not connect to database.");
 		} 
-				
+
 		$queryText = 
 			"insert into _Order (UserID, Status, TimeCompleted)"
 			. " values (?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("sss", $order->userID, $order->status, $this->dateToString($order->timeCompleted));
 		$didSaveSucceed = $queryCommand->execute();
-		
+
 		if ($didSaveSucceed == false)
 		{
 			die("Could not write to database.");
 		}
 		else
-		{			
+		{
 			$orderID = mysqli_insert_id($databaseConnection);
 			if ($orderID != null)
 			{
@@ -151,7 +149,7 @@ class PersistenceClientMySQL
 
 		return $notification;
 	}
-	
+
 	public function orderProductSave($orderProduct)
 	{
 		$databaseConnection = $this->connect();
@@ -173,16 +171,16 @@ class PersistenceClientMySQL
 			die("Could not write to database.");
 		}
 		else
-		{			
+		{
 			$orderProductID = mysqli_insert_id($databaseConnection);
 			if ($orderProductID != null)
 			{
 				$orderProduct->OrderProductID = $orderProductID;
 			}
 		}
-		
+
 		$databaseConnection->close();
-						
+
 		return $notification;
 	}
 
@@ -202,52 +200,52 @@ class PersistenceClientMySQL
 
 		return $returnValue;
 	}
-		
+
 	public function productGetByID($productID)
-	{	
+	{
 		$returnValue = null;
-		
+
 		$databaseConnection = $this->connect();
-		
+
 		$queryText = "select * from Product where ProductID = ?";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $productID);
 		$queryCommand->execute();
 		$queryCommand->bind_result($productID, $name, $price);
-				
+
 		while ($queryCommand->fetch())
-		{			
+		{
 			$returnValue = new Product($productID, $name, $price);
 			break;
 		}
-		
+
 		$databaseConnection->close();
-		
+
 		return $returnValue;
 	}
-	
+
 	public function productsGetAll()
 	{
 		$returnValues = array();
-		
+
 		$databaseConnection = $this->connect();
-		
+
 		$queryText = "select * from Product";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->execute();
 		$queryCommand->bind_result($productID, $name, $price);
-		
+
 		while ($queryCommand->fetch())
-		{			
+		{
 			$product = new Product($productID, $name, $price);
 			$returnValues[$productID] = $product;
 		}
-		
+
 		$databaseConnection->close();
-		
+
 		return $returnValues;
 	}
-	
+
 	public function sessionSave($session)
 	{
 		$databaseConnection = $this->connect();
@@ -265,27 +263,27 @@ class PersistenceClientMySQL
 		$timeUpdatedAsString = $this->dateToString($session->timeUpdated);
 		$timeEndedAsString = $this->dateToString($session->timeEnded);
 		$queryCommand->bind_param("issss", $session->user->userID, $session->sessionToken, $timeStartedAsString, $timeUpdatedAsString, $timeEndedAsString);
-			
+
 		$didSaveSucceed = $queryCommand->execute();
-		
+
 		if ($didSaveSucceed == false)
 		{
 			die("Could not write to database.");
 		}
 		else
-		{			
+		{
 			$sessionID = mysqli_insert_id($databaseConnection);
 			if ($sessionID != null)
 			{
 				$session->SessionID = $sessionID;
 			}
 		}
-		
+
 		$databaseConnection->close();
-						
-		return $session;		
+
+		return $session;
 	}
-	
+
 	public function userDeleteByID($userID)
 	{
 		$databaseConnection = $this->connect();
@@ -294,15 +292,15 @@ class PersistenceClientMySQL
 		{
 			die("Could not connect to database.");
 		} 
-		
+
 		$queryText = "update User set IsActive = 0 where UserID = ?";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $userID);
 		$didDeleteSucceed = $queryCommand->execute();
-		
+
 		return $didDeleteSucceed;
 	}
-	
+
 	public function userGetByUsername($username)
 	{
 		$databaseConnection = $this->connect();
@@ -311,56 +309,56 @@ class PersistenceClientMySQL
 		{
 			die("Could not connect to database.");
 		} 
-				
+
 		$queryText = "select * from User where Username = ? and IsActive = 1";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("s", $username);
 		$queryCommand->execute();
 		$queryCommand->bind_result($userID, $username, $emailAddress, $passwordSalt, $passwordHashed, $passwordResetCode, $isActive);
 		$queryCommand->store_result();
-		
+
 		$numberOfRows = $queryCommand->num_rows();
 		if ($numberOfRows == 0)
-		{			
+		{
 			$userFound = null;
 		}
 		else
 		{
 			$queryCommand->fetch();
-			
+
 			$licenses = $this->licensesGetByUserID($databaseConnection, $userID);
-			
+
 			$userFound = new User
 			(
 				$userID, $username, $emailAddress, $passwordSalt, 
 				$passwordHashed, $passwordResetCode, $isActive, $licenses
 			);
 		}
-		
+
 		$databaseConnection->close();
-						
+
 		return $userFound;
 	}
-	
+
 	private function licensesGetByUserID($databaseConnection, $userID)
-	{		
+	{
 		$returnValues = array();
-		
+
 		$queryText = "select * from License where UserID = ?";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $productID);
 		$queryCommand->execute();
 		$queryCommand->bind_result($licenseID, $userID, $productID);
-				
+
 		while ($row = $queryCommand->fetch())
 		{
 			$license = new License($licenseID, $userID, $productID);
 			$returnValues[] = $license;
 		}
-		
+
 		return $returnValues;
 	}
-	
+
 	public function userSave($user)
 	{
 		$databaseConnection = $this->connect();
@@ -369,7 +367,7 @@ class PersistenceClientMySQL
 		{
 			die("Could not connect to database.");
 		} 
-				
+
 		if ($user->userID == null)
 		{
 			$queryText = 
@@ -382,24 +380,24 @@ class PersistenceClientMySQL
 		}
 
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-		$queryCommand->bind_param("sssssi", $user->username, $user->emailAddress, $user->passwordSalt, $user->passwordHashed, $user->passwordResetCode, $user->isActive);				
+		$queryCommand->bind_param("sssssi", $user->username, $user->emailAddress, $user->passwordSalt, $user->passwordHashed, $user->passwordResetCode, $user->isActive);
 		$didSaveSucceed = $queryCommand->execute();
-		
+
 		if ($didSaveSucceed == false)
 		{
 			die("Could not write to database.");
 		}
 		else
-		{			
+		{
 			$userID = mysqli_insert_id($databaseConnection);
 			if ($userID != null)
 			{
 				$user->UserID = $userID;
 			}
 		}
-		
+
 		$databaseConnection->close();
-						
+
 		return $user;
 	}
 }
@@ -409,7 +407,7 @@ class License
 	public $licenseID;
 	public $userID;
 	public $productID;
-		
+
 	public function __construct($licenseID, $userID, $productID)
 	{
 		$this->licenseID = $licenseID;
@@ -435,7 +433,7 @@ class Order
 	public $status;
 	public $timeCompleted;
 	public $productBatches;
-	
+
 	public function __construct($orderID, $userID, $status, $timeCompleted, $productBatches)
 	{
 		$this->orderID = $orderID;
@@ -481,7 +479,7 @@ class Order
 		}
 
 	}
-	
+
 	public function toLicenses()
 	{
 		$returnValues = array();
@@ -489,7 +487,7 @@ class Order
 		{
 			$productID = $productBatch->productID;
 			$quantity = $productBatch->quantity;
-			
+
 			for ($i = 0; $i < quantity; $i++)
 			{
 				$license = new License(null, $this->userID, $productID);
@@ -538,7 +536,7 @@ class Product
 	public $productID;
 	public $name;
 	public $price;
-	
+
 	public function __construct($productID, $name, $price)
 	{
 		$this->productID = $productID;
@@ -550,12 +548,12 @@ class Product
 class Session
 {
 	public $sessionID;
-	public $user;	
+	public $user;
 	public $sessionToken;
 	public $timeStarted;
 	public $timeUpdated;
 	public $timeEnded;
-	
+
 	public function __construct($sessionID, $user, $sessionToken, $timeStarted, $timeUpdated, $timeEnded)
 	{
 		$this->sessionID = $sessionID;
@@ -568,35 +566,35 @@ class Session
 }
 
 class User
-{	
+{
 	public $userID;
 	public $username;
-	public $emailAddress;	
+	public $emailAddress;
 	public $passwordSalt;
 	public $passwordHashed;
 	public $passwordResetCode;
 	public $isActive;
 	public $licenses;
 	public $orderCurrent;
-	
+
 	public function __construct($userID, $username, $emailAddress, $passwordSalt, $passwordHashed, $passwordResetCode, $isActive, $licenses)
 	{
 		$this->userID = $userID;
 		$this->username = $username;
-		$this->emailAddress = $emailAddress;		
+		$this->emailAddress = $emailAddress;
 		$this->passwordSalt = $passwordSalt;
 		$this->passwordHashed = $passwordHashed;
 		$this->passwordResetCode = $passwordResetCode;
 		$this->isActive = $isActive;
 		$this->licenses = $licenses;
-		
+
 		$this->orderCurrent = new Order(null, $this->userID, "InProgress", null, array());
 	}
-	
+
 	public function isProductWithIDLicensed($productIDToCheck)
 	{
 		$returnValue = false;
-		
+
 		foreach ($this->licenses as $license)
 		{
 			$productID = $license->productID;
@@ -606,36 +604,36 @@ class User
 				break;
 			}
 		}
-		
+
 		return $returnValue;
 	}
-	
+
 	public static function passwordResetCodeGenerate()
 	{
 		$passwordSalt = decHex(rand()) . decHex(rand()) . decHex(rand()) . decHex(rand());
 		$passwordSalt = str_pad($passwordSalt, 32, "0", STR_PAD_LEFT);
 		return $passwordSalt;
 	}
-			
+
 	public static function passwordSaltGenerate()
 	{
 		$passwordSalt = decHex(rand()) . decHex(rand()) . decHex(rand()) . decHex(rand());
 		$passwordSalt = str_pad($passwordSalt, 32, "0", STR_PAD_LEFT);
 		return $passwordSalt;
 	}
-	
+
 	public static function passwordHashWithSalt($passwordAsPlaintext, $passwordSalt)
 	{
 		$passwordSalted = $passwordAsPlaintext . $passwordSalt;
 		$passwordHashed = hash("sha256", $passwordSalted);
 		return $passwordHashed;
 	}
-	
+
 	public function passwordHash($passwordAsPlaintext)
 	{
 		return User::passwordHashWithSalt($passwordAsPlaintext, $this->passwordSalt);
 	}
-	
+
 	public function passwordResetCodeQuoted()
 	{
 		$returnValue = $this->passwordResetCode;
@@ -650,5 +648,5 @@ class User
 		return $returnValue;
 	}
 }
-	
+
 ?>

@@ -2,7 +2,7 @@
 
 <html>
 
-<?php PageWriter::elementHeadWrite("Order Complete"); ?>
+<head><?php PageWriter::elementHeadWrite("Order Complete"); ?></head>
 
 <body>
 
@@ -11,7 +11,7 @@
 	<div class="divCentered">
 		<label><b>Completed Order:</b></label><br />
 		<div>
-		<?php 	
+		<?php 
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			$orderCurrent = $userLoggedIn->orderCurrent;
@@ -40,7 +40,7 @@
 					echo("<br />");
 				}
 			}
-		?>	
+		?>
 		</div>
 		<div id="divStatusMessage">This order is complete.</div>
 		<a href="User.php">Return to User Page</a>

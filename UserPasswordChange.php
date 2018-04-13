@@ -2,7 +2,7 @@
 
 <html>
 
-<?php PageWriter::elementHeadWrite("Change Password"); ?>
+<head><?php PageWriter::elementHeadWrite("Change Password"); ?></head>
 
 <body>
 
@@ -22,7 +22,7 @@
 			$username = $_GET["username"];
 			$passwordResetCode = $_GET["passwordResetCode"];
 			$messagePasswordResetLinkNotValid = "The password reset link is not valid.";
-			
+
 			if (isset($username) == false || isset($passwordResetCode) == false)
 			{
 				PageWriter::displayStatusMessage($messagePasswordResetLinkNotValid);
@@ -33,12 +33,12 @@
 				$userFound = $persistenceClient->userGetByUsername($username);
 
 				if ($userFound == null || $userFound->passwordResetCode != $passwordResetCode)
-				{		
+				{
 					PageWriter::displayStatusMessage($messagePasswordResetLinkNotValid);
 				}
 				else
 				{
-						
+
 					$passwordCharactersRequired = 12;
 					$messagePasswordsMustMatch = 
 						"The values entered in the Password and Password Confirmation boxes must match.";
@@ -55,19 +55,19 @@
 						isset($_POST["Password"]) == false 
 						|| isset($_POST["PasswordConfirm"]) == false 
 					)
-					{		
+					{
 						PageWriter::displayStatusMessage($messageInitial);
 					}
 					else
-					{		
-						$passwordEntered = $_POST["Password"];	
+					{
+						$passwordEntered = $_POST["Password"];
 						$doesPasswordMeetCriteria = false;
 						if (strlen($passwordEntered) >= $passwordCharactersRequired)
 						{
 							$doesPasswordContainUppercase = ( preg_match('/[A-Z]/', $passwordEntered) == 1 );
 							$doesPasswordContainLowercase = ( preg_match('/[a-z]/', $passwordEntered) == 1 );
 							$doesPasswordContainNumeral = ( preg_match('/[0-9]/', $passwordEntered) == 1 );
-							
+
 							if 
 							(
 								$doesPasswordContainUppercase == true 
@@ -78,17 +78,17 @@
 								$doesPasswordMeetCriteria = true;
 							}
 						}
-						
+
 						if ($doesPasswordMeetCriteria == false)
 						{
-							PageWriter::displayStatusMessage("Password does not meet requirements.  " . $messagePasswordCriteria);		
+							PageWriter::displayStatusMessage("Password does not meet requirements.  " . $messagePasswordCriteria);
 						}
 						else
-						{	
+						{
 							$passwordConfirmationEntered = $_POST["PasswordConfirm"];
 							if ($passwordEntered != $passwordConfirmationEntered)
 							{
-								PageWriter::displayStatusMessage($messagePasswordsMustMatch);	
+								PageWriter::displayStatusMessage($messagePasswordsMustMatch);
 							}
 							else
 							{
@@ -103,17 +103,17 @@
 								$now = new DateTime();
 								$sessionNew = new Session(null, $userFound, $sessionToken, $now, $now, null);
 								$persistenceClient->sessionSave($sessionNew);
-								
+
 								$_SESSION["Session"] = $sessionNew;
 								header("Location: User.php");
-								
+
 								$databaseConnection->close();
 							}
 						}
 					}
 				}
 			}
-			
+
 		?>
 	</div>
 

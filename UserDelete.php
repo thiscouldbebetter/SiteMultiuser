@@ -2,7 +2,7 @@
 
 <html>
 
-<?php PageWriter::elementHeadWrite("Delete User"); ?>
+<head><?php PageWriter::elementHeadWrite("Delete User"); ?></head>
 
 <body>
 
@@ -22,7 +22,7 @@
 			<button type="submit">Delete User</button>
 			<a href="User.php">Cancel</a>
 		</form>
-		
+
 		<?php
 			if (isset($_POST["UsernameToDelete"]) == true)
 			{
@@ -37,12 +37,12 @@
 					$persistenceClient->userDeleteByID($userLoggedIn->userID);
 					$_SESSION["Session"] = null;
 					header("Location: UserLogin.php");
-				}			
+				}
 			}
 		?>
 	</div>
 
 	<?php PageWriter::footerWrite(); ?>
-	
+
 </body>
 </html>

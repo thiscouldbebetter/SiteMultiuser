@@ -2,7 +2,7 @@
 
 <html>
 
-<?php PageWriter::elementHeadWrite("Order Quantity Change"); ?>
+<head><?php PageWriter::elementHeadWrite("Order Quantity Change"); ?></head>
 
 <body>
 
@@ -12,7 +12,7 @@
 		<?php
 			$productID = $_GET["productID"];
 			$session = $_SESSION["Session"];
-			$userLoggedIn = $session->user;	
+			$userLoggedIn = $session->user;
 			$orderCurrent = $userLoggedIn->orderCurrent;
 			$orderID = $orderCurrent->orderID;
 			$productBatchesInOrder = $orderCurrent->productBatches;
