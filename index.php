@@ -7,8 +7,9 @@
 
 	<?php PageWriter::headerWrite(); ?>
 
-	<div>
-		<label><b>Welcome Page</b></label><br />
+	<div class="divCentered">
+		<label><b>Welcome!</b></label><br />
+		<br />
 		<a href="UserLogin.php">Log In</a><br />
 	</div>
 

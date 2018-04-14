@@ -2,7 +2,7 @@
 
 <html>
 
-<head><?php PageWriter::elementHeadWrite("User Login"); ?></head>
+<head><?php PageWriter::elementHeadWrite("Account Login"); ?></head>
 
 <body>
 
@@ -10,14 +10,16 @@
 
 	<div class="divCentered">
 		<form action="UserLogin.php" method="post">
-			<label><b>Log In</b></label><br />
+
+			<label><b>Account Login:</b></label><br /><br />
+
 			<label>Username:</label><br />
 			<input name="Username"></input><br />
 			<label>Password:</label><br />
 			<input name="Password" type="password"></input><br />
+
+			<br/>
 			<button type="submit">Log In</button>
-			<a href="UserPasswordReset.php">Forgot Password</a>
-			<a href="UserNew.php">Register as New User</a>
 		</form>
 
 		<?php
@@ -73,6 +75,10 @@
 				}
 			}
 		?>
+
+		<a href="UserPasswordReset.php">Forgot Password</a><br />
+		<a href="UserNew.php">Create New Account</a>
+
 	</div>
 
 	<?php PageWriter::footerWrite(); ?>

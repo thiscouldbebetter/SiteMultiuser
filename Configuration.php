@@ -3,8 +3,8 @@
 return array
 (
 	"DatabaseServerName" => "localhost",
-	"DatabaseUsername" => "root",
-	"DatabasePassword" => "Password42",
+	"DatabaseUsername" => "web",
+	"DatabasePassword" => "[redacted]",
 	"DatabaseName" => "Store",
 	"SiteTitle" => "Online Store"
 );

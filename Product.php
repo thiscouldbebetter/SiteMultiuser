@@ -20,6 +20,8 @@
 			$productAsString = $productName . " ($" . $productPrice . ")";
 			echo $productAsString;
 		?>
+		</label>
+		<img src='<?php echo($product->imagePath); ?>' />
 		<br /><br/>
 		<a href='OrderProductQuantitySet.php?productID=<?php echo($productID); ?>&quantity=1'>Add Product to Current Order</a><br />
 		</label>

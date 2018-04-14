@@ -10,16 +10,19 @@
 
 	<div class="divCentered">
 		<label>Are you sure you want to delete the user
-		<?php 
+		"<?php 
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			echo($userLoggedIn->username);
-		?>?
+		?>"?
 		</label><br />
 		<label>To confirm, enter the username below and click the Delete User button.</label><br />
+		<br />
 		<form action="UserDelete.php" method="post">
-			<input name="UsernameToDelete"></input>
-			<button type="submit">Delete User</button>
+			<label>Username:</label><br />
+			<input name="UsernameToDelete"></input><br /.>
+			<br />
+			<button type="submit">Delete User</button><br />
 			<a href="User.php">Cancel</a>
 		</form>
 

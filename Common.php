@@ -211,11 +211,11 @@ class PersistenceClientMySQL
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $productID);
 		$queryCommand->execute();
-		$queryCommand->bind_result($productID, $name, $price);
+		$queryCommand->bind_result($productID, $name, $imagePath, $price);
 
 		while ($queryCommand->fetch())
 		{
-			$returnValue = new Product($productID, $name, $price);
+			$returnValue = new Product($productID, $name, $imagePath, $price);
 			break;
 		}
 
@@ -233,11 +233,11 @@ class PersistenceClientMySQL
 		$queryText = "select * from Product";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->execute();
-		$queryCommand->bind_result($productID, $name, $price);
+		$queryCommand->bind_result($productID, $name, $imagePath, $price);
 
 		while ($queryCommand->fetch())
 		{
-			$product = new Product($productID, $name, $price);
+			$product = new Product($productID, $name, $imagePath, $price);
 			$returnValues[$productID] = $product;
 		}
 
@@ -346,7 +346,7 @@ class PersistenceClientMySQL
 
 		$queryText = "select * from License where UserID = ?";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-		$queryCommand->bind_param("i", $productID);
+		$queryCommand->bind_param("i", $userID);
 		$queryCommand->execute();
 		$queryCommand->bind_result($licenseID, $userID, $productID);
 
@@ -423,6 +423,15 @@ class Notification
 		$this->addressee = $addressee;
 		$this->subject = $subject;
 		$this->body = $body;
+	}
+
+	public function sendAsEmail()
+	{
+		$isEmailEnabled = false; // todo
+		if ($isEmailEnabled == true)
+		{
+			// todo
+		}
 	}
 }
 
@@ -535,12 +544,14 @@ class Product
 {
 	public $productID;
 	public $name;
+	public $imagePath;
 	public $price;
 
-	public function __construct($productID, $name, $price)
+	public function __construct($productID, $name, $imagePath, $price)
 	{
 		$this->productID = $productID;
 		$this->name = $name;
+		$this->imagePath = $imagePath;
 		$this->price = $price;
 	}
 }

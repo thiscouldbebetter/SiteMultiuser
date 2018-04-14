@@ -2,7 +2,7 @@
 
 <html>
 
-<head><?php PageWriter::elementHeadWrite("New User"); ?></head>
+<head><?php PageWriter::elementHeadWrite("New Account"); ?></head>
 
 <body>
 
@@ -11,7 +11,8 @@
 	<div class="divCentered">
 
 		<form action="UserNew.php" method="post">
-			<label><b>Register New User</b></label><br />
+			<label><b>Create New Account:</b></label><br />
+			<br />
 			<label>Username:</label><br />
 			<input name="Username"></input><br />
 			<label>Email Address:</label><br />
@@ -20,7 +21,8 @@
 			<input name="Password" type="password"></input><br />
 			<label>Password Confirmation:</label><br />
 			<input name="PasswordConfirm" type="password"></input><br />
-			<button type="submit">Register as New User</button>
+			<br />
+			<button type="submit">Create New Account</button>
 		</form>
 
 		<?php
@@ -112,7 +114,8 @@
 								$userNew = new User
 								(
 									null, $usernameEntered, $emailAddressEntered, 
-									$passwordSalt, $passwordHashed, $passwordResetCode, $isActive, array()
+									$passwordSalt, $passwordHashed, $passwordResetCode, 
+									$isActive, array()
 								);
 								$persistenceClient->userSave($userNew);
 

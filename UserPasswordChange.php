@@ -10,35 +10,46 @@
 
 	<div class="divCentered">
 
+		<label><b>Change Password:</b></label><br /><br />
 		<form action="" method="post">
+			<label>Username:</label><br />
+			<input name="Username"></input></br />
+			<label>Password Reset Code:</label><br />
+			<input name="PasswordResetCode"></input></br />
 			<label>Password:</label><br />
 			<input name="Password" type="password"></input><br />
 			<label>Password Confirmation:</label><br />
-			<input name="PasswordConfirm" type="password"></input><br />
+			<input name="PasswordConfirm" type="password"></input><br /><br />
 			<button type="submit">Change Password</button>
 		</form>
 
 		<?php
-			$username = $_GET["username"];
-			$passwordResetCode = $_GET["passwordResetCode"];
-			$messagePasswordResetLinkNotValid = "The password reset link is not valid.";
-
-			if (isset($username) == false || isset($passwordResetCode) == false)
+			if 
+			(
+				isset($_POST["Username"]) == false 
+				|| isset($_POST["PasswordResetCode"]) == false 
+				|| isset($_POST["Password"]) == false 
+				|| isset($_POST["PasswordConfirm"]) == false 
+			)
 			{
-				PageWriter::displayStatusMessage($messagePasswordResetLinkNotValid);
+				echo "All fields are required.  The password reset code should have been sent to the email address associated with this account.";
 			}
 			else
 			{
+				$username = $_POST["Username"];
+				$passwordResetCode = $_POST["PasswordResetCode"]; 
+				$password = $_POST["Password"];
+				$passwordConfirm = $_POST["PasswordConfirm"];
+
 				$persistenceClient = $_SESSION["PersistenceClient"];
 				$userFound = $persistenceClient->userGetByUsername($username);
 
 				if ($userFound == null || $userFound->passwordResetCode != $passwordResetCode)
 				{
-					PageWriter::displayStatusMessage($messagePasswordResetLinkNotValid);
+					PageWriter::displayStatusMessage("Either the username or password reset code entered were invalid.");
 				}
 				else
 				{
-
 					$passwordCharactersRequired = 12;
 					$messagePasswordsMustMatch = 
 						"The values entered in the Password and Password Confirmation boxes must match.";
