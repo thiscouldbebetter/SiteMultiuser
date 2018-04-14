@@ -110,9 +110,8 @@
 								$userFound->passwordResetCode = null;
 								$persistenceClient->userSave($userFound);
 
-								$sessionToken = "todo";
 								$now = new DateTime();
-								$sessionNew = new Session(null, $userFound, $sessionToken, $now, $now, null);
+								$sessionNew = new Session(null, $userFound, $now, $now, null);
 								$persistenceClient->sessionSave($sessionNew);
 
 								$_SESSION["Session"] = $sessionNew;

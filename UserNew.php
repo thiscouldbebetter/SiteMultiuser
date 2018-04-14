@@ -119,9 +119,8 @@
 								);
 								$persistenceClient->userSave($userNew);
 
-								$sessionToken = "todo";
 								$now = new DateTime();
-								$sessionNew = new Session(null, $userNew, "sessionToken", $now, $now, null);
+								$sessionNew = new Session(null, $userNew, $now, $now, null);
 								$persistenceClient->sessionSave($sessionNew);
 
 								$_SESSION["Session"] = $sessionNew;

@@ -1,11 +1,12 @@
 <?php
 
+$configuration = include("Configuration.php");
+
 if (isset($_SESSION) == false)
 {
 	session_start();
 	if (isset($_SESSION["PersistenceClient"]) == false)
 	{
-		$configuration = include("Configuration.php");
 		$persistenceClient = new PersistenceClientMySQL
 		(
 			$configuration["DatabaseServerName"], 
@@ -40,6 +41,16 @@ class PageWriter
 	public static function headerWrite()
 	{
 		echo("<script id='scriptHeader' type='text/javascript' src='Header.js'></script>");
+	}
+
+	public static function sessionVerify()
+	{
+		if (isset($_SESSION["Session"]) == false)
+		{
+			echo "Your session has expired.";
+			echo "<a href='UserLogin.php'>Log In Again</a>";
+			die();
+		}
 	}
 }
 
@@ -246,6 +257,28 @@ class PersistenceClientMySQL
 		return $returnValues;
 	}
 
+	public function productsSearch($productNamePartial)
+	{
+		$returnValues = array();
+
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from Product where Name like '%" . $productNamePartial . "%'";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->execute();
+		$queryCommand->bind_result($productID, $name, $imagePath, $price);
+
+		while ($queryCommand->fetch())
+		{
+			$product = new Product($productID, $name, $imagePath, $price);
+			$returnValues[$productID] = $product;
+		}
+
+		$databaseConnection->close();
+
+		return $returnValues;
+	}
+
 	public function sessionSave($session)
 	{
 		$databaseConnection = $this->connect();
@@ -256,13 +289,13 @@ class PersistenceClientMySQL
 		} 
 
 		$queryText = 
-			"insert into Session (UserID, SessionToken, TimeStarted, TimeUpdated, TimeEnded)"
-			. " values (?, ?, ?, ?, ?)";
+			"insert into Session (UserID, TimeStarted, TimeUpdated, TimeEnded)"
+			. " values (?, ?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$timeStartedAsString = $this->dateToString($session->timeStarted);
 		$timeUpdatedAsString = $this->dateToString($session->timeUpdated);
 		$timeEndedAsString = $this->dateToString($session->timeEnded);
-		$queryCommand->bind_param("issss", $session->user->userID, $session->sessionToken, $timeStartedAsString, $timeUpdatedAsString, $timeEndedAsString);
+		$queryCommand->bind_param("isss", $session->user->userID, $timeStartedAsString, $timeUpdatedAsString, $timeEndedAsString);
 
 		$didSaveSucceed = $queryCommand->execute();
 
@@ -427,10 +460,10 @@ class Notification
 
 	public function sendAsEmail()
 	{
-		$isEmailEnabled = false; // todo
+		$isEmailEnabled = $configuration["EmailEnabled"];
 		if ($isEmailEnabled == true)
 		{
-			// todo
+			mail($this->addressee, $this->subject, $this->body); 
 		}
 	}
 }
@@ -560,16 +593,14 @@ class Session
 {
 	public $sessionID;
 	public $user;
-	public $sessionToken;
 	public $timeStarted;
 	public $timeUpdated;
 	public $timeEnded;
 
-	public function __construct($sessionID, $user, $sessionToken, $timeStarted, $timeUpdated, $timeEnded)
+	public function __construct($sessionID, $user, $timeStarted, $timeUpdated, $timeEnded)
 	{
 		$this->sessionID = $sessionID;
 		$this->user = $user;
-		$this->sessionToken = $sessionToken;
 		$this->timeStarted = $timeStarted;
 		$this->timeUpdated = $timeUpdated;
 		$this->timeEnded = $timeEnded;
@@ -600,6 +631,11 @@ class User
 		$this->licenses = $licenses;
 
 		$this->orderCurrent = new Order(null, $this->userID, "InProgress", null, array());
+	}
+
+	public static function dummy()
+	{
+		return new User(null, null, null, null, null, null, true, array() );
 	}
 
 	public function isProductWithIDLicensed($productIDToCheck)

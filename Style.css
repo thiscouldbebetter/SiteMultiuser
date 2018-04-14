@@ -3,9 +3,10 @@ body {
 }
 
 .divCentered {
-	text-align: left;
-	border:1px solid;
-	margin:0px auto;
+	border:2px solid;
+	border-radius:16px;
 	display:table;
+	margin:0px auto;
 	padding:32px;
+	text-align:left;
 }

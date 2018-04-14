@@ -15,6 +15,6 @@ create table Order_Product (OrderProductID int not null auto_increment, OrderID 
 
 create table Notification (NotificationID int not null auto_increment, Addressee text not null, Subject text not null, Body text not null, primary key (NotificationID) );
 
-create table Session(SessionID int not null auto_increment, UserID int, SessionToken text not null, TimeStarted datetime not null, TimeUpdated datetime not null, TimeEnded datetime, primary key (SessionID), foreign key (UserID) references User(UserID) );
+create table Session(SessionID int not null auto_increment, UserID int, TimeStarted datetime not null, TimeUpdated datetime not null, TimeEnded datetime, primary key (SessionID), foreign key (UserID) references User(UserID) );
 
 create table PaypalClientData (ClientIDSandbox text not null, ClientIDProduction text not null, IsProductionEnabled boolean not null);

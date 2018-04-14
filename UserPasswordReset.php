@@ -17,7 +17,9 @@
 			<label>Email Address:</label><br />
 			<input name="EmailAddress"></input><br />
 			<br />
-			<button type="submit">Reset Password</button>
+			<button type="submit">Reset Password</button><br />
+			<br />
+			<a href="UserLogin.php">Log In</a>
 		</form>
 
 		<?php
@@ -64,7 +66,7 @@
 
 						$notificationMessage = 
 							"A request has been made to reset your password.\n\n"
-							. "If you made this request, enter the code below to reset your password:\n"
+							. "If you made this request, enter the code below when prompted to reset your password:\n"
 							. "\n"
 							. $passwordResetCode
 							. "\n\n"

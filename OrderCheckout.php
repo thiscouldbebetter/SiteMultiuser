@@ -1,4 +1,5 @@
 <?php include "Common.php"; ?>
+<?php PageWriter::sessionVerify(); ?>
 
 <html>
 <head>

@@ -1,4 +1,5 @@
 <?php include "Common.php"; ?>
+$configuration = include("Configuration.php");
 
 <html>
 

@@ -61,9 +61,8 @@
 						}
 						else
 						{
-							$sessionToken = "todo";
 							$now = new DateTime();
-							$sessionNew = new Session(null, $userFound, $sessionToken, $now, $now, null);
+							$sessionNew = new Session(null, $userFound, $now, $now, null);
 							$_SESSION["Session"] = $sessionNew;
 							$persistenceClient->sessionSave($sessionNew);
 

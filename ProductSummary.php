@@ -9,36 +9,66 @@
 	<?php PageWriter::headerWrite(); ?>
 
 	<div class="divCentered"> 
-		<label><b>Products Available:</b></label>
+		<label><b>Product Search:</b></label><br />
+		<br />
 		<div>
-		<?php 
-			$persistenceClient = $_SESSION["PersistenceClient"];
-			$session = $_SESSION["Session"];
-			$userLoggedIn = $session->user;
-			$productsAll = $persistenceClient->productsGetAll();
-			echo("<ul>");
-			foreach ($productsAll as $product)
-			{
-				$productName = $product->name;
-				$productPrice = $product->price;
-				$productAsString = $productName . " ($" . $productPrice . ") ";
-
-				$productID = $product->productID;
-				$isProductLicensedByUserLoggedIn = $userLoggedIn->isProductWithIDLicensed($productID);
-
-				if ($isProductLicensedByUserLoggedIn == true)
+			<div>
+				<label>Search Criteria:</label><br />
+				<form action="" method="post">
+				<label>Product Name:</label>
+				<input name="ProductNamePartial"></input>
+				<button type="submit">Search</button>
+			</div>
+		<div>
+			<label>Search Results:</label><br />
+			<br />
+			<div>
+			<?php 
+				$persistenceClient = $_SESSION["PersistenceClient"];
+				$session = $_SESSION["Session"];
+				if ($session != null)
 				{
-					$productAsString = $productAsString . "(Owned)";
+					$userLoggedIn = $session->user;
 				}
 				else
 				{
-					$productAsString = $productAsString . "<a href='Product.php?productID=" . $productID . "'>Details</a>";
+					$userLoggedIn = User::dummy();
 				}
-				$productAsListItem = "<li>" . $productAsString . "</li>";
-				echo($productAsListItem);
-			}
-			echo("</ul>");
-		?>
+
+				if (isset($_POST["ProductNamePartial"]) == false)
+				{
+					$productNamePartial = "";
+				}
+				else
+				{
+					$productNamePartial = $_POST["ProductNamePartial"];
+				}
+				$productsFound = $persistenceClient->productsSearch($productNamePartial);
+				$numberOfProductsFound = count($productsFound);
+
+				echo($numberOfProductsFound . " products found.<br />");
+
+				echo("<ul>");
+				foreach ($productsFound as $product)
+				{
+					$productName = $product->name;
+					$productPrice = $product->price;
+					$productAsString = $productName . " ($" . $productPrice . ") ";
+
+					$productID = $product->productID;
+					$productAsString = $productAsString . "<a href='Product.php?productID=" . $productID . "'>Details</a>";
+					$isProductLicensedByUserLoggedIn = $userLoggedIn->isProductWithIDLicensed($productID);
+					if ($isProductLicensedByUserLoggedIn == true)
+					{
+						$productAsString = $productAsString . " (Owned)";
+					}
+					$productAsListItem = "<li>" . $productAsString . "</li>";
+					echo($productAsListItem);
+				}
+				echo("</ul>");
+			?>
+			</div>
+		</div>
 		<a href='OrderCurrent.php'>Back to Current Order</a>
 		</div>
 	</div>
