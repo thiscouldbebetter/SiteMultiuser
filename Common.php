@@ -95,11 +95,33 @@ class PersistenceClientMySQL
 			die("Could not connect to database.");
 		} 
 
-		$queryText = 
-			"insert into Notification (Addressee, Subject, Body)"
-			. " values (?, ?, ?)";
-		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-		$queryCommand->bind_param("sss", $notification->addressee, $notification->subject, $notification->body);
+		if ($notification->notificationID == null)
+		{
+			$queryText = 
+				"insert into Notification (Addressee, Subject, Body, TimeCreated, TimeSent)"
+				. " values (?, ?, ?, ?, ?)";
+			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+			$queryCommand->bind_param
+			(
+				"sssss", 
+				$notification->addressee, $notification->subject, 
+				$notification->body, $this->dateToString($notification->timeCreated), 
+				$this->dateToString($notification->timeSent)
+			);
+		}
+		else
+		{
+			$queryText = "update Notification set Addressee = ?, Subject = ?, Body = ?, TimeCreated = ?, TimeSent = ? where NotificationID = ?";
+			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+			$queryCommand->bind_param
+			(
+				"sssssi", 
+				$notification->addressee, $notification->subject, 
+				$notification->body, $this->dateToString($notification->timeCreated), 
+				$this->dateToString($notification->timeSent),
+				$notification->notificationID
+			);
+		}
 		$didSaveSucceed = $queryCommand->execute();
 
 		if ($didSaveSucceed == false)
@@ -111,7 +133,7 @@ class PersistenceClientMySQL
 			$notificationID = mysqli_insert_id($databaseConnection);
 			if ($notificationID != null)
 			{
-				$notification->NotificationID = $notificationID;
+				$notification->notificationID = $notificationID;
 			}
 		}
 
@@ -145,7 +167,7 @@ class PersistenceClientMySQL
 			$orderID = mysqli_insert_id($databaseConnection);
 			if ($orderID != null)
 			{
-				$order->OrderID = $orderID;
+				$order->orderID = $orderID;
 			}
 		}
 
@@ -186,7 +208,7 @@ class PersistenceClientMySQL
 			$orderProductID = mysqli_insert_id($databaseConnection);
 			if ($orderProductID != null)
 			{
-				$orderProduct->OrderProductID = $orderProductID;
+				$orderProduct->orderProductID = $orderProductID;
 			}
 		}
 
@@ -308,7 +330,7 @@ class PersistenceClientMySQL
 			$sessionID = mysqli_insert_id($databaseConnection);
 			if ($sessionID != null)
 			{
-				$session->SessionID = $sessionID;
+				$session->sessionID = $sessionID;
 			}
 		}
 
@@ -415,7 +437,6 @@ class PersistenceClientMySQL
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("sssssi", $user->username, $user->emailAddress, $user->passwordSalt, $user->passwordHashed, $user->passwordResetCode, $user->isActive);
 		$didSaveSucceed = $queryCommand->execute();
-
 		if ($didSaveSucceed == false)
 		{
 			die("Could not write to database.");
@@ -425,7 +446,7 @@ class PersistenceClientMySQL
 			$userID = mysqli_insert_id($databaseConnection);
 			if ($userID != null)
 			{
-				$user->UserID = $userID;
+				$user->userID = $userID;
 			}
 		}
 
@@ -451,19 +472,33 @@ class License
 
 class Notification
 {
-	public function __construct($addressee, $subject, $body)
+	public $notificationID;
+	public $addressee;
+	public $subject;
+	public $body;
+	public $timeCreated;
+	public $timeSent;
+
+	public function __construct($notificationID, $addressee, $subject, $body, $timeCreated, $timeSent)
 	{
+		$this->notificationID = $notificationID;
 		$this->addressee = $addressee;
 		$this->subject = $subject;
 		$this->body = $body;
+		$this->timeCreated = $timeCreated;
+		$this->timeSent = $timeSent;
 	}
 
-	public function sendAsEmail()
+	public function sendAsEmail($persistenceClient)
 	{
+		$configuration = include("Configuration.php");
 		$isEmailEnabled = $configuration["EmailEnabled"];
 		if ($isEmailEnabled == true)
 		{
 			mail($this->addressee, $this->subject, $this->body); 
+			$now = new DateTime();
+			$this->timeSent = $now;
+			$persistenceClient->notificationSave($this);
 		}
 	}
 }

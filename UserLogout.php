@@ -16,7 +16,7 @@
 			$session = $_SESSION["Session"];
 			$now = new DateTime();
 			$session->timeEnded = $now;
-			$persistenceClient = $SESSION["PersistenceClient"];
+			$persistenceClient = $_SESSION["PersistenceClient"];
 			$persistenceClient->sessionSave($session);
 			session_destroy();
 			header("Location: UserLogin.php");

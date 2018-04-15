@@ -13,7 +13,7 @@ create table _Order (OrderID int not null auto_increment, UserID int not null, S
 
 create table Order_Product (OrderProductID int not null auto_increment, OrderID int, ProductID int, Quantity int, primary key (OrderProductID), foreign key (OrderID) references _Order(OrderID) );
 
-create table Notification (NotificationID int not null auto_increment, Addressee text not null, Subject text not null, Body text not null, primary key (NotificationID) );
+create table Notification (NotificationID int not null auto_increment, Addressee text not null, Subject text not null, Body text not null, TimeCreated datetime not null, TimeSent datetime, primary key (NotificationID) );
 
 create table Session(SessionID int not null auto_increment, UserID int, TimeStarted datetime not null, TimeUpdated datetime not null, TimeEnded datetime, primary key (SessionID), foreign key (UserID) references User(UserID) );
 

@@ -32,7 +32,7 @@
 				|| isset($_POST["PasswordConfirm"]) == false 
 			)
 			{
-				echo "All fields are required.  The password reset code should have been sent to the email address associated with this account.";
+				PageWriter::displayStatusMessage("All fields are required.  The password reset code should have been sent to the email address associated with this account.");
 			}
 			else
 			{

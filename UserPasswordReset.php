@@ -73,9 +73,10 @@
 							. "If you did not make this request, "
 							. "it may indicate that an attempt has been made to hack your account.\n";
 
-						$notificationToSend = new Notification($userFound->emailAddress, "Password Reset", $notificationMessage);
+						$now = new DateTime();
+						$notificationToSend = new Notification(null, $userFound->emailAddress, "Password Reset", $notificationMessage, $now, null);
 						$persistenceClient->notificationSave($notificationToSend);
-						$notificationToSend->sendAsEmail();
+						$notificationToSend->sendAsEmail($persistenceClient);
 
 						header("Location: UserPasswordChange.php");
 

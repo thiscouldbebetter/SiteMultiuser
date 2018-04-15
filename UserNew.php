@@ -118,7 +118,6 @@
 									$isActive, array()
 								);
 								$persistenceClient->userSave($userNew);
-
 								$now = new DateTime();
 								$sessionNew = new Session(null, $userNew, $now, $now, null);
 								$persistenceClient->sessionSave($sessionNew);
