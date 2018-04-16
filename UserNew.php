@@ -28,21 +28,21 @@
 		<?php
 
 			$passwordCharactersRequired = 12;
-			$messagePasswordsMustMatch = 
+			$messagePasswordsMustMatch =
 				"The values entered in the Password and Password Confirmation boxes must match.";
-			$messagePasswordCriteria = 
+			$messagePasswordCriteria =
 				"Password must be at least " . $passwordCharactersRequired . " characters long, "
 				. "and must contain uppercase letters, lowercase letters, and numerals.";
-			$messageInitial = 
-				"Enter a username, email, and password to create a new user.  " 
+			$messageInitial =
+				"Enter a username, email, and password to create a new user.  "
 				. $messagePasswordCriteria
 				. "  " . $messagePasswordsMustMatch;
 
-			if 
+			if
 			(
-				isset($_POST["Username"]) == false 
-				|| isset($_POST["Password"]) == false 
-				|| isset($_POST["PasswordConfirm"]) == false 
+				isset($_POST["Username"]) == false
+				|| isset($_POST["Password"]) == false
+				|| isset($_POST["PasswordConfirm"]) == false
 				|| isset($_POST["EmailAddress"]) == false
 			)
 			{
@@ -76,10 +76,10 @@
 							$doesPasswordContainLowercase = ( preg_match('/[a-z]/', $passwordEntered) == 1 );
 							$doesPasswordContainNumeral = ( preg_match('/[0-9]/', $passwordEntered) == 1 );
 
-							if 
+							if
 							(
-								$doesPasswordContainUppercase == true 
-								&& $doesPasswordContainLowercase == true 
+								$doesPasswordContainUppercase == true
+								&& $doesPasswordContainLowercase == true
 								&& $doesPasswordContainNumeral == true
 							)
 							{
@@ -106,15 +106,15 @@
 							}
 							else
 							{
-								$passwordSalt = User::passwordSaltGenerate();
+								$passwordSalt = MathHelper::randomCodeGenerate();
 								$passwordHashed = User::passwordHashWithSalt($passwordEntered, $passwordSalt);
 								$passwordResetCode = null;
 								$isActive = 1;
 
 								$userNew = new User
 								(
-									null, $usernameEntered, $emailAddressEntered, 
-									$passwordSalt, $passwordHashed, $passwordResetCode, 
+									null, $usernameEntered, $emailAddressEntered,
+									$passwordSalt, $passwordHashed, $passwordResetCode,
 									$isActive, array()
 								);
 								$persistenceClient->userSave($userNew);

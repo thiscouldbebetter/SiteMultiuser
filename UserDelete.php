@@ -11,7 +11,7 @@
 
 	<div class="divCentered">
 		<label>Are you sure you want to delete the user
-		"<?php 
+		"<?php
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			echo($userLoggedIn->username);

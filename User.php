@@ -13,7 +13,7 @@
 		<label><b>Acount Details:</b></label><br /><br />
 		<label>Username:</label>
 		<label>
-		<?php 
+		<?php
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			echo($userLoggedIn->username);
@@ -21,7 +21,7 @@
 		</label><br /><br />
 
 		<label>Licenses Owned:</label>
-		<?php 
+		<?php
 			$licenses = $userLoggedIn->licenses;
 			$numberOfLicenses = count($licenses);
 			echo("(" . $numberOfLicenses . " item(s)) ");

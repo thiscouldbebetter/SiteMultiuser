@@ -6,7 +6,12 @@ create table Product (ProductID int not null auto_increment, Name text not null,
 
 create table User (UserID int not null auto_increment, Username text not null, EmailAddress text not null, PasswordSalt text not null, PasswordHashed text not null, PasswordResetCode text, IsActive boolean not null, primary key (UserID) );
 
-create table License (LicenseID int not null auto_increment, UserID int not null, ProductID int not null, primary key (LicenseID), foreign key (UserID) references User(UserID), foreign key (ProductID) references Product(ProductID) );
+create table LicenseTransferType (LicenseTransferTypeID int not null, Name text not null, Description text not null, primary key (LicenseTransferTypeID) );
+insert into LicenseTransferType (LicenseTransferTypeID, Name, Description) values (1, 'Username', 'To an Existing User by Username');
+insert into LicenseTransferType (LicenseTransferTypeID, Name, Description) values (2, 'EmailAddress', 'To a Future or Existing User by Email Address');
+insert into LicenseTransferType (LicenseTransferTypeID, Name, Description) values (3, 'TransferCode', 'To an Anonymous Recipient by Transfer Code');
+
+create table License (LicenseID int not null auto_increment, UserID int not null, ProductID int not null, TransferTypeID int, TransferTarget text, primary key (LicenseID), foreign key (UserID) references User(UserID), foreign key (ProductID) references Product(ProductID), foreign key (TransferTypeID) references LicenseTransferType(LicenseTransferTypeID) );
 
 /* "Order" is a SQL keyword, but no other name really makes sense, so prefix an "_". */
 create table _Order (OrderID int not null auto_increment, UserID int not null, Status text not null, TimeCompleted datetime, primary key (OrderID), foreign key (UserID) references User(UserID) );

@@ -8,7 +8,7 @@
 
 	<?php PageWriter::headerWrite(); ?>
 
-	<div class="divCentered"> 
+	<div class="divCentered">
 		<label><b>Product Search:</b></label><br />
 		<br />
 		<div>
@@ -23,7 +23,7 @@
 			<label>Search Results:</label><br />
 			<br />
 			<div>
-			<?php 
+			<?php
 				$persistenceClient = $_SESSION["PersistenceClient"];
 				$session = $_SESSION["Session"];
 				if ($session != null)

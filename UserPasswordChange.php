@@ -24,12 +24,12 @@
 		</form>
 
 		<?php
-			if 
+			if
 			(
-				isset($_POST["Username"]) == false 
-				|| isset($_POST["PasswordResetCode"]) == false 
-				|| isset($_POST["Password"]) == false 
-				|| isset($_POST["PasswordConfirm"]) == false 
+				isset($_POST["Username"]) == false
+				|| isset($_POST["PasswordResetCode"]) == false
+				|| isset($_POST["Password"]) == false
+				|| isset($_POST["PasswordConfirm"]) == false
 			)
 			{
 				PageWriter::displayStatusMessage("All fields are required.  The password reset code should have been sent to the email address associated with this account.");
@@ -37,7 +37,7 @@
 			else
 			{
 				$username = $_POST["Username"];
-				$passwordResetCode = $_POST["PasswordResetCode"]; 
+				$passwordResetCode = $_POST["PasswordResetCode"];
 				$password = $_POST["Password"];
 				$passwordConfirm = $_POST["PasswordConfirm"];
 
@@ -51,20 +51,20 @@
 				else
 				{
 					$passwordCharactersRequired = 12;
-					$messagePasswordsMustMatch = 
+					$messagePasswordsMustMatch =
 						"The values entered in the Password and Password Confirmation boxes must match.";
-					$messagePasswordCriteria = 
+					$messagePasswordCriteria =
 						"Password must be at least " . $passwordCharactersRequired . " characters long, "
 						. "and must contain uppercase letters, lowercase letters, and numerals.";
-					$messageInitial = 
-						"Enter and confirm a new password to change it.  " 
+					$messageInitial =
+						"Enter and confirm a new password to change it.  "
 						. $messagePasswordCriteria
 						. "  " . $messagePasswordsMustMatch;
 
-					if 
+					if
 					(
-						isset($_POST["Password"]) == false 
-						|| isset($_POST["PasswordConfirm"]) == false 
+						isset($_POST["Password"]) == false
+						|| isset($_POST["PasswordConfirm"]) == false
 					)
 					{
 						PageWriter::displayStatusMessage($messageInitial);
@@ -79,10 +79,10 @@
 							$doesPasswordContainLowercase = ( preg_match('/[a-z]/', $passwordEntered) == 1 );
 							$doesPasswordContainNumeral = ( preg_match('/[0-9]/', $passwordEntered) == 1 );
 
-							if 
+							if
 							(
-								$doesPasswordContainUppercase == true 
-								&& $doesPasswordContainLowercase == true 
+								$doesPasswordContainUppercase == true
+								&& $doesPasswordContainLowercase == true
 								&& $doesPasswordContainNumeral == true
 							)
 							{
@@ -103,7 +103,7 @@
 							}
 							else
 							{
-								$passwordSalt = User::passwordSaltGenerate();
+								$passwordSalt = MathHelper::randomCodeGenerate();
 								$passwordHashed = User::passwordHashWithSalt($passwordEntered, $passwordSalt);
 								$userFound->passwordSalt = $passwordSalt;
 								$userFound->passwordHashed = $passwordHashed;

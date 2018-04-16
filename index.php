@@ -1,6 +1,6 @@
 <html>
-<?php 
-	include("Common.php"); 
+<?php
+	include("Common.php");
 ?>
 <head><?php PageWriter::elementHeadWrite("Welcome"); ?></head>
 <body>

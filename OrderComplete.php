@@ -12,7 +12,7 @@ $configuration = include("Configuration.php");
 	<div class="divCentered">
 		<label><b>Completed Order:</b></label><br />
 		<div>
-		<?php 
+		<?php
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			$orderCurrent = $userLoggedIn->orderCurrent;

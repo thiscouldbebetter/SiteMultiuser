@@ -9,9 +9,9 @@ if (isset($_SESSION) == false)
 	{
 		$persistenceClient = new PersistenceClientMySQL
 		(
-			$configuration["DatabaseServerName"], 
-			$configuration["DatabaseUsername"], 
-			$configuration["DatabasePassword"], 
+			$configuration["DatabaseServerName"],
+			$configuration["DatabaseUsername"],
+			$configuration["DatabasePassword"],
 			$configuration["DatabaseName"]
 		);
 		$_SESSION["PersistenceClient"] = $persistenceClient;
@@ -86,26 +86,120 @@ class PersistenceClientMySQL
 		return $returnValue;
 	}
 
+	public function licenseGetByID($licenseID)
+	{
+		$returnValue = null;
+
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from License where LicenseID = ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("i", $licenseID);
+		$queryCommand->execute();
+		$queryCommand->bind_result($licenseID, $userID, $productID, $transferTypeID, $transferTarget);
+
+		while ($queryCommand->fetch())
+		{
+			$returnValue = new License($licenseID, $userID, $productID, $transferTypeID, $transferTarget);
+			break;
+		}
+
+		$databaseConnection->close();
+
+		return $returnValue;
+	}
+
+	public function licenseTransferTypesGetAll()
+	{
+		$returnValues = array();
+
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from LicenseTransferType";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->execute();
+		$queryCommand->bind_result($transferTypeID, $name, $description);
+
+		while ($queryCommand->fetch())
+		{
+			$transferType = new LicenseTransferType($transferTypeID, $name, $description);
+			$returnValues[$transferTypeID] = $transferType;
+		}
+
+		$databaseConnection->close();
+
+		return $returnValues;
+	}
+
+	public function licenseSave($license)
+	{
+		$databaseConnection = $this->connect();
+
+		if ($databaseConnection->connect_error)
+		{
+			die("Could not connect to database.");
+		}
+
+		if ($license->licenseID == null)
+		{
+			$queryText =
+				"insert into License (UserID, ProductID, TransferTypeID, TransferTarget)"
+				. " values (?, ?, ?, ?)";
+			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+			$queryCommand->bind_param
+			(
+				"iiis", $license->userID, $license->productID, $license->transferTypeID, $license->transferTarget
+			);
+		}
+		else
+		{
+			$queryText = "update License set UserID = ?, ProductID = ?, TransferTypeID = ?, TransferTarget = ? where LicenseID = ?";
+			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+			$queryCommand->bind_param
+			(
+				"iiisi", $license->userID, $license->productID, $license->transferTypeID, $license->transferTarget, $license->licenseID
+			);
+		}
+		$didSaveSucceed = $queryCommand->execute();
+
+		if ($didSaveSucceed == false)
+		{
+			die("Could not write to database.");
+		}
+		else
+		{
+			$licenseID = mysqli_insert_id($databaseConnection);
+			if ($licenseID != null)
+			{
+				$license->licenseID = $licenseID;
+			}
+		}
+
+		$databaseConnection->close();
+
+		return $license;
+	}
+
 	public function notificationSave($notification)
 	{
 		$databaseConnection = $this->connect();
 
-		if ($databaseConnection->connect_error) 
+		if ($databaseConnection->connect_error)
 		{
 			die("Could not connect to database.");
-		} 
+		}
 
 		if ($notification->notificationID == null)
 		{
-			$queryText = 
+			$queryText =
 				"insert into Notification (Addressee, Subject, Body, TimeCreated, TimeSent)"
 				. " values (?, ?, ?, ?, ?)";
 			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 			$queryCommand->bind_param
 			(
-				"sssss", 
-				$notification->addressee, $notification->subject, 
-				$notification->body, $this->dateToString($notification->timeCreated), 
+				"sssss",
+				$notification->addressee, $notification->subject,
+				$notification->body, $this->dateToString($notification->timeCreated),
 				$this->dateToString($notification->timeSent)
 			);
 		}
@@ -115,9 +209,9 @@ class PersistenceClientMySQL
 			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 			$queryCommand->bind_param
 			(
-				"sssssi", 
-				$notification->addressee, $notification->subject, 
-				$notification->body, $this->dateToString($notification->timeCreated), 
+				"sssssi",
+				$notification->addressee, $notification->subject,
+				$notification->body, $this->dateToString($notification->timeCreated),
 				$this->dateToString($notification->timeSent),
 				$notification->notificationID
 			);
@@ -146,12 +240,12 @@ class PersistenceClientMySQL
 	{
 		$databaseConnection = $this->connect();
 
-		if ($databaseConnection->connect_error) 
+		if ($databaseConnection->connect_error)
 		{
 			die("Could not connect to database.");
-		} 
+		}
 
-		$queryText = 
+		$queryText =
 			"insert into _Order (UserID, Status, TimeCompleted)"
 			. " values (?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
@@ -187,10 +281,10 @@ class PersistenceClientMySQL
 	{
 		$databaseConnection = $this->connect();
 
-		if ($databaseConnection->connect_error) 
+		if ($databaseConnection->connect_error)
 		{
 			die("Could not connect to database.");
-		} 
+		}
 
 		$queryText =
 			"insert into Order_Product (OrderID, ProductID, Quantity)"
@@ -305,12 +399,12 @@ class PersistenceClientMySQL
 	{
 		$databaseConnection = $this->connect();
 
-		if ($databaseConnection->connect_error) 
+		if ($databaseConnection->connect_error)
 		{
 			die("Could not connect to database.");
-		} 
+		}
 
-		$queryText = 
+		$queryText =
 			"insert into Session (UserID, TimeStarted, TimeUpdated, TimeEnded)"
 			. " values (?, ?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
@@ -343,10 +437,10 @@ class PersistenceClientMySQL
 	{
 		$databaseConnection = $this->connect();
 
-		if ($databaseConnection->connect_error) 
+		if ($databaseConnection->connect_error)
 		{
 			die("Could not connect to database.");
-		} 
+		}
 
 		$queryText = "update User set IsActive = 0 where UserID = ?";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
@@ -360,10 +454,10 @@ class PersistenceClientMySQL
 	{
 		$databaseConnection = $this->connect();
 
-		if ($databaseConnection->connect_error) 
+		if ($databaseConnection->connect_error)
 		{
 			die("Could not connect to database.");
-		} 
+		}
 
 		$queryText = "select * from User where Username = ? and IsActive = 1";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
@@ -385,7 +479,7 @@ class PersistenceClientMySQL
 
 			$userFound = new User
 			(
-				$userID, $username, $emailAddress, $passwordSalt, 
+				$userID, $username, $emailAddress, $passwordSalt,
 				$passwordHashed, $passwordResetCode, $isActive, $licenses
 			);
 		}
@@ -403,11 +497,11 @@ class PersistenceClientMySQL
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $userID);
 		$queryCommand->execute();
-		$queryCommand->bind_result($licenseID, $userID, $productID);
+		$queryCommand->bind_result($licenseID, $userID, $productID, $transferTypeID, $transferTarget);
 
 		while ($row = $queryCommand->fetch())
 		{
-			$license = new License($licenseID, $userID, $productID);
+			$license = new License($licenseID, $userID, $productID, null, null);
 			$returnValues[] = $license;
 		}
 
@@ -418,14 +512,14 @@ class PersistenceClientMySQL
 	{
 		$databaseConnection = $this->connect();
 
-		if ($databaseConnection->connect_error) 
+		if ($databaseConnection->connect_error)
 		{
 			die("Could not connect to database.");
-		} 
+		}
 
 		if ($user->userID == null)
 		{
-			$queryText = 
+			$queryText =
 				"insert into User (Username, EmailAddress, PasswordSalt, PasswordHashed, PasswordResetCode, IsActive)"
 				. " values (?, ?, ?, ?, ?, ?)";
 		}
@@ -461,14 +555,43 @@ class License
 	public $licenseID;
 	public $userID;
 	public $productID;
+	public $transferTypeID;
+	public $transferTarget;
 
-	public function __construct($licenseID, $userID, $productID)
+	public function __construct($licenseID, $userID, $productID, $transferTypeID, $transferTarget)
 	{
 		$this->licenseID = $licenseID;
 		$this->userID = $userID;
 		$this->productID = $productID;
+		$this->transferTypeID = $transferTypeID;
+		$this->transferTarget = $transferTarget;
 	}
 }
+
+class LicenseTransferType
+{
+	public $licenseTransferTypeID;
+	public $name;
+	public $description;
+
+	public function __construct($licenseTransferTypeID, $name, $description)
+	{
+		$this->licenseTransferTypeID = $licenseTransferTypeID;
+		$this->name = $name;
+		$this->description = $description;
+	}
+}
+
+class MathHelper
+{
+	public static function randomCodeGenerate()
+	{
+		$passwordSalt = decHex(rand()) . decHex(rand()) . decHex(rand()) . decHex(rand());
+		$passwordSalt = str_pad($passwordSalt, 32, "0", STR_PAD_LEFT);
+		return $passwordSalt;
+	}
+}
+
 
 class Notification
 {
@@ -495,7 +618,7 @@ class Notification
 		$isEmailEnabled = $configuration["EmailEnabled"];
 		if ($isEmailEnabled == true)
 		{
-			mail($this->addressee, $this->subject, $this->body); 
+			mail($this->addressee, $this->subject, $this->body);
 			$now = new DateTime();
 			$this->timeSent = $now;
 			$persistenceClient->notificationSave($this);
@@ -567,7 +690,7 @@ class Order
 
 			for ($i = 0; $i < quantity; $i++)
 			{
-				$license = new License(null, $this->userID, $productID);
+				$license = new License(null, $this->userID, $productID, null, null);
 				$returnValues[] = $license;
 			}
 		}
@@ -688,20 +811,6 @@ class User
 		}
 
 		return $returnValue;
-	}
-
-	public static function passwordResetCodeGenerate()
-	{
-		$passwordSalt = decHex(rand()) . decHex(rand()) . decHex(rand()) . decHex(rand());
-		$passwordSalt = str_pad($passwordSalt, 32, "0", STR_PAD_LEFT);
-		return $passwordSalt;
-	}
-
-	public static function passwordSaltGenerate()
-	{
-		$passwordSalt = decHex(rand()) . decHex(rand()) . decHex(rand()) . decHex(rand());
-		$passwordSalt = str_pad($passwordSalt, 32, "0", STR_PAD_LEFT);
-		return $passwordSalt;
 	}
 
 	public static function passwordHashWithSalt($passwordAsPlaintext, $passwordSalt)

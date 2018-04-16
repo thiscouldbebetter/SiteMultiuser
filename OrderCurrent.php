@@ -13,7 +13,7 @@
 		<label><b>Current Order:</b></label><br /><br />
 		<form name="formOrderCurrent" action="" method="post">
 		<div>
-		<?php 
+		<?php
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			$orderCurrent = $userLoggedIn->orderCurrent;

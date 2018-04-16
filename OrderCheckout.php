@@ -13,7 +13,7 @@
 	<div class="divCentered">
 		<label><b>Checkout Order:</b></label><br />
 		<div>
-		<?php 
+		<?php
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			$orderCurrent = $userLoggedIn->orderCurrent;
@@ -59,14 +59,14 @@
 			paypal.Button.render
 			({
 				env: "<?php echo($paypalClientData->isProductionEnabled == 1 ? "production" : "sandbox"); ?>",
-				client: 
-				{ 
+				client:
+				{
 					sandbox: "<?php echo($paypalClientData->clientIDSandbox); ?>",
-					production: "<?php echo($paypalClientData->clientIDProduction); ?>" 
+					production: "<?php echo($paypalClientData->clientIDProduction); ?>"
 				},
 				commit: true, // Show a 'Pay Now' button.
 				style: { color: "gold", size: "small" },
-				payment: function(data, actions) 
+				payment: function(data, actions)
 				{
 					var transactionTotal = <?php echo( $orderCurrent->priceTotal($productsAll) ); ?>;
 					var transactionTotalAsString = "" + transactionTotal;
@@ -77,9 +77,9 @@
 					return returnValue;
 				},
 
-				onAuthorize: function(data, actions) 
+				onAuthorize: function(data, actions)
 				{
-					return actions.payment.execute().then(function(payment) 
+					return actions.payment.execute().then(function(payment)
 					{
 						var divStatusMessage = document.getElementById("divStatusMessage");
 						divStatusMessage.innerHTML = "Payment for this order was successful.";
@@ -87,12 +87,12 @@
 					});
 				},
 
-				onCancel: function(data, actions) 
+				onCancel: function(data, actions)
 				{
 					divStatusMessage.innerHTML = "Payment for this order has been cancelled.";
 				},
 
-				onError: function(err) 
+				onError: function(err)
 				{
 					divStatusMessage.innerHTML = "An error occurred while processing payment for this order.";
 				}

@@ -13,7 +13,7 @@
 		<br />
 		<div style="text-align:center">
 		<label>
-		<?php 
+		<?php
 			$persistenceClient = $_SESSION["PersistenceClient"];
 			$productID = $_GET["productID"];
 			$product = $persistenceClient->productGetByID($productID);

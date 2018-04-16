@@ -23,7 +23,7 @@
 		</form>
 
 		<?php
-			$messageInstructions = 
+			$messageInstructions =
 				"Enter a valid username and its associated email address."
 				. "  A password reset code will be sent via email to the specified address.";
 
@@ -45,7 +45,7 @@
 					$persistenceClient = $_SESSION["PersistenceClient"];
 					$userFound = $persistenceClient->userGetByUsername($usernameEntered);
 
-					$messageUsernameOrEmailAddressInvalid = 
+					$messageUsernameOrEmailAddressInvalid =
 						"Either no user with the specified username exists, "
 						. "or the email address specified did not match the one associated with the username.";
 
@@ -59,12 +59,12 @@
 					}
 					else
 					{
-						$passwordResetCode = User::passwordResetCodeGenerate();
+						$passwordResetCode = MathHelper::randomCodeGenerate();
 
 						$userFound->passwordResetCode = $passwordResetCode;
 						$persistenceClient->userSave($userFound);
 
-						$notificationMessage = 
+						$notificationMessage =
 							"A request has been made to reset your password.\n\n"
 							. "If you made this request, enter the code below when prompted to reset your password:\n"
 							. "\n"

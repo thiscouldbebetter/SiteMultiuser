@@ -24,7 +24,7 @@
 
 		<?php
 			$passwordCharactersRequired = 12;
-			$messagePasswordCriteria = 
+			$messagePasswordCriteria =
 				"Passwords must be at least " . $passwordCharactersRequired . " characters long, "
 				. "and must contain uppercase letters, lowercase letters, and numerals.";
 
@@ -52,7 +52,7 @@
 					{
 						PageWriter::displayStatusMessage("Username or password not valid.");
 					}
-					else 
+					else
 					{
 						$passwordEnteredHashed = $userFound->passwordHash($passwordEntered);
 						if ($userFound->passwordHashed != $passwordEnteredHashed)
