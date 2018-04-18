@@ -59,7 +59,6 @@
 				}
 				else
 				{
-
 					$isEmailAddressWellFormed = filter_var($emailAddressEntered, FILTER_VALIDATE_EMAIL);
 
 					if ($isEmailAddressWellFormed == false)
@@ -125,15 +124,25 @@
 										$passwordSalt, $passwordHashed, $passwordResetCode,
 										$isActive, array()
 									);
-									$persistenceClient->userSave($userNew);
+									$_SESSION["UserToCreate"] = $userNew;
+									$verificationCodeGenerated = MathHelper::randomCodeGenerate();
+									$_SESSION["VerificationCode"] = $verificationCodeGenerated;
+
+									$notificationMessage =
+										"A new user account associated with this email address is in the process of being created on our site.\n\n"
+										. "If you made this request, enter the code below when prompted to verify the account:\n"
+										. "\n"
+										. $verificationCodeGenerated
+										. "\n\n"
+										. "If you did not make this request, "
+										. "it may indicate that an attempt has been made to use your email address inappropriately.\n";
+
 									$now = new DateTime();
-									$sessionNew = new Session(null, $userNew, $now, $now, null);
-									$persistenceClient->sessionSave($sessionNew);
+									$notificationToSend = new Notification(null, $userNew->emailAddress, "New Account Verification", $notificationMessage, $now, null);
+									$persistenceClient->notificationSave($notificationToSend);
+									$notificationToSend->sendAsEmail($persistenceClient);
 
-									$_SESSION["Session"] = $sessionNew;
-									header("Location: User.php");
-
-									$databaseConnection->close();
+									header("Location: UserNewVerify.php");
 								}
 							}
 						}

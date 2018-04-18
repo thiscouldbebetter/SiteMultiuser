@@ -47,7 +47,7 @@ class PageWriter
 	{
 		if (isset($_SESSION["Session"]) == false)
 		{
-			echo "Your session has expired.";
+			echo "Your session has expired (or no session was ever established).";
 			echo "<a href='UserLogin.php'>Log In Again</a>";
 			die();
 		}

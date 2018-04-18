@@ -6,7 +6,7 @@ return array
 	"DatabaseUsername" => "web",
 	"DatabasePassword" => "[redacted]",
 	"DatabaseName" => "Store",
-	"EmailEnabled" => true,
+	"EmailEnabled" => false,
 	"SiteTitle" => "Online Store"
 );
 
