@@ -109,6 +109,29 @@ class PersistenceClientMySQL
 		return $returnValue;
 	}
 
+	public function licensesGetByTransferTarget($username, $emailAddress)
+	{
+		$returnValues = array();
+
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from License where (TransferTypeID = 1 and TransferTarget = ?) or (TransferTypeID = 2 and TransferTarget = ?)";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("ss", $username, $emailAddress);
+		$queryCommand->execute();
+		$queryCommand->bind_result($licenseID, $userID, $productID, $transferTypeID, $transferTarget);
+
+		while ($queryCommand->fetch())
+		{
+			$license = new License($licenseID, $userID, $productID, $transferTypeID, $transferTarget);
+			$returnValues[] = $license;
+		}
+
+		$databaseConnection->close();
+
+		return $returnValues;
+	}
+
 	public function licenseTransferTypesGetAll()
 	{
 		$returnValues = array();
@@ -450,18 +473,41 @@ class PersistenceClientMySQL
 		return $didDeleteSucceed;
 	}
 
+	public function userGetByID($userID)
+	{
+		$databaseConnection = $this->connect();
+		$queryText = "select * from User where UserID = ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("i", $userID);
+		$returnValue = $this->userGetByQueryCommand($queryCommand);
+		$databaseConnection->close();
+		return $returnValue;
+	}
+
+	public function userGetByEmailAddress($emailAddress)
+	{
+		$databaseConnection = $this->connect();
+		$queryText = "select * from User where EmailAddress = ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("s", $emailAddress);
+		$returnValue = $this->userGetByQueryCommand($queryCommand);
+		$databaseConnection->close();
+		return $returnValue;
+	}
+
 	public function userGetByUsername($username)
 	{
 		$databaseConnection = $this->connect();
-
-		if ($databaseConnection->connect_error)
-		{
-			die("Could not connect to database.");
-		}
-
 		$queryText = "select * from User where Username = ? and IsActive = 1";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("s", $username);
+		$returnValue = $this->userGetByQueryCommand($queryCommand);
+		$databaseConnection->close();
+		return $returnValue;
+	}
+
+	private function userGetByQueryCommand($queryCommand)
+	{
 		$queryCommand->execute();
 		$queryCommand->bind_result($userID, $username, $emailAddress, $passwordSalt, $passwordHashed, $passwordResetCode, $isActive);
 		$queryCommand->store_result();
@@ -475,7 +521,7 @@ class PersistenceClientMySQL
 		{
 			$queryCommand->fetch();
 
-			$licenses = $this->licensesGetByUserID($databaseConnection, $userID);
+			$licenses = $this->licensesGetByUserID($userID);
 
 			$userFound = new User
 			(
@@ -484,14 +530,14 @@ class PersistenceClientMySQL
 			);
 		}
 
-		$databaseConnection->close();
-
 		return $userFound;
 	}
 
-	private function licensesGetByUserID($databaseConnection, $userID)
+	private function licensesGetByUserID($userID)
 	{
 		$returnValues = array();
+
+		$databaseConnection = $this->connect();
 
 		$queryText = "select * from License where UserID = ?";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
@@ -501,9 +547,11 @@ class PersistenceClientMySQL
 
 		while ($row = $queryCommand->fetch())
 		{
-			$license = new License($licenseID, $userID, $productID, null, null);
+			$license = new License($licenseID, $userID, $productID, $transferTypeID, $transferTarget);
 			$returnValues[] = $license;
 		}
+
+		$databaseConnection->close();
 
 		return $returnValues;
 	}

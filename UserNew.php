@@ -106,26 +106,35 @@
 							}
 							else
 							{
-								$passwordSalt = MathHelper::randomCodeGenerate();
-								$passwordHashed = User::passwordHashWithSalt($passwordEntered, $passwordSalt);
-								$passwordResetCode = null;
-								$isActive = 1;
+								$userFound = $persistenceClient->userGetByEmailAddress($emailAddressEntered);
 
-								$userNew = new User
-								(
-									null, $usernameEntered, $emailAddressEntered,
-									$passwordSalt, $passwordHashed, $passwordResetCode,
-									$isActive, array()
-								);
-								$persistenceClient->userSave($userNew);
-								$now = new DateTime();
-								$sessionNew = new Session(null, $userNew, $now, $now, null);
-								$persistenceClient->sessionSave($sessionNew);
+								if ($userFound != null)
+								{
+									PageWriter::displayStatusMessage("A user with the specified email address already exists.");
+								}
+								else
+								{
+									$passwordSalt = MathHelper::randomCodeGenerate();
+									$passwordHashed = User::passwordHashWithSalt($passwordEntered, $passwordSalt);
+									$passwordResetCode = null;
+									$isActive = 1;
 
-								$_SESSION["Session"] = $sessionNew;
-								header("Location: User.php");
+									$userNew = new User
+									(
+										null, $usernameEntered, $emailAddressEntered,
+										$passwordSalt, $passwordHashed, $passwordResetCode,
+										$isActive, array()
+									);
+									$persistenceClient->userSave($userNew);
+									$now = new DateTime();
+									$sessionNew = new Session(null, $userNew, $now, $now, null);
+									$persistenceClient->sessionSave($sessionNew);
 
-								$databaseConnection->close();
+									$_SESSION["Session"] = $sessionNew;
+									header("Location: User.php");
+
+									$databaseConnection->close();
+								}
 							}
 						}
 					}

@@ -20,11 +20,14 @@
 		?>
 		</label><br /><br />
 
-		<label>Licenses Owned:</label>
+		<label>Licenses:</label>
 		<?php
-			$licenses = $userLoggedIn->licenses;
-			$numberOfLicenses = count($licenses);
-			echo("(" . $numberOfLicenses . " item(s)) ");
+			$licensesOwned = $userLoggedIn->licenses;
+			$numberOfLicensesOwned = count($licensesOwned);
+			$persistenceClient = $_SESSION["PersistenceClient"];
+			$transfersIncoming = $persistenceClient->licensesGetByTransferTarget($userLoggedIn->username, $userLoggedIn->emailAddress);
+			$numberOfTransfersIncoming = count($transfersIncoming);
+			echo("(" . $numberOfLicensesOwned . " owned, " . $numberOfTransfersIncoming . " incoming transfers) ");
 			echo("<a href='UserLicenses.php'>Details</a>");
 		?>
 		<br /><br />
