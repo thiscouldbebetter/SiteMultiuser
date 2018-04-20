@@ -17,10 +17,10 @@
 			<input name="VerificationCode"></input><br />
 			<br />
 			<button type="submit">Verify New Account</button>
-		</form>		
+		</form>
 
 		<?php
-		
+
 			$userToCreate = $_SESSION["UserToCreate"];
 
 			if ($userToCreate == null)
@@ -40,7 +40,7 @@
 				{
 					$verificationCodeEntered = $_POST["VerificationCode"];
 					$verificationCodeFromSession = $_SESSION["VerificationCode"];
-					
+
 					if ($verificationCodeEntered == "")
 					{
 						PageWriter::displayStatusMessage($messageInstructions);
@@ -55,7 +55,7 @@
 						$persistenceClient->userSave($userToCreate);
 
 						$now = new DateTime();
-						$sessionNew = new Session(null, $userToCreate, $now, $now, null);						
+						$sessionNew = new Session(null, $userToCreate, $now, $now, null);
 						$persistenceClient->sessionSave($sessionNew);
 
 						$_SESSION["Session"] = $sessionNew;

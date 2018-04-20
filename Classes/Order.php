@@ -4,14 +4,16 @@ class Order
 {
 	public $orderID;
 	public $userID;
+	public $promotion;
 	public $status;
 	public $timeCompleted;
 	public $productBatches;
 
-	public function __construct($orderID, $userID, $status, $timeCompleted, $productBatches)
+	public function __construct($orderID, $userID, $promotion, $status, $timeCompleted, $productBatches)
 	{
 		$this->orderID = $orderID;
 		$this->userID = $userID;
+		$this->promotion = $promotion;
 		$this->status = $status;
 		$this->timeCompleted = $timeCompleted;
 		$this->productBatches = $productBatches;
@@ -23,7 +25,7 @@ class Order
 		$this->timeCompleted = new DateTime();
 	}
 
-	public function priceTotal($productsAll)
+	public function priceSubtotal($productsAll)
 	{
 		$returnValue = 0;
 
@@ -33,6 +35,24 @@ class Order
 			$product = $productsAll[$productID];
 			$productPrice = $product->price;
 			$returnValue += $productPrice;
+		}
+
+		return $returnValue;
+	}
+
+	public function priceTotal($productsAll)
+	{
+		$returnValue = $this->priceSubtotal($productsAll);
+
+		$promotion = $this->promotion;
+		if ($promotion != null)
+		{
+			$doesPromotionApplyToOrder = $promotion->doesApplyToOrder($this);
+			if ($doesPromotionApplyToOrder == true)
+			{
+				$discount = $promotion->discount;
+				$returnValue -= $discount;
+			}
 		}
 
 		return $returnValue;

@@ -23,7 +23,7 @@ class User
 		$this->isActive = $isActive;
 		$this->licenses = $licenses;
 
-		$this->orderCurrent = new Order(null, $this->userID, "InProgress", null, array());
+		$this->orderCurrent = new Order(null, $this->userID, null, "InProgress", null, array());
 	}
 
 	public static function dummy()

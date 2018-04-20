@@ -40,10 +40,10 @@
 					<button type='submit'>Claim Transfer</button>
 
 
-					<?php 
+					<?php
 						$messageInstructions = "Specify a valid vendor username, product, and transfer code.";
 
-						if 
+						if
 						(
 							(isset($_POST["VendorUsername"]) == false)
 							|| (isset($_POST["ProductID"]) == false)
@@ -107,11 +107,11 @@
 		<br />
 		<a href="UserLicenses.php">Back to All User Licenses</a>
 	</div>
-		
+
 	<?php PageWriter::footerWrite(); ?>
-	
+
 	<script type="text/javascript">
-	
+
 		// event handlers
 		function selectTransferType_Changed(event)
 		{
@@ -122,17 +122,17 @@
 			{
 				divTransferTarget.style.display = "none";
 			}
-			else 
+			else
 			{
 				divTransferTarget.style.display = "inline";
-				
+
 				var inputTransferTarget = document.getElementById("inputTransferTarget");
 				inputTransferTarget.value = "";
 				inputTransferTarget.readonly = false;
-				
+
 				var transferTarget;
 				var transferTargetTypeName;
-				
+
 				if (transferTypeID == 1)
 				{
 					transferTargetTypeName = "Username";
@@ -140,12 +140,12 @@
 				}
 				else if (transferTypeID == 2)
 				{
-					transferTargetTypeName = "Email Address";					
+					transferTargetTypeName = "Email Address";
 					transferTarget = "";
-				}				
+				}
 				else if (transferTypeID == 3)
 				{
-					transferTargetTypeName = "Transfer Code";					
+					transferTargetTypeName = "Transfer Code";
 					inputTransferTarget.readonly = true;
 					var inputRandomCode = document.getElementById("inputRandomCode");
 					transferTarget = inputRandomCode.value;
@@ -155,13 +155,13 @@
 					throw("Unrecognized transfer type!");
 				}
 
-				var labelTransferTarget = document.getElementById("labelTransferTarget");				
+				var labelTransferTarget = document.getElementById("labelTransferTarget");
 				labelTransferTarget.innerText = transferTargetTypeName + ":";
 				inputTransferTarget.value = transferTarget;
 			}
 		}
-	
+
 	</script>
-	
+
 </body>
 </html>

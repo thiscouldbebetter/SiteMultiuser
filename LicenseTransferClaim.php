@@ -15,7 +15,7 @@
 		<div style="text-align:center">
 			<div>
 				<label>
-				<?php 
+				<?php
 					$session = $_SESSION["Session"];
 					$userLoggedIn = $session->user;
 					$persistenceClient = $_SESSION["PersistenceClient"];
@@ -29,7 +29,7 @@
 							break;
 						}
 					}
-					
+
 					$message = "License does not exist or is not being transferred to current user.";
 					if ($licenseToTransfer == null)
 					{
@@ -39,7 +39,7 @@
 					{
 						$transferTypeID = $licenseToTransfer->transferTypeID;
 						$transferTarget = $licenseToTransfer->transferTarget;
-						$isLicenseTargetedToUserLoggedIn = 
+						$isLicenseTargetedToUserLoggedIn =
 						(
 							( $transferTypeID = 1 && $transferTarget = $userLoggedIn->username )
 							|| ( $transferTypeID = 2 && $transferTarget = $userLoggedIn->emailAddress )
@@ -57,15 +57,15 @@
 				<br />
 				<img src='<?php echo($product->imagePath); ?>' /><br />
 				<br />
-				<label>from 
-					<?php 
+				<label>from
+					<?php
 						$userTransferredFrom = $persistenceClient->userGetByID($licenseToTransfer->userID);
 						echo $userTransferredFrom->username;
 					?>
 				</label>
 				<br /><br />
 				<form method="post">
-					<?php 
+					<?php
 						if (isset($_POST["IsClaimed"]) == false)
 						{
 							echo "<button type='submit' name='IsClaimed'>Claim Transfer</button>";
@@ -86,11 +86,11 @@
 		<br />
 		<a href="UserLicenses.php">Back to All User Licenses</a>
 	</div>
-		
+
 	<?php PageWriter::footerWrite(); ?>
-	
+
 	<script type="text/javascript">
-	
+
 		// event handlers
 		function selectTransferType_Changed(event)
 		{
@@ -101,17 +101,17 @@
 			{
 				divTransferTarget.style.display = "none";
 			}
-			else 
+			else
 			{
 				divTransferTarget.style.display = "inline";
-				
+
 				var inputTransferTarget = document.getElementById("inputTransferTarget");
 				inputTransferTarget.value = "";
 				inputTransferTarget.readonly = false;
-				
+
 				var transferTarget;
 				var transferTargetTypeName;
-				
+
 				if (transferTypeID == 1)
 				{
 					transferTargetTypeName = "Username";
@@ -119,12 +119,12 @@
 				}
 				else if (transferTypeID == 2)
 				{
-					transferTargetTypeName = "Email Address";					
+					transferTargetTypeName = "Email Address";
 					transferTarget = "";
-				}				
+				}
 				else if (transferTypeID == 3)
 				{
-					transferTargetTypeName = "Transfer Code";					
+					transferTargetTypeName = "Transfer Code";
 					inputTransferTarget.readonly = true;
 					var inputRandomCode = document.getElementById("inputRandomCode");
 					transferTarget = inputRandomCode.value;
@@ -134,13 +134,13 @@
 					throw("Unrecognized transfer type!");
 				}
 
-				var labelTransferTarget = document.getElementById("labelTransferTarget");				
+				var labelTransferTarget = document.getElementById("labelTransferTarget");
 				labelTransferTarget.innerText = transferTargetTypeName + ":";
 				inputTransferTarget.value = transferTarget;
 			}
 		}
-	
+
 	</script>
-	
+
 </body>
 </html>

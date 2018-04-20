@@ -364,6 +364,57 @@ class PersistenceClientMySQL
 		return $returnValues;
 	}
 
+	public function promotionGetByCode($promotionCode)
+	{
+		$returnValue = null;
+
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from Promotion where Code = ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("s", $promotionCode);
+		$queryCommand->execute();
+		$queryCommand->bind_result($promotionID, $description, $discount, $code);
+
+		while ($queryCommand->fetch())
+		{
+			$returnValue = new Promotion($promotionID, $description, $discount, $code, array() );
+			break;
+		}
+
+		$databaseConnection->close();
+
+		if ($returnValue != null)
+		{
+			$returnValue->products = $this->productsGetByPromotionID($promotionID);
+		}
+
+		return $returnValue;
+	}
+
+	private function productsGetByPromotionID($promotionID)
+	{
+		$databaseConnection = $this->connect();
+
+		$returnValues = array();
+
+		$queryText = "select p.* from Promotion_Product pp, Product p where p.ProductID = pp.ProductID and pp.PromotionID = ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("i", $promotionID);
+		$queryCommand->execute();
+		$queryCommand->bind_result($productID, $name, $imagePath, $price, $contentPath);
+
+		while ($queryCommand->fetch())
+		{
+			$product = new Product($productID, $name, $imagePath, $price, $contentPath);
+			$returnValues[] = $product;
+		}
+
+		$databaseConnection->close();
+
+		return $returnValues;
+	}
+
 	public function sessionSave($session)
 	{
 		$databaseConnection = $this->connect();

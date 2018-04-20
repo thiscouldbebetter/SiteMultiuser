@@ -45,7 +45,7 @@ class PageWriter
 			echo "You do not yet have a license to access this content.  ";
 			echo "You can buy a license by clicking the link below.<br />";
 			echo "<a href='../../Product.php?productID=" . $productIDToVerify . "'>View Product</a>";
-			die();			
+			die();
 		}
 	}
 

@@ -10,6 +10,8 @@ include("Classes/PageWriter.php");
 include("Classes/PaypalClientData.php");
 include("Classes/PersistenceClientMySQL.php");
 include("Classes/Product.php");
+include("Classes/Promotion.php");
+include("Classes/Promotion_Product.php");
 include("Classes/Session.php");
 include("Classes/User.php");
 

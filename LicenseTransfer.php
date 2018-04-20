@@ -15,10 +15,10 @@
 		<div style="text-align:center">
 			<div>
 				<label>
-				<?php 
+				<?php
 					$session = $_SESSION["Session"];
 					$userLoggedIn = $session->user;
-					$licenses = $userLoggedIn->licenses;		
+					$licenses = $userLoggedIn->licenses;
 					$licenseID = $_GET["licenseID"];
 					foreach ($licenses as $license)
 					{
@@ -34,7 +34,7 @@
 						die();
 					}
 					$productID = $licenseToTransfer->productID;
-					$persistenceClient = $_SESSION["PersistenceClient"];					
+					$persistenceClient = $_SESSION["PersistenceClient"];
 					$product = $persistenceClient->productGetByID($productID);
 					$productName = $product->name;
 					echo $productName;
@@ -48,7 +48,7 @@
 				<label>Transfer Type:</label>
 				<select id="selectTransferType" name="TransferTypeID" onchange="selectTransferType_Changed(event);">
 					<option value="0">None</option>
-					<?php						
+					<?php
 						if (isset($_POST["TransferTypeID"]) == true)
 						{
 							$transferTypeIDSelected = $_POST["TransferTypeID"];
@@ -57,9 +57,9 @@
 						{
 							$transferTypeIDSelected = null;
 						}
-					
+
 						$licenseTransferTypes = $persistenceClient->licenseTransferTypesGetAll();
-						
+
 						foreach ($licenseTransferTypes as $transferType)
 						{
 							$transferTypeID = $transferType->licenseTransferTypeID;
@@ -72,31 +72,31 @@
 				<div id="divTransferTarget" <?php if ($transferTypeIDSelected >= 1 && $transferTypeIDSelected <= 3) {} else { echo("style='display:none'"); } ?> >
 					<label id="labelTransferTarget">Transfer Target:</label>
 					<input id="inputTransferTarget" name="TransferTarget"></input>
-					<input id="inputRandomCode" style="display:none" value='<?php echo MathHelper::randomCodeGenerate(); ?>'></input>				
+					<input id="inputRandomCode" style="display:none" value='<?php echo MathHelper::randomCodeGenerate(); ?>'></input>
 				</div>
 				<button type="submit">Save</button>
-			</form>			
+			</form>
 		</div>
 
 		<div>
 		<?php
 			if (isset($_POST["TransferTypeID"]) && isset($_POST["TransferTarget"]) )
-			{	
+			{
 				$transferTypeID = $_POST["TransferTypeID"];
 				$transferTarget = $_POST["TransferTarget"];
-				
+
 				$isTransferValid = false;
-				
+
 				if ($transferTypeID == 0)
 				{
 					$transferTypeID = null;
 					$transferTarget = null;
-					$isTransferValid = true;					
+					$isTransferValid = true;
 				}
 				else if ($transferTarget == "")
 				{
 					echo "No transfer target specified.";
-				}			
+				}
 				else if ($transferTypeID == 1) // username
 				{
 					$userFound = $persistenceClient->userGetByUsername($transferTarget);
@@ -123,20 +123,20 @@
 					$licenseToTransfer->transferTypeID = $transferTypeID;
 					$licenseToTransfer->transferTarget = $transferTarget;
 					$persistenceClient->licenseSave($licenseToTransfer);
-					
+
 					header("Location: UserLicenses.php");
 				}
 			}
 		?>
 		</div>
-				
+
 		<a href="UserLicenses.php">Back to All User Licenses</a>
 	</div>
-		
+
 	<?php PageWriter::footerWrite(); ?>
-	
+
 	<script type="text/javascript">
-	
+
 		// event handlers
 		function selectTransferType_Changed(event)
 		{
@@ -147,17 +147,17 @@
 			{
 				divTransferTarget.style.display = "none";
 			}
-			else 
+			else
 			{
 				divTransferTarget.style.display = "inline";
-				
+
 				var inputTransferTarget = document.getElementById("inputTransferTarget");
 				inputTransferTarget.value = "";
 				inputTransferTarget.readonly = false;
-				
+
 				var transferTarget;
 				var transferTargetTypeName;
-				
+
 				if (transferTypeID == 1)
 				{
 					transferTargetTypeName = "Username";
@@ -165,12 +165,12 @@
 				}
 				else if (transferTypeID == 2)
 				{
-					transferTargetTypeName = "Email Address";					
+					transferTargetTypeName = "Email Address";
 					transferTarget = "";
-				}				
+				}
 				else if (transferTypeID == 3)
 				{
-					transferTargetTypeName = "Transfer Code";					
+					transferTargetTypeName = "Transfer Code";
 					inputTransferTarget.readonly = true;
 					var inputRandomCode = document.getElementById("inputRandomCode");
 					transferTarget = inputRandomCode.value;
@@ -180,13 +180,13 @@
 					throw("Unrecognized transfer type!");
 				}
 
-				var labelTransferTarget = document.getElementById("labelTransferTarget");				
+				var labelTransferTarget = document.getElementById("labelTransferTarget");
 				labelTransferTarget.innerText = transferTargetTypeName + ":";
 				inputTransferTarget.value = transferTarget;
 			}
 		}
-	
+
 	</script>
-	
+
 </body>
 </html>
