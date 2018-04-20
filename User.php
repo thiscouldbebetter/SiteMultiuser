@@ -1,4 +1,4 @@
-<?php include "Common.php"; ?>
+<?php include("Common.php"); ?>
 <?php PageWriter::sessionVerify(); ?>
 
 <html>

@@ -4,10 +4,12 @@ insert into PaypalClientData (ClientIDSandbox, ClientIDProduction, IsProductionE
 
 grant select, update, insert, delete on *.* to 'web'@'localhost' identified by '[redacted]';
 
-insert into Product (Name, ImagePath, Price) values ('Product1', "Images/Product1.png", 1.00);
-insert into Product (Name, ImagePath, Price) values ('Product2', "Images/Product2.png", 2.00);
-insert into Product (Name, ImagePath, Price) values ('Product3', "Images/Product3.png", 3.00);
-insert into Product (Name, ImagePath, Price) values ('Product4', "Images/Product4.png", 4.00);
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product1', "Images/Product1.png", 1.00, "Content/Product1/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product2', "Images/Product2.png", 2.00, "Content/Product2/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product3', "Images/Product3.png", 3.00, "Content/Product3/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product4', "Images/Product4.png", 4.00, "Content/Product4/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product5', "Images/Product5.png", 5.00, "Content/Product5/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product6', "Images/Product6.png", 6.00, "Content/Product6/Content.php");
 
 /* user "adam", password "Password_123" */
 insert into User (Username, EmailAddress, PasswordSalt, PasswordHashed, PasswordResetCode, IsActive) values ('adam', 'adam@localhost.localdomain', '1147748628', '874c1d861559fa124a3948a947bc1f6564ea478b56e37b976a9ad25bbd67092e', null, 1);

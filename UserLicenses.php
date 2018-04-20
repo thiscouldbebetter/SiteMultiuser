@@ -1,4 +1,4 @@
-<?php include "Common.php"; ?>
+<?php include("Common.php"); ?>
 <?php PageWriter::sessionVerify(); ?>
 
 <html>
@@ -41,8 +41,9 @@
 						$licenseID = $license->licenseID;
 						if ($transferTypeID == null)
 						{
+							$contentLink = "<a href='" . $product->contentPath . "'>Content</a>";
 							$transferLink = "<a href='LicenseTransfer.php?licenseID=" . $licenseID . "'>Transfer</a>";
-							$productNameAndTransferData = $productNameAndTransferData . $transferLink;
+							$productNameAndTransferData = $productNameAndTransferData . $contentLink . " " . $transferLink;
 						}
 						else
 						{
