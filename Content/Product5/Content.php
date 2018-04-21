@@ -1,5 +1,5 @@
 <?php include("../../Common.php"); ?>
-<?php PageWriter::sessionVerify(); ?>
+<?php Session::verify(); ?>
 <?php PageWriter::licenseVerifyForProductID(5); ?>
 
 <html>

@@ -15,22 +15,6 @@ include("Classes/Promotion_Product.php");
 include("Classes/Session.php");
 include("Classes/User.php");
 
-$configuration = include("Configuration.php");
-
-if (isset($_SESSION) == false)
-{
-	session_start();
-	if (isset($_SESSION["PersistenceClient"]) == false)
-	{
-		$persistenceClient = new PersistenceClientMySQL
-		(
-			$configuration["DatabaseServerName"],
-			$configuration["DatabaseUsername"],
-			$configuration["DatabasePassword"],
-			$configuration["DatabaseName"]
-		);
-		$_SESSION["PersistenceClient"] = $persistenceClient;
-	}
-}
+Session::start();
 
 ?>

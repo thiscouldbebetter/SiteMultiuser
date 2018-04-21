@@ -1,5 +1,5 @@
 <?php include "Common.php"; ?>
-<?php PageWriter::sessionVerify(); ?>
+<?php Session::verify(); ?>
 <?php
 	$session = $_SESSION["Session"];
 	$userLoggedIn = $session->user;
