@@ -5,5 +5,5 @@
 	$userLoggedIn = $session->user;
 	$orderCurrent = $userLoggedIn->orderCurrent;
 	$orderCurrent->promotion = null;
-	header("Location: OrderCurrent.php");
+	header("Location: OrderDetails.php");
 ?>

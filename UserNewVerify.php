@@ -54,8 +54,9 @@
 						$persistenceClient = $_SESSION["PersistenceClient"];
 						$persistenceClient->userSave($userToCreate);
 
+						$deviceAddress = $_SERVER["SERVER_ADDR"];
 						$now = new DateTime();
-						$sessionNew = new Session(null, $userToCreate, $now, $now, null);
+						$sessionNew = new Session(null, $userToCreate, $deviceAddress, $now, $now, null);
 						$persistenceClient->sessionSave($sessionNew);
 
 						$_SESSION["Session"] = $sessionNew;

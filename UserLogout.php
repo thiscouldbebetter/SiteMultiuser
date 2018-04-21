@@ -1,5 +1,4 @@
 <?php include "Common.php"; ?>
-<?php Session::verify(); ?>
 
 <html>
 
@@ -13,12 +12,7 @@
 		<p>User logged out.</p>
 		<a href='UserLogin.php'>Log In</a>
 		<?php
-			$session = $_SESSION["Session"];
-			$now = new DateTime();
-			$session->timeEnded = $now;
-			$persistenceClient = $_SESSION["PersistenceClient"];
-			$persistenceClient->sessionSave($session);
-			session_destroy();
+			Session::stop();
 			header("Location: UserLogin.php");
 			die();
 		?>

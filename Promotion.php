@@ -21,7 +21,7 @@
 			if (isset($_POST["Submitted"]) == true)
 			{
 				$orderCurrent->promotion = $promotion;
-				header("Location: OrderCurrent.php");
+				header("Location: OrderDetails.php");
 			}
 		}
 	?>
@@ -68,7 +68,7 @@
 				<button type="submit" Name="Submitted">Add Promotion to Order</button>
 			</form>
 		</div>
-		<a href="OrderCurrent.php">Back to Order</a><br />
+		<a href="OrderDetails.php">Back to Order</a><br />
 		<a href="ProductSummary.php">Browse Products</a>
 	</div>
 

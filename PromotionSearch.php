@@ -42,7 +42,7 @@
 			?>
 		</div>
 		<br />
-		<a href="OrderCurrent.php">Back to Order</a><br />
+		<a href="OrderDetails.php">Back to Order</a><br />
 		<a href="ProductSummary.php">Browse Products</a>
 	</div>
 

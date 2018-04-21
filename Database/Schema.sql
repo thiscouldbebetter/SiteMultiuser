@@ -14,13 +14,13 @@ insert into LicenseTransferType (LicenseTransferTypeID, Name, Description) value
 create table License (LicenseID int not null auto_increment, UserID int not null, ProductID int not null, TransferTypeID int, TransferTarget text, primary key (LicenseID), foreign key (UserID) references User(UserID), foreign key (ProductID) references Product(ProductID), foreign key (TransferTypeID) references LicenseTransferType(LicenseTransferTypeID) );
 
 /* "Order" is a SQL keyword, but no other name really makes sense, so prefix an "_". */
-create table _Order (OrderID int not null auto_increment, UserID int not null, PromotionID int, Status text not null, TimeCompleted datetime, primary key (OrderID), foreign key (UserID) references User(UserID) );
+create table _Order (OrderID int not null auto_increment, UserID int not null, PromotionID int, Status text not null, TimeStarted datetime not null, TimeUpdated datetime not null, TimeCompleted datetime, primary key (OrderID), foreign key (UserID) references User(UserID) );
 
 create table Order_Product (OrderProductID int not null auto_increment, OrderID int, ProductID int, Quantity int, primary key (OrderProductID), foreign key (OrderID) references _Order(OrderID) );
 
 create table Notification (NotificationID int not null auto_increment, Addressee text not null, Subject text not null, Body text not null, TimeCreated datetime not null, TimeSent datetime, primary key (NotificationID) );
 
-create table Session(SessionID int not null auto_increment, UserID int, TimeStarted datetime not null, TimeUpdated datetime not null, TimeEnded datetime, primary key (SessionID), foreign key (UserID) references User(UserID) );
+create table Session(SessionID int not null auto_increment, UserID int, DeviceAddress text not null, TimeStarted datetime not null, TimeUpdated datetime not null, TimeEnded datetime, primary key (SessionID), foreign key (UserID) references User(UserID) );
 
 create table PaypalClientData (ClientIDSandbox text not null, ClientIDProduction text not null, IsProductionEnabled boolean not null);
 

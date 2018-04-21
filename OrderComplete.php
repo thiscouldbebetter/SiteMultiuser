@@ -16,10 +16,17 @@ $configuration = include("Configuration.php");
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			$orderCurrent = $userLoggedIn->orderCurrent;
-			$userLoggedIn->orderCurrent = null;
+			$now = new DateTime();
+			$userLoggedIn->orderCurrent = new Order(null, $userLoggedIn->userID, null, "InProgress", $now, $now, null, array() );
 			$orderCurrent->complete();
 			$persistenceClient = $_SESSION["PersistenceClient"];
 			$persistenceClient->orderSave($orderCurrent);
+			$licensesFromOrder = $orderCurrent->toLicenses();
+			foreach ($licensesFromOrder as $license)
+			{
+				$persistenceClient->licenseSave();
+				$userLoggedIn->licenses[] = $license;
+			}
 			$productBatchesInOrder = $orderCurrent->productBatches;
 			$productsAll = $persistenceClient->productsGetAll();
 			$numberOfBatches = count($productBatchesInOrder);

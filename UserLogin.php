@@ -61,8 +61,9 @@
 						}
 						else
 						{
+							$deviceAddress = $_SERVER["SERVER_ADDR"];
 							$now = new DateTime();
-							$sessionNew = new Session(null, $userFound, $now, $now, null);
+							$sessionNew = new Session(null, $userFound, $deviceAddress, $now, $now, null);
 							$_SESSION["Session"] = $sessionNew;
 							$persistenceClient->sessionSave($sessionNew);
 

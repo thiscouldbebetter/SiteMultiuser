@@ -246,6 +246,81 @@ class PersistenceClientMySQL
 		return $notification;
 	}
 
+	public function orderGetByID($orderID)
+	{
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from _Order where OrderID = ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("i", $orderID);
+		$ordersFound = $this->ordersGetByQueryCommand($queryCommand, $databaseConnection);
+		$returnValue = null;
+		if (count($ordersFound) > 0)
+		{
+			$returnValue = $ordersFound[0];
+		}
+		return $returnValue;
+	}
+
+	public function ordersGetByUserID($userID)
+	{
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from _Order where UserID = ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("i", $userID);
+		$returnValues = $this->ordersGetByQueryCommand($queryCommand, $databaseConnection);
+		return $returnValues;
+	}
+
+	private function ordersGetByQueryCommand($queryCommand, $databaseConnection)
+	{
+		$returnValues = array();
+
+		$queryCommand->execute();
+		$queryCommand->bind_result($orderID, $userID, $promotionID, $status, $timeStarted, $timeUpdated, $timeCompleted);
+
+		while ($queryCommand->fetch())
+		{
+			$order = new Order($orderID, $userID, $promotionID, $status, $timeStarted, $timeUpdated, $timeCompleted, null);
+			$returnValues[] = $order;
+		}
+
+		$databaseConnection->close();
+
+		foreach ($returnValues as $order)
+		{
+			$orderID = $order->orderID;
+			$productBatchesInOrder = $this->orderProductsGetByOrderID($orderID);
+			$order->productBatches = $productBatchesInOrder;
+		}
+
+		return $returnValues;
+	}
+
+	public function orderProductsGetByOrderID($orderID)
+	{
+		$returnValues = array();
+
+		$databaseConnection = $this->connect();
+
+		$queryText = "select * from Order_Product where OrderID = ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("i", $orderID);
+		$queryCommand->execute();
+		$queryCommand->bind_result($orderProductID, $orderID, $productID, $quantity);
+
+		while ($queryCommand->fetch())
+		{
+			$orderProduct = new Order_Product($orderProductID, $orderID, $productID, $quantity);
+			$returnValues[] = $orderProduct;
+		}
+
+		$databaseConnection->close();
+
+		return $returnValues;
+	}
+
 	public function orderProductSave($orderProduct)
 	{
 		$databaseConnection = $this->connect();
@@ -415,6 +490,32 @@ class PersistenceClientMySQL
 		return $returnValues;
 	}
 
+	public function sessionGetCurrentByUserID($userID)
+	{
+		$databaseConnection = $this->connect();
+
+		$queryText = "select s.* from Session s where s.UserID = ? and s.TimeEnded is null and s.TimeStarted = (select max(s1.TimeStarted) from Session s1 where s1.TimeStarted <= ? and s1.UserID = s.UserID)";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$now = new DateTime();
+		$nowAsString = $this->dateToString($now);
+		$queryCommand->bind_param("is", $userID, $nowAsString);
+		$queryCommand->execute();
+		$queryCommand->bind_result($sessionID, $userID, $deviceAddress, $timeStarted, $timeUpdated, $timeEnded);
+
+		$session = null;
+		while ($queryCommand->fetch())
+		{
+			$user = User::dummy();
+			$user->userID = $userID;
+			$session = new Session($sessionID, $user, $deviceAddress, $timeStarted, $timeUpdated, $timeEnded);
+			break;
+		}
+
+		$databaseConnection->close();
+
+		return $session;
+	}
+
 	public function sessionSave($session)
 	{
 		$databaseConnection = $this->connect();
@@ -424,14 +525,25 @@ class PersistenceClientMySQL
 			die("Could not connect to database.");
 		}
 
-		$queryText =
-			"insert into Session (UserID, TimeStarted, TimeUpdated, TimeEnded)"
-			. " values (?, ?, ?, ?)";
-		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$timeStartedAsString = $this->dateToString($session->timeStarted);
 		$timeUpdatedAsString = $this->dateToString($session->timeUpdated);
 		$timeEndedAsString = $this->dateToString($session->timeEnded);
-		$queryCommand->bind_param("isss", $session->user->userID, $timeStartedAsString, $timeUpdatedAsString, $timeEndedAsString);
+
+		if ($session->sessionID == null)
+		{
+			$queryText =
+				"insert into Session (UserID, DeviceAddress, TimeStarted, TimeUpdated, TimeEnded)"
+				. " values (?, ?, ?, ?, ?)";
+			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+			$queryCommand->bind_param("issss", $session->user->userID, $session->deviceAddress, $timeStartedAsString, $timeUpdatedAsString, $timeEndedAsString);
+		}
+		else
+		{
+			$queryText =
+				"update Session set UserID = ?, DeviceAddress = ?, TimeStarted = ?, TimeUpdated = ?, TimeEnded = ? where SessionID = ?";
+			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+			$queryCommand->bind_param("issssi", $session->user->userID, $session->deviceAddress, $timeStartedAsString, $timeUpdatedAsString, $timeEndedAsString, $session->sessionID);
+		}
 
 		$didSaveSucceed = $queryCommand->execute();
 

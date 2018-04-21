@@ -17,6 +17,12 @@ insert into Promotion_Product (PromotionID, ProductID) values (1, 2);
 
 /* user "adam", password "Password_123" */
 insert into User (Username, EmailAddress, PasswordSalt, PasswordHashed, PasswordResetCode, IsActive) values ('adam', 'adam@localhost.localdomain', '1147748628', '874c1d861559fa124a3948a947bc1f6564ea478b56e37b976a9ad25bbd67092e', null, 1);
+
+insert into _Order (UserID, PromotionID, Status, TimeStarted, TimeUpdated, TimeCompleted) values (1, null, 'Completed', '2015-01-01', '2015-01-02', '2015-01-02');
+insert into Order_Product (OrderID, ProductID, Quantity) values (1, 2, 1);
+insert into Order_Product (OrderID, ProductID, Quantity) values (1, 3, 1);
+insert into Order_Product (OrderID, ProductID, Quantity) values (1, 4, 1);
+
 insert into License (UserID, ProductID) values (1, 1);
 insert into License (UserID, ProductID, TransferTypeID, TransferTarget) values (1, 2, 1, 'beth');
 insert into License (UserID, ProductID, TransferTypeID, TransferTarget) values (1, 3, 2, 'charlie@localhost.localdomain');

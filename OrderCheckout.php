@@ -80,7 +80,7 @@
 
 		</div>
 
-		<a href="OrderCurrent.php">Modify Order</a><br /><br />
+		<a href="OrderDetails.php">Modify Order</a><br /><br />
 
 		<div id="divStatusMessage">This order is ready for payment.</div>
 

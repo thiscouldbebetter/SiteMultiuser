@@ -110,8 +110,9 @@
 								$userFound->passwordResetCode = null;
 								$persistenceClient->userSave($userFound);
 
+								$deviceAddress = $_SERVER["SERVER_ADDR"];
 								$now = new DateTime();
-								$sessionNew = new Session(null, $userFound, $now, $now, null);
+								$sessionNew = new Session(null, $userFound, $deviceAddress, $now, $now, null);
 								$persistenceClient->sessionSave($sessionNew);
 
 								$_SESSION["Session"] = $sessionNew;

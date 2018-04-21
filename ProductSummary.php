@@ -69,7 +69,7 @@
 			?>
 			</div>
 		</div>
-		<a href='OrderCurrent.php'>Back to Current Order</a>
+		<a href='OrderDetails.php'>Back to Current Order</a>
 		</div>
 	</div>
 

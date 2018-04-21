@@ -6,15 +6,19 @@ class Order
 	public $userID;
 	public $promotion;
 	public $status;
+	public $timeStarted;
+	public $timeUpdated;
 	public $timeCompleted;
 	public $productBatches;
 
-	public function __construct($orderID, $userID, $promotion, $status, $timeCompleted, $productBatches)
+	public function __construct($orderID, $userID, $promotion, $status, $timeStarted, $timeUpdated, $timeCompleted, $productBatches)
 	{
 		$this->orderID = $orderID;
 		$this->userID = $userID;
 		$this->promotion = $promotion;
 		$this->status = $status;
+		$this->timeStarted = $timeStarted;
+		$this->timeUpdated = $timeUpdated;
 		$this->timeCompleted = $timeCompleted;
 		$this->productBatches = $productBatches;
 	}
@@ -22,7 +26,9 @@ class Order
 	public function complete()
 	{
 		$this->status = "Complete";
-		$this->timeCompleted = new DateTime();
+		$now = new DateTime();
+		$this->timeUpdated = $now;
+		$this->timeCompleted = $now;
 	}
 
 	public function priceSubtotal($productsAll)

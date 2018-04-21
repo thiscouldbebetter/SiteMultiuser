@@ -39,7 +39,8 @@
 			$numberOfBatches = count($productBatchesInOrder);
 			echo("(" . $numberOfBatches . " item(s)) ");
 		?>
-		<a href='OrderCurrent.php'>Details</a><br />
+		<a href='OrderDetails.php'>Details</a><span> </span>
+		<a href='OrderHistory.php'>History</a><br />
 
 		<br />
 

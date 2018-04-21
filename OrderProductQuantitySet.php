@@ -40,10 +40,10 @@ $configuration = include("Configuration.php");
 			$persistenceClient = $_SESSION["PersistenceClient"];
 			$persistenceClient->orderSave($orderCurrent);
 
-			header("Location: OrderCurrent.php");
+			header("Location: OrderDetails.php");
 
 		?>
-		<a href='OrderCurrent.php'>Back to Current Order</a>
+		<a href='OrderDetails.php'>Back to Current Order</a>
 	</div>
 
 	<?php PageWriter::footerWrite(); ?>
