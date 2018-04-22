@@ -21,11 +21,10 @@ class Session
 
 	public static function start()
 	{
-		$configuration = include("Configuration.php");
-
 		if (isset($_SESSION) == false)
 		{
 			session_start();
+			$configuration = include("Configuration.php");
 			$persistenceClient = new PersistenceClientMySQL
 			(
 				$configuration["DatabaseServerName"],

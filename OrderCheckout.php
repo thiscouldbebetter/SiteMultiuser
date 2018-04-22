@@ -1,9 +1,10 @@
 <?php include "Common.php"; ?>
 <?php Session::verify(); ?>
+<?php $configuration = include("Configuration.php"); ?>
 
 <html>
 <head>
-	<?php PageWriter::elementHeadWrite("Account Details"); ?>
+	<?php PageWriter::elementHeadWrite("Order Checkout"); ?>
 	<script src="https://www.paypalobjects.com/api/checkout.js"></script>
 </head>
 <body>
@@ -84,50 +85,36 @@
 
 		<div id="divStatusMessage">This order is ready for payment.</div>
 
-		<div id="divPaypalButton"></div>
-		<script>
-			paypal.Button.render
-			({
-				env: "<?php echo($paypalClientData->isProductionEnabled == 1 ? "production" : "sandbox"); ?>",
-				client:
-				{
-					sandbox: "<?php echo($paypalClientData->clientIDSandbox); ?>",
-					production: "<?php echo($paypalClientData->clientIDProduction); ?>"
-				},
-				commit: true, // Show a 'Pay Now' button.
-				style: { color: "gold", size: "small" },
-				payment: function(data, actions)
-				{
-					var transactionTotal = <?php echo( $orderCurrent->priceTotal($productsAll) ); ?>;
-					var transactionTotalAsString = "" + transactionTotal;
-					var transactionAmount = { total: transactionTotalAsString, currency: "USD" };
-					var transaction = { amount: transactionAmount };
-					var payment = { payment: { transactions: [ transaction ] } };
-					var returnValue = actions.payment.create(payment);
-					return returnValue;
-				},
+		<div id="paypal-button"></div>
 
-				onAuthorize: function(data, actions)
-				{
-					return actions.payment.execute().then(function(payment)
-					{
-						var divStatusMessage = document.getElementById("divStatusMessage");
-						divStatusMessage.innerHTML = "Payment for this order was successful.";
-						window.location = "OrderComplete.php";
+		<script>
+			var CREATE_PAYMENT_URL  = 'OrderPayment.php';
+			var EXECUTE_PAYMENT_URL = 'OrderComplete.php';
+
+			paypal.Button.render({
+
+				env: '<?php if ($paypalClientData->isProductionEnabled) { echo "production"; } else { echo "sandbox"; } ?>',
+
+				commit: true, // Show a 'Pay Now' button
+
+				payment: function() {
+					return paypal.request.post(CREATE_PAYMENT_URL).then(function(data) {
+						return data.id;
 					});
 				},
 
-				onCancel: function(data, actions)
-				{
-					divStatusMessage.innerHTML = "Payment for this order has been cancelled.";
-				},
-
-				onError: function(err)
-				{
-					divStatusMessage.innerHTML = "An error occurred while processing payment for this order.";
+				onAuthorize: function(data) {
+					return paypal.request.post(EXECUTE_PAYMENT_URL, {
+						paymentID: data.paymentID,
+						payerID:   data.payerID
+					}).then(function() {
+						window.location = "OrderComplete.php";
+					});
 				}
-			}, "#divPaypalButton");
-		</script><br />
+
+			}, '#paypal-button');
+		</script>
+	<br />
 
 		<a href="User.php">Back to Account Details</a><br />
 

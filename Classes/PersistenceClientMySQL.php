@@ -243,7 +243,7 @@ class PersistenceClientMySQL
 
 		$databaseConnection->close();
 
-		return $notification;
+		return $order;
 	}
 
 	public function orderGetByID($orderID)
@@ -278,11 +278,11 @@ class PersistenceClientMySQL
 		$returnValues = array();
 
 		$queryCommand->execute();
-		$queryCommand->bind_result($orderID, $userID, $promotionID, $status, $timeStarted, $timeUpdated, $timeCompleted);
+		$queryCommand->bind_result($orderID, $userID, $promotionID, $status, $timeStarted, $timeUpdated, $timeCompleted, $paymentID);
 
 		while ($queryCommand->fetch())
 		{
-			$order = new Order($orderID, $userID, $promotionID, $status, $timeStarted, $timeUpdated, $timeCompleted, null);
+			$order = new Order($orderID, $userID, $promotionID, $status, $timeStarted, $timeUpdated, $timeCompleted, $paymentID, null);
 			$returnValues[] = $order;
 		}
 
@@ -352,7 +352,7 @@ class PersistenceClientMySQL
 
 		$databaseConnection->close();
 
-		return $notification;
+		return $orderProduct;
 	}
 
 	public function paypalClientDataGet()

@@ -9,15 +9,31 @@ class PaypalClient
 
 	public function __construct($clientID, $clientSecret)
 	{
+		$this->paypalURLRoot = "https://api.sandbox.paypal.com/v1/";
 		$this->clientID = $clientID;
 		$this->clientSecret = $clientSecret;
 	}
+
+	public function accessToken()
+	{
+		$url = $this->paypalURLRoot . "oauth2/token";
+		$requestBody = "grant_type=client_credentials";
+		$clientIDColonSecret = $this->clientID . ":" . $this->clientSecret;
+		$clientIDColonSecretAsBase64 = base64_encode($clientIDColonSecret);
+		$headerAccept = "Accept: application/json";
+		$headerAuthorization = "Authorization: Basic " . $clientIDColonSecretAsBase64;
+		$headersAsStrings = array( $headerAccept, $headerAuthorization );
+		$response = WebClient::responseGetForRequest($url, "POST", $headersAsStrings, $requestBody);
+		$responseAsLookup = JSONEncoder::jsonStringToLookup($response);
+		$accessToken = $responseAsLookup["access_token"];
+		return $accessToken;
+	}
 	
-	public function payForOrder($order)
+	public function payForOrder($order, $paymentExecuteURL, $paymentCancelURL)
 	{
 		$accessToken = $this->accessToken();
 
-		$url = "https://api.sandbox.paypal.com/v1/payments/payment";
+		$url = $this->paypalURLRoot . "payments/payment";
 
 		$headersAsStrings = array
 		(
@@ -70,8 +86,8 @@ class PaypalClient
 			"intent" => "sale",	
 			"redirect_urls" => array
 			(
-				"return_url" => "https://localhost/Store",
-				"cancel_url" => "https://localhost/Store"
+				"return_url" => $paymentExecuteURL,
+				"cancel_url" => $paymentCancelURL
 			),
 			"payer" => array
 			(
@@ -100,20 +116,21 @@ class PaypalClient
 		return $response;
 	}
 
-	public function accessToken()
+	public function paymentVerify($paypalPaymentID)
 	{
-		$url = "https://api.sandbox.paypal.com/v1/oauth2/token";
-		$requestBody = "grant_type=client_credentials";
-		$clientIDColonSecret = $this->clientID . ":" . $this->clientSecret;
-		$clientIDColonSecretAsBase64 = base64_encode($clientIDColonSecret);
-		$headerAccept = "Accept: application/json";
-		$headerAuthorization = "Authorization: Basic " . $clientIDColonSecretAsBase64;
-		$headersAsStrings = array( $headerAccept, $headerAuthorization );
-		$response = WebClient::responseGetForRequest($url, "POST", $headersAsStrings, $requestBody);
-		$responseAsLookup = JSONEncoder::jsonStringToLookup($response);
-		$accessToken = $responseAsLookup["access_token"];
-		return $accessToken;
-	}
+		$url = $this->paypalURLRoot . "payments/payment/" . $paypalPaymentID;
 
+		$accessToken = $this->accessToken();
+
+		$headersAsStrings = array
+		(
+			"Content-Type: application/json",
+			"Authorization: Bearer " . $accessToken,
+		);
+		
+		$response = WebClient::responseGetForRequest($url, "GET", $headersAsStrings, null);
+
+		return $response;
+	}
 }	
 ?>

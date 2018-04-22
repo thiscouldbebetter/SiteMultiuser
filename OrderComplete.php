@@ -1,5 +1,5 @@
 <?php include "Common.php"; ?>
-$configuration = include("Configuration.php");
+<?php Session::verify(); ?>
 
 <html>
 
@@ -15,19 +15,18 @@ $configuration = include("Configuration.php");
 		<?php
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
-			$orderCurrent = $userLoggedIn->orderCurrent;
-			$now = new DateTime();
-			$userLoggedIn->orderCurrent = new Order(null, $userLoggedIn->userID, null, "InProgress", $now, $now, null, array() );
-			$orderCurrent->complete();
+			$orderCompleted = $userLoggedIn->orderCurrent;
+			$orderCompleted->complete();
 			$persistenceClient = $_SESSION["PersistenceClient"];
-			$persistenceClient->orderSave($orderCurrent);
-			$licensesFromOrder = $orderCurrent->toLicenses();
+			$persistenceClient->orderSave($orderCompleted);
+
+			$licensesFromOrder = $orderCompleted->toLicenses();
 			foreach ($licensesFromOrder as $license)
 			{
-				$persistenceClient->licenseSave();
+				$persistenceClient->licenseSave($license);
 				$userLoggedIn->licenses[] = $license;
 			}
-			$productBatchesInOrder = $orderCurrent->productBatches;
+			$productBatchesInOrder = $orderCompleted->productBatches;
 			$productsAll = $persistenceClient->productsGetAll();
 			$numberOfBatches = count($productBatchesInOrder);
 			if ($numberOfBatches == 0)
@@ -36,9 +35,9 @@ $configuration = include("Configuration.php");
 			}
 			else
 			{
-				for ($i = 0; $i < count($orderCurrent->productBatches); $i++)
+				for ($i = 0; $i < count($orderCompleted->productBatches); $i++)
 				{
-					$productBatch = $orderCurrent->productBatches[$i];
+					$productBatch = $orderCompleted->productBatches[$i];
 					$productID = $productBatch->productID;
 					$product = $productsAll[$productID];
 					$productName = $product->name;
@@ -48,10 +47,15 @@ $configuration = include("Configuration.php");
 					echo("<br />");
 				}
 			}
+
+			//$now = new DateTime();
+			//$userLoggedIn->orderCurrent = new Order(null, $userLoggedIn->userID, null, "InProgress", $now, $now, null, null, array() );
 		?>
 		</div>
+		<br />
 		<div id="divStatusMessage">This order is complete.</div>
-		<a href="User.php">Return to User Page</a>
+		<br />
+		<a href="User.php">Return to Account Details</a>
 	</div>
 
 	<?php PageWriter::footerWrite(); ?>

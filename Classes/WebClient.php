@@ -6,12 +6,14 @@ class WebClient
 	{
 		$curlClient = curl_init($url);
 		curl_setopt($curlClient, CURLOPT_RETURNTRANSFER, true);
+
+		if ($headersAsStrings != null)
+		{
+			curl_setopt($curlClient, CURLOPT_HTTPHEADER, $headersAsStrings);
+		}
+
 		if ($methodName == "POST")
 		{
-			if ($headersAsStrings != null)
-			{
-				curl_setopt($curlClient, CURLOPT_HTTPHEADER, $headersAsStrings);
-			}
 			curl_setopt($curlClient, CURLOPT_POST, true);
 			curl_setopt($curlClient, CURLOPT_POSTFIELDS, $requestBody);
 		}

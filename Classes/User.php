@@ -24,7 +24,7 @@ class User
 		$this->licenses = $licenses;
 
 		$now = new DateTime();
-		$this->orderCurrent = new Order(null, $this->userID, null, "InProgress", $now, $now, null, array());
+		$this->orderCurrent = new Order(null, $this->userID, null, "InProgress", $now, $now, null, null, array());
 	}
 
 	public static function dummy()

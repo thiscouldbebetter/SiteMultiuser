@@ -9,9 +9,10 @@ class Order
 	public $timeStarted;
 	public $timeUpdated;
 	public $timeCompleted;
+	public $paymentID;
 	public $productBatches;
 
-	public function __construct($orderID, $userID, $promotion, $status, $timeStarted, $timeUpdated, $timeCompleted, $productBatches)
+	public function __construct($orderID, $userID, $promotion, $status, $timeStarted, $timeUpdated, $timeCompleted, $paymentID, $productBatches)
 	{
 		$this->orderID = $orderID;
 		$this->userID = $userID;
@@ -20,6 +21,7 @@ class Order
 		$this->timeStarted = $timeStarted;
 		$this->timeUpdated = $timeUpdated;
 		$this->timeCompleted = $timeCompleted;
+		$this->paymentID = $paymentID;
 		$this->productBatches = $productBatches;
 	}
 
@@ -86,7 +88,7 @@ class Order
 			$productID = $productBatch->productID;
 			$quantity = $productBatch->quantity;
 
-			for ($i = 0; $i < quantity; $i++)
+			for ($i = 0; $i < $quantity; $i++)
 			{
 				$license = new License(null, $this->userID, $productID, null, null);
 				$returnValues[] = $license;
