@@ -364,10 +364,10 @@ class PersistenceClientMySQL
 		$queryText = "select * from PaypalClientData";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->execute();
-		$queryCommand->bind_result($clientIDSandbox, $clientIDProduction, $isProductionEnabled);
+		$queryCommand->bind_result($clientIDSandbox, $clientSecretSandbox, $clientIDProduction, $clientSecretProduction, $isProductionEnabled);
 		$queryCommand->fetch();
 
-		$returnValue = new PaypalClientData($clientIDSandbox, $clientIDProduction, $isProductionEnabled);
+		$returnValue = new PaypalClientData($clientIDSandbox, $clientSecretSandbox, $clientIDProduction, $clientSecretProduction, $isProductionEnabled);
 
 		return $returnValue;
 	}

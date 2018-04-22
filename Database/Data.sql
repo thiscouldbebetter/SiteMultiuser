@@ -1,6 +1,6 @@
 use Store;
 
-insert into PaypalClientData (ClientIDSandbox, ClientIDProduction, IsProductionEnabled) values ('[redacted]', '[redacted]', 0);
+insert into PaypalClientData (ClientIDSandbox, ClientSecretSandbox, ClientIDProduction, ClientSecretProduction, IsProductionEnabled) values ('[redacted]', '[redacted]', '[redacted]', '[redacted]', 0);
 
 grant select, update, insert, delete on *.* to 'web'@'localhost' identified by '[redacted]';
 

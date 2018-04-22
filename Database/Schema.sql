@@ -22,7 +22,7 @@ create table Notification (NotificationID int not null auto_increment, Addressee
 
 create table Session(SessionID int not null auto_increment, UserID int, DeviceAddress text not null, TimeStarted datetime not null, TimeUpdated datetime not null, TimeEnded datetime, primary key (SessionID), foreign key (UserID) references User(UserID) );
 
-create table PaypalClientData (ClientIDSandbox text not null, ClientIDProduction text not null, IsProductionEnabled boolean not null);
+create table PaypalClientData (ClientIDSandbox text not null, ClientSecretSandbox text not null, ClientIDProduction text not null, ClientSecretProduction text not null, IsProductionEnabled boolean not null);
 
 create table Promotion (PromotionID int not null auto_increment, Description text not null, Discount decimal not null, Code text not null, primary key (PromotionID) );
 create table Promotion_Product (PromotionProductID int not null auto_increment, PromotionID int not null, ProductID int not null, primary key (PromotionProductID), foreign key (PromotionID) references Promotion(PromotionID), foreign key (ProductID) references Product(ProductID) );

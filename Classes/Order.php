@@ -37,10 +37,8 @@ class Order
 
 		foreach ($this->productBatches as $productBatch)
 		{
-			$productID = $productBatch->productID;
-			$product = $productsAll[$productID];
-			$productPrice = $product->price;
-			$returnValue += $productPrice;
+			$batchPrice = $productBatch->price($productsAll);
+			$returnValue += $batchPrice;
 		}
 
 		return $returnValue;
