@@ -7,10 +7,7 @@
 			<?php 
 				Session::start();
 				$persistenceClient = $_SESSION["PersistenceClient"];
-				$paypalClientData = $persistenceClient->paypalClientDataGet();
-				$clientID = $paypalClientData->clientIDSandbox;
-				$clientSecret = $paypalClientData->clientSecretSandbox;
-				$paypalClient = new PaypalClient($clientID, $clientSecret);
+				$paypalClient = PaypalClient::fromConfiguration($configuration);
 				$productBatchesInOrder = array
 				( 
 					new Order_Product(null, null, 1, 1),

@@ -3,10 +3,7 @@
 <?php	
 	$configuration = include("Configuration.php");
 	$persistenceClient = $_SESSION["PersistenceClient"];
-	$paypalClientData = $persistenceClient->paypalClientDataGet();
-	$clientID = $paypalClientData->clientIDSandbox;
-	$clientSecret = $paypalClientData->clientSecretSandbox;
-	$paypalClient = new PaypalClient($clientID, $clientSecret);
+	$paypalClient = PaypalClient::fromConfiguration($configuration);
 	$session = $_SESSION["Session"];
 	$userLoggedIn = $session->user;
 	$order = $userLoggedIn->orderCurrent;

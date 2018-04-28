@@ -31,7 +31,15 @@
 					{
 						$orderTotal = $order->priceTotal($productsAll);
 						$timeCompleted = $order->timeCompleted;
-						$orderAsString = "$" . $orderTotal . ", " . count($order->productBatches) . " products, completed " . $timeCompleted;
+						$orderAsString = "$" . $orderTotal . ", " . count($order->productBatches) . " products";
+						if ($order->timeCompleted == null)
+						{
+							$orderAsString = "never completed";
+						}
+						else
+						{
+							$orderAsString = $orderAsString . ", completed " . $timeCompleted;
+						}
 						$orderID = $order->orderID;
 						$orderDetailLink = "<a href='OrderDetails.php?orderID=" . $orderID . "'>Details</a>";
 						$orderAsListItem = "<li>" . $orderAsString . " " . $orderDetailLink . "</li>";

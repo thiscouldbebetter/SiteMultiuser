@@ -10,7 +10,7 @@
 	<div class="divCentered">
 		<label><b>Welcome!</b></label><br />
 		<br />
-		<a href="UserLogin.php">Log In</a><br />
+		<a href="Pages/UserLogin.php">Log In</a><br />
 	</div>
 
 	<?php PageWriter::footerWrite(); ?>

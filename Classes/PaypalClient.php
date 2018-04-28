@@ -4,14 +4,44 @@ include("JSONEncoder.php");
 
 class PaypalClient
 {
+	public $isProductionModeEnabled;
+	public $paypalURLRoot;
 	public $clientID;
 	public $clientSecret;
 
-	public function __construct($clientID, $clientSecret)
+	public function __construct($isProductionModeEnabled, $paypalURLRoot, $clientID, $clientSecret)
 	{
-		$this->paypalURLRoot = "https://api.sandbox.paypal.com/v1/";
+		$this->isProductionModeEnabled = $isProductionModeEnabled;
+		$this->paypalURLRoot = $paypalURLRoot;
 		$this->clientID = $clientID;
 		$this->clientSecret = $clientSecret;
+	}
+
+	public static function fromConfiguration($configuration)
+	{
+		$isProductionModeEnabled = $configuration["PaypalProductionModeEnabled"];
+		if ($isProductionModeEnabled == true)
+		{
+			$returnValue = new PaypalClient
+			(
+				$isProductionModeEnabled,
+				"https://api.paypal.com/v1/",
+				$configuration["PaypalClientIDProduction"],
+				$configuration["PaypalClientSecretProduction"]
+			);
+		}
+		else
+		{
+			$returnValue = new PaypalClient
+			(
+				$isProductionModeEnabled,
+				"https://api.sandbox.paypal.com/v1/",
+				$configuration["PaypalClientIDSandbox"],
+				$configuration["PaypalClientSecretSandbox"]
+			);
+		}
+
+		return $returnValue;
 	}
 
 	public function accessToken()

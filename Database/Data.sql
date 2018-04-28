@@ -1,15 +1,13 @@
 use Store;
 
-insert into PaypalClientData (ClientIDSandbox, ClientSecretSandbox, ClientIDProduction, ClientSecretProduction, IsProductionEnabled) values ('[redacted]', '[redacted]', '[redacted]', '[redacted]', 0);
-
 grant select, update, insert, delete on *.* to 'web'@'localhost' identified by '[redacted]';
 
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product1', "Images/Product1.png", 1.00, "Content/Product1/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product2', "Images/Product2.png", 2.00, "Content/Product2/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product3', "Images/Product3.png", 3.00, "Content/Product3/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product4', "Images/Product4.png", 4.00, "Content/Product4/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product5', "Images/Product5.png", 5.00, "Content/Product5/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product6', "Images/Product6.png", 6.00, "Content/Product6/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product1', "../Images/Product1.png", 1.00, "Content/Product1/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product2', "../Images/Product2.png", 2.00, "Content/Product2/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product3', "../Images/Product3.png", 3.00, "Content/Product3/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product4', "../Images/Product4.png", 4.00, "Content/Product4/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product5', "../Images/Product5.png", 5.00, "Content/Product5/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product6', "../Images/Product6.png", 6.00, "Content/Product6/Content.php");
 
 insert into Promotion (Description, Discount, Code) values ('Save $0 on Product1 when you buy Product2.', 0.00, "12341234-1234-1234-1234-123412341234");
 insert into Promotion_Product (PromotionID, ProductID) values (1, 1);

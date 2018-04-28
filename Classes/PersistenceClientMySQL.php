@@ -355,23 +355,6 @@ class PersistenceClientMySQL
 		return $orderProduct;
 	}
 
-	public function paypalClientDataGet()
-	{
-		$returnValue = null;
-
-		$databaseConnection = $this->connect();
-
-		$queryText = "select * from PaypalClientData";
-		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-		$queryCommand->execute();
-		$queryCommand->bind_result($clientIDSandbox, $clientSecretSandbox, $clientIDProduction, $clientSecretProduction, $isProductionEnabled);
-		$queryCommand->fetch();
-
-		$returnValue = new PaypalClientData($clientIDSandbox, $clientSecretSandbox, $clientIDProduction, $clientSecretProduction, $isProductionEnabled);
-
-		return $returnValue;
-	}
-
 	public function productGetByID($productID)
 	{
 		$returnValue = null;

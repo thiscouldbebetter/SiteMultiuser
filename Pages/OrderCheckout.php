@@ -22,7 +22,7 @@
 				$orderID = $orderCurrent->orderID;
 				$productBatchesInOrder = $orderCurrent->productBatches;
 				$persistenceClient = $_SESSION["PersistenceClient"];
-				$paypalClientData = $persistenceClient->paypalClientDataGet();
+				$paypalClient = PaypalClient::fromConfiguration($configuration);
 				$productsAll = $persistenceClient->productsGetAll();
 				$numberOfBatches = count($productBatchesInOrder);
 
@@ -93,7 +93,7 @@
 
 			paypal.Button.render({
 
-				env: '<?php if ($paypalClientData->isProductionEnabled) { echo "production"; } else { echo "sandbox"; } ?>',
+				env: '<?php if ($paypalClient->isProductionModeEnabled) { echo "production"; } else { echo "sandbox"; } ?>',
 
 				commit: true, // Show a 'Pay Now' button
 
