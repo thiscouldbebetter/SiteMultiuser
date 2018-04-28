@@ -1,5 +1,4 @@
 <?php include "Common.php"; ?>
-$configuration = include("Configuration.php");
 
 <html>
 
@@ -37,8 +36,8 @@ $configuration = include("Configuration.php");
 
 			$orderCurrent->productBatchesWithQuantityZeroRemove();
 
-			$persistenceClient = $_SESSION["PersistenceClient"];
-			$persistenceClient->orderSave($orderCurrent);
+			//$persistenceClient = $_SESSION["PersistenceClient"];
+			//$persistenceClient->orderSave($orderCurrent);
 
 			header("Location: OrderDetails.php");
 

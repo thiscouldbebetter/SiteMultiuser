@@ -61,16 +61,6 @@ class PaypalClient
 	
 	public function payForOrder($order, $paymentExecuteURL, $paymentCancelURL)
 	{
-		$accessToken = $this->accessToken();
-
-		$url = $this->paypalURLRoot . "payments/payment";
-
-		$headersAsStrings = array
-		(
-			"Content-Type: application/json",
-			"Authorization: Bearer " . $accessToken,
-		);
-
 		$paymentItemsAsLookups = array();
 
 		$currencyCode = "USD";
@@ -141,26 +131,79 @@ class PaypalClient
 
 		$requestBody = JSONEncoder::lookupToJSONString($requestAsLookup);
 
-		$response = WebClient::responseGetForRequest($url, "POST", $headersAsStrings, $requestBody);
-
-		return $response;
-	}
-
-	public function paymentVerify($paypalPaymentID)
-	{
-		$url = $this->paypalURLRoot . "payments/payment/" . $paypalPaymentID;
-
 		$accessToken = $this->accessToken();
-
 		$headersAsStrings = array
 		(
 			"Content-Type: application/json",
 			"Authorization: Bearer " . $accessToken,
 		);
-		
-		$response = WebClient::responseGetForRequest($url, "GET", $headersAsStrings, null);
 
-		return $response;
+		$paymentCreateURL = $this->paypalURLRoot . "payments/payment";
+		$paymentCreateResponse = WebClient::responseGetForRequest
+		(
+			$paymentCreateURL, "POST", $headersAsStrings, $requestBody
+		);
+
+		return $paymentCreateResponse;
+	}
+
+	public function paymentExecuteFromJSON($paymentAsJSON)
+	{
+		// todo - Approval first.
+
+		$paymentAsLookup = JSONEncoder::jsonStringToLookup($paymentAsJSON);
+		$paypalPaymentID = $paymentAsLookup["id"];
+		$paymentExecuteURL = $this->paypalURLRoot . "payments/payment/" . $paypalPaymentID;
+
+		$accessToken = $this->accessToken();
+		$headersAsStrings = array
+		(
+			"Content-Type: application/json",
+			"Authorization: Bearer " . $accessToken,
+		);
+
+		$payerID = $paymentAsLookup["payer_id"];
+		$paymentExecuteRequestBody = '{ "payerID": "' . $payerID . '" }';
+
+		$paymentExecuteResponse = WebClient::responseGetForRequest
+		(
+			$paymentExecuteURL, "POST", $headersAsStrings, $paymentExecuteRequestBody
+		);
+
+		$paymentExecuteResponseAsLookup = JSONEncoder::jsonStringToLookup($paymentExecuteResponse);
+		$paymentState = $paymentExecuteResponseAsLookup["state"];
+		$wasPaymentApproved = ($paymentState == "approved");
+
+		return $wasPaymentApproved;
+	}
+
+	public function paymentVerifyByID($paypalPaymentID)
+	{
+		if ($paypalPaymentID == null || $paypalPaymentID == "")
+		{
+			$returnValue = false;
+		}
+		else
+		{
+			$url = $this->paypalURLRoot . "payments/payment/" . $paypalPaymentID;
+
+			$accessToken = $this->accessToken();
+
+			$headersAsStrings = array
+			(
+				"Content-Type: application/json",
+				"Authorization: Bearer " . $accessToken,
+			);
+			
+			$response = WebClient::responseGetForRequest($url, "GET", $headersAsStrings, null);
+
+echo ($response);
+
+			// todo
+			$returnValue = true;
+		}
+
+		return $returnValue;
 	}
 }	
 ?>

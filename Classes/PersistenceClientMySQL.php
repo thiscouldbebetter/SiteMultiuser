@@ -214,11 +214,23 @@ class PersistenceClientMySQL
 			die("Could not connect to database.");
 		}
 
-		$queryText =
-			"insert into _Order (UserID, Status, TimeCompleted)"
-			. " values (?, ?, ?)";
-		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-		$queryCommand->bind_param("sss", $order->userID, $order->status, $this->dateToString($order->timeCompleted));
+		if ($order->orderID == null)
+		{
+			$queryText =
+				"insert into _Order (UserID, PromotionID, Status, TimeStarted, TimeUpdated, TimeCompleted, PaymentID)"
+				. " values (?, ?, ?, ?, ?, ?, ?)";
+			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+			$queryCommand->bind_param("issssss", $order->userID, $order->promotionID, $order->status, $this->dateToString($order->timeStarted), $this->dateToString($order->timeUpdated), $this->dateToString($order->timeCompleted), $order->paymentID);
+		}
+		else
+		{
+			$queryText =
+				"update _Order set UserID = ?, PromotionID = ?, Status = ?, TimeStarted = ?, TimeUpdated = ?, TimeCompleted = ?, PaymentID = ?"
+				. " where OrderID = ?";
+			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+			$queryCommand->bind_param("issssssi", $order->userID, $order->promotionID, $order->status, $this->dateToString($order->timeStarted), $this->dateToString($order->timeUpdated), $this->dateToString($order->timeCompleted), $order->paymentID, $order->orderID);
+		}
+
 		$didSaveSucceed = $queryCommand->execute();
 
 		if ($didSaveSucceed == false)
@@ -266,7 +278,7 @@ class PersistenceClientMySQL
 	{
 		$databaseConnection = $this->connect();
 
-		$queryText = "select * from _Order where UserID = ?";
+		$queryText = "select * from _Order where UserID = ? order by TimeStarted desc";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $userID);
 		$returnValues = $this->ordersGetByQueryCommand($queryCommand, $databaseConnection);
@@ -334,7 +346,7 @@ class PersistenceClientMySQL
 			"insert into Order_Product (OrderID, ProductID, Quantity)"
 			. " values (?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-		$queryCommand->bind_param("ssi", $orderProduct->orderID, $order->productID, $order->quantity);
+		$queryCommand->bind_param("ssi", $orderProduct->orderID, $orderProduct->productID, $orderProduct->quantity);
 		$didSaveSucceed = $queryCommand->execute();
 
 		if ($didSaveSucceed == false)

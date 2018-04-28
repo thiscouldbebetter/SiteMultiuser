@@ -16,6 +16,8 @@ include("../Classes/Session.php");
 include("../Classes/User.php");
 include("../Classes/WebClient.php");
 
+$configuration = include("Configuration.php");
+
 Session::start();
 
 ?>

@@ -21,55 +21,67 @@
 				{
 					$orderID = $_GET["orderID"];
 					$order = $persistenceClient->orderGetByID($orderID);
+					if ($order->userID != $userLoggedIn->userID)
+					{
+						$order = null;
+					}
 				}
 				else
 				{
 					$order = $userLoggedIn->orderCurrent;
 				}
-				$orderID = $order->orderID;
-				$productBatchesInOrder = $order->productBatches;
-				$productsAll = $persistenceClient->productsGetAll();
-				$numberOfBatches = count($productBatchesInOrder);
-				if ($numberOfBatches == 0)
+				if ($order == null)
 				{
-					echo "(no items)";
+					echo "No order found!";
+					die();
 				}
 				else
 				{
-					echo "<ul>";
-					for ($i = 0; $i < count($order->productBatches); $i++)
+					$orderID = $order->orderID;
+					$productBatchesInOrder = $order->productBatches;
+					$productsAll = $persistenceClient->productsGetAll();
+					$numberOfBatches = count($productBatchesInOrder);
+					if ($numberOfBatches == 0)
 					{
-						$productBatch = $order->productBatches[$i];
-						$productID = $productBatch->productID;
-						$controlID = "Product" . $productID . "Quantity";
-						if (isset($_POST[$controlID]) == true)
-						{
-							$quantityChanged = $_POST[$controlID];
-							unset($_POST[$controlID]) ;
-							$productBatch->quantity = $quantityChanged;
-						}
-						$product = $productsAll[$productID];
-						$productName = $product->name;
-						$productAsString = $productName;
-						$quantity = $productBatch->quantity;
-						$productPricePerUnit = $product->price;
-						$productBatchPrice = ($productPricePerUnit * $quantity);
-						if ($order->timeCompleted == null)
-						{
-							$productQuantitySelect = " x <input id='" . $controlID . "' name='" . $controlID . "' type='number' value='" . $quantity . "' onchange='document.forms[0].submit();'></input>\n";
-							$productAsString = $productAsString . $productQuantitySelect;
-							$productAsString = $productAsString . "@ $" . $productPricePerUnit . " each = $" . $productBatchPrice;
-							$productRemoveLink = " <a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=0'>Remove</a>";
-							$productAsString = $productAsString . $productRemoveLink;
-						}
-						else
-						{
-							$productAsString .= " x " . $quantity . " @ $" . $productPricePerUnit . " each = $" . $productBatchPrice;
-						}
-						$productAsListItem = "<li>" . $productAsString . "</li>";
-						echo($productAsListItem);
+						echo "(no items)";
 					}
-					echo "</ul>";
+					else
+					{
+						echo "<ul>";
+						for ($i = 0; $i < count($order->productBatches); $i++)
+						{
+							$productBatch = $order->productBatches[$i];
+							$productID = $productBatch->productID;
+							$controlID = "Product" . $productID . "Quantity";
+							if (isset($_POST[$controlID]) == true)
+							{
+								$quantityChanged = $_POST[$controlID];
+								unset($_POST[$controlID]) ;
+								$productBatch->quantity = $quantityChanged;
+							}
+							$product = $productsAll[$productID];
+							$productName = $product->name;
+							$productAsString = $productName;
+							$quantity = $productBatch->quantity;
+							$productPricePerUnit = $product->price;
+							$productBatchPrice = ($productPricePerUnit * $quantity);
+							if ($order->timeCompleted == null)
+							{
+								$productQuantitySelect = " x <input id='" . $controlID . "' name='" . $controlID . "' type='number' value='" . $quantity . "' onchange='document.forms[0].submit();'></input>\n";
+								$productAsString = $productAsString . $productQuantitySelect;
+								$productAsString = $productAsString . "@ $" . $productPricePerUnit . " each = $" . $productBatchPrice;
+								$productRemoveLink = " <a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=0'>Remove</a>";
+								$productAsString = $productAsString . $productRemoveLink;
+							}
+							else
+							{
+								$productAsString .= " x " . $quantity . " @ $" . $productPricePerUnit . " each = $" . $productBatchPrice;
+							}
+							$productAsListItem = "<li>" . $productAsString . "</li>";
+							echo($productAsListItem);
+						}
+						echo "</ul>";
+					}
 				}
 			?>
 			<br />

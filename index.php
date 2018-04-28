@@ -1,11 +1,15 @@
 <html>
-<?php
-	include("Common.php");
-?>
-<head><?php PageWriter::elementHeadWrite("Welcome"); ?></head>
+<?php include("Classes/PageWriter.php"); ?>
+<?php $configuration = include("Pages/Configuration.php"); ?>
+
+<head>
+	<title><?php echo ($configuration["SiteTitle"]); ?> - Welcome</title>
+	<link rel='stylesheet' href='Pages/Style.css'>
+</head>
+
 <body>
 
-	<?php PageWriter::headerWrite(); ?>
+	<script id='scriptHeader' type='text/javascript' src='Pages/Header.js'></script>
 
 	<div class="divCentered">
 		<label><b>Welcome!</b></label><br />
@@ -13,7 +17,7 @@
 		<a href="Pages/UserLogin.php">Log In</a><br />
 	</div>
 
-	<?php PageWriter::footerWrite(); ?>
+	<script id='scriptHeader' type='text/javascript' src='Pages/Footer.js'></script>
 
 </body>
 

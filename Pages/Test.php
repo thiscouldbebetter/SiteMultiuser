@@ -1,5 +1,4 @@
 <?php include "Common.php"; ?>
-<?php $configuration = include("Configuration.php"); ?>
 
 <html>
 	<body>
@@ -16,11 +15,13 @@
 				$now = new DateTime();
 				$order = new Order(null, null, null, "InProgress", $now, $now, null, null, $productBatchesInOrder);
 				$storeURL = $configuration["StoreURL"];
-				$paymentResponse = $paypalClient->payForOrder($order, "http://localhost", "http://localhost");
-				echo("paymentResponse is: " . $paymentResponse);
+				$paymentCreateResponse = $paypalClient->payForOrder($order, "http://localhost", "http://localhost");
+				$paymentExecuteResponse = $paypalClient->paymentExecuteFromJSON($paymentCreateResponse);
+				echo("paymentExecuteResponse is: " . $paymentExecuteResponse);
+				echo "<br /><br />";
 				$paymentResponseAsLookup = JSONEncoder::jsonStringToLookup($paymentResponse);
 				$paypalPaymentID = $paymentResponseAsLookup["id"];
-				$verificationResponse = $paypalClient->paymentVerify($paypalPaymentID);
+				$verificationResponse = $paypalClient->paymentVerifyByID($paypalPaymentID);
 				echo ("verificationResponse is: " . $verificationResponse);
 			?>
 		</p>

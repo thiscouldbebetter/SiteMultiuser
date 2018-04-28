@@ -1,6 +1,5 @@
 <?php include "Common.php"; ?>
 <?php Session::verify(); ?>
-<?php $configuration = include("Configuration.php"); ?>
 
 <html>
 <head>
@@ -19,7 +18,6 @@
 				$session = $_SESSION["Session"];
 				$userLoggedIn = $session->user;
 				$orderCurrent = $userLoggedIn->orderCurrent;
-				$orderID = $orderCurrent->orderID;
 				$productBatchesInOrder = $orderCurrent->productBatches;
 				$persistenceClient = $_SESSION["PersistenceClient"];
 				$paypalClient = PaypalClient::fromConfiguration($configuration);
@@ -108,7 +106,7 @@
 						paymentID: data.paymentID,
 						payerID:   data.payerID
 					}).then(function() {
-						window.location = "OrderComplete.php";
+						window.location = "OrderVerify.php";
 					});
 				}
 
@@ -119,6 +117,8 @@
 		<a href="User.php">Back to Account Details</a><br />
 
 	</div>
+
+	<?php PageWriter::footerWrite(); ?>
 
 </body>
 </html>

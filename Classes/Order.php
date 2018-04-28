@@ -25,12 +25,13 @@ class Order
 		$this->productBatches = $productBatches;
 	}
 
-	public function complete()
+	public function complete($paymentID)
 	{
 		$this->status = "Complete";
 		$now = new DateTime();
 		$this->timeUpdated = $now;
 		$this->timeCompleted = $now;
+		$this->paymentID = $paymentID;
 	}
 
 	public function priceSubtotal($productsAll)

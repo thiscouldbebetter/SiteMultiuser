@@ -50,7 +50,7 @@ class Session
 	{
 		$messageSessionExpired =
 			"Your session has expired (or no session was ever established)."
-			. "<a href='UserLogin.php'>Log In Again</a>";
+			. " <a href='UserLogin.php'>Log In Again</a>";
 
 		if (isset($_SESSION["Session"]) == false)
 		{
