@@ -18,9 +18,6 @@
 				$persistenceClient = $_SESSION["PersistenceClient"];
 				$order = $userLoggedIn->orderCurrent;
 
-				$now = new DateTime();
-				$userLoggedIn->orderCurrent = new Order(null, $userLoggedIn->userID, null, "InProgress", $now, $now, null, null, array() );
-
 				$orderID = $order->orderID;
 				$productBatchesInOrder = $order->productBatches;
 				$productsAll = $persistenceClient->productsGetAll();
@@ -51,11 +48,7 @@
 						$productBatchPrice = ($productPricePerUnit * $quantity);
 						if ($order->timeCompleted == null)
 						{
-							$productQuantitySelect = " x <input id='" . $controlID . "' name='" . $controlID . "' type='number' value='" . $quantity . "' onchange='document.forms[0].submit();'></input>\n";
-							$productAsString = $productAsString . $productQuantitySelect;
-							$productAsString = $productAsString . "@ $" . $productPricePerUnit . " each = $" . $productBatchPrice;
-							$productRemoveLink = " <a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=0'>Remove</a>";
-							$productAsString = $productAsString . $productRemoveLink;
+							$productAsString = $productAsString . " x " . $quantity . "@ $" . $productPricePerUnit . " each = $" . $productBatchPrice;
 						}
 						else
 						{
@@ -89,15 +82,31 @@
 			<label>
 				<?php 
 					$paymentID = $order->paymentID;
+echo("paymentID is " . $paymentID);
 					$paypalClient = PaypalClient::fromConfiguration($configuration);
 					$isPaymentValid = $paypalClient->paymentVerifyByID($paymentID);
-					if ($isPaymentValid == false)
+					if ($isPaymentValid == true)
 					{
-						echo("Payment could not be verified.  Please contact support.");
+						$now = new DateTime();
+						$userLoggedIn->orderCurrent = new Order(null, $userLoggedIn->userID, null, "InProgress", $now, $now, null, null, array() );
+
+						$orderToComplete = $order;
+						$orderToComplete->complete($paymentID);
+						$persistenceClient = $_SESSION["PersistenceClient"];
+						$persistenceClient->orderSave($orderToComplete);
+
+						$licensesFromOrder = $orderToComplete->toLicenses();
+						foreach ($licensesFromOrder as $license)
+						{
+							$persistenceClient->licenseSave($license);
+							$userLoggedIn->licenses[] = $license;
+						}
+
+						echo("Verified.");
 					}
 					else
 					{
-						echo("Verified!");						
+						echo("Payment could not be verified.  Please contact support.");
 					}
 				?>
 			</label>

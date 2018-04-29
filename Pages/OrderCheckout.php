@@ -86,28 +86,38 @@
 		<div id="paypal-button"></div>
 
 		<script>
-			var CREATE_PAYMENT_URL  = 'OrderPayment.php';
-			var EXECUTE_PAYMENT_URL = 'OrderComplete.php';
-
 			paypal.Button.render({
-
 				env: '<?php if ($paypalClient->isProductionModeEnabled) { echo "production"; } else { echo "sandbox"; } ?>',
-
 				commit: true, // Show a 'Pay Now' button
-
-				payment: function() {
-					return paypal.request.post(CREATE_PAYMENT_URL).then(function(data) {
-						return data.id;
-					});
+				payment: function() 
+				{
+					return paypal.request.post
+					(
+						"OrderPaymentCreate.php"
+					).then
+					(
+						function(data) 
+						{
+							return data.id;
+						}
+					);
 				},
-
-				onAuthorize: function(data) {
-					return paypal.request.post(EXECUTE_PAYMENT_URL, {
-						paymentID: data.paymentID,
-						payerID:   data.payerID
-					}).then(function() {
-						window.location = "OrderVerify.php";
-					});
+				onAuthorize: function(data) 
+				{
+					return paypal.request.post
+					(
+						"OrderPaymentExecute.php", 
+						{
+							paymentID: data.paymentID,
+							payerID:   data.payerID
+						}
+					).then
+					(
+						function() 
+						{
+							window.location = "OrderVerify.php";
+						}
+					);
 				}
 
 			}, '#paypal-button');

@@ -59,7 +59,7 @@ class PaypalClient
 		return $accessToken;
 	}
 	
-	public function payForOrder($order, $paymentExecuteURL, $paymentCancelURL)
+	public function payForOrder($order)
 	{
 		$paymentItemsAsLookups = array();
 
@@ -106,8 +106,8 @@ class PaypalClient
 			"intent" => "sale",	
 			"redirect_urls" => array
 			(
-				"return_url" => $paymentExecuteURL,
-				"cancel_url" => $paymentCancelURL
+				"return_url" => "http://localhost",
+				"cancel_url" => "http://localhost"
 			),
 			"payer" => array
 			(
@@ -147,13 +147,24 @@ class PaypalClient
 		return $paymentCreateResponse;
 	}
 
-	public function paymentExecuteFromJSON($paymentAsJSON)
+	public function paymentExecuteFromIDAndPayerID($paymentID, $payerID)
 	{
-		// todo - Approval first.
-
+		$paymentAsJSON = $this->paymentGetbyID($paymentID);
 		$paymentAsLookup = JSONEncoder::jsonStringToLookup($paymentAsJSON);
-		$paypalPaymentID = $paymentAsLookup["id"];
-		$paymentExecuteURL = $this->paypalURLRoot . "payments/payment/" . $paypalPaymentID;
+		$paymentAsLookup["payer_id"] = $payerID;
+		unset($paymentAsLookup["id"]);
+		unset($paymentAsLookup["update_time"]);
+		unset($paymentAsLookup["payer"]);
+		unset($paymentAsLookup["create_time"]);
+		unset($paymentAsLookup["state"]);
+		unset($paymentAsLookup["links"]);
+		unset($paymentAsLookup["redirect_urls"]);
+		unset($paymentAsLookup["cart"]);
+		unset($paymentAsLookup["intent"]);
+
+		$paymentExecuteRequestBody = JSONEncoder::lookupToJSONString($paymentAsLookup);
+
+		$paymentExecuteURL = $this->paypalURLRoot . "payments/payment/" . $paymentID . "/execute";
 
 		$accessToken = $this->accessToken();
 		$headersAsStrings = array
@@ -161,9 +172,6 @@ class PaypalClient
 			"Content-Type: application/json",
 			"Authorization: Bearer " . $accessToken,
 		);
-
-		$payerID = $paymentAsLookup["payer_id"];
-		$paymentExecuteRequestBody = '{ "payerID": "' . $payerID . '" }';
 
 		$paymentExecuteResponse = WebClient::responseGetForRequest
 		(
@@ -177,15 +185,15 @@ class PaypalClient
 		return $wasPaymentApproved;
 	}
 
-	public function paymentVerifyByID($paypalPaymentID)
+	public function paymentGetByID($paymentID)
 	{
-		if ($paypalPaymentID == null || $paypalPaymentID == "")
+		if ($paymentID == null || $paymentID == "")
 		{
-			$returnValue = false;
+			$returnValue = null;
 		}
 		else
 		{
-			$url = $this->paypalURLRoot . "payments/payment/" . $paypalPaymentID;
+			$url = $this->paypalURLRoot . "payments/payment/" . $paymentID;
 
 			$accessToken = $this->accessToken();
 
@@ -195,14 +203,18 @@ class PaypalClient
 				"Authorization: Bearer " . $accessToken,
 			);
 			
-			$response = WebClient::responseGetForRequest($url, "GET", $headersAsStrings, null);
-
-echo ($response);
-
-			// todo
-			$returnValue = true;
+			$returnValue = WebClient::responseGetForRequest($url, "GET", $headersAsStrings, null);
 		}
 
+		return $returnValue;
+	}
+
+	public function paymentVerifyByID($paymentID)
+	{
+		$paymentRetrieved = $this->paymentGetByID($paymentID);
+		$paymentAsLookup = JSONEncoder::jsonStringToLookup($paymentRetrieved);
+		$state = $paymentAsLookup["state"];
+		$returnValue = ($state == "approved");
 		return $returnValue;
 	}
 }	

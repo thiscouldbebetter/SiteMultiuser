@@ -7,12 +7,8 @@
 	$userLoggedIn = $session->user;
 	$order = $userLoggedIn->orderCurrent;
 	$storeURL = $configuration["StoreURL"];
-	$paymentExecuteURL = $storeURL . "/OrderComplete.php";
-	$paymentCancelURL = $storeURL . "/OrderPaymentCancelled.php";
-	$paymentCreateResponse = $paypalClient->payForOrder($order, $paymentExecuteURL, $paymentCancelURL);
-	// todo
-	//$paypalClient->paymentExecuteFromJSON($paymentCreateResponse);
-	$paymentCreateResponseAsLookup = JSONEncoder::jsonStringToLookup($paymentResponse);
+	$paymentCreateResponse = $paypalClient->payForOrder($order);
+	$paymentCreateResponseAsLookup = JSONEncoder::jsonStringToLookup($paymentCreateResponse);
 	$paypalPaymentID = $paymentCreateResponseAsLookup["id"];
 	header("Content-Type: application/json");
 	echo "{\"id\":\"" . $paypalPaymentID. "\"}";

@@ -4,8 +4,6 @@
 	<body>
 		<p>
 			<?php 
-				Session::start();
-				$persistenceClient = $_SESSION["PersistenceClient"];
 				$paypalClient = PaypalClient::fromConfiguration($configuration);
 				$productBatchesInOrder = array
 				( 
@@ -16,10 +14,16 @@
 				$order = new Order(null, null, null, "InProgress", $now, $now, null, null, $productBatchesInOrder);
 				$storeURL = $configuration["StoreURL"];
 				$paymentCreateResponse = $paypalClient->payForOrder($order, "http://localhost", "http://localhost");
-				$paymentExecuteResponse = $paypalClient->paymentExecuteFromJSON($paymentCreateResponse);
+				echo("paymentCreateResponse is: " . $paymentCreateResponse);
+				$paymentCreateResponseAsLookup = JSONEncoder::jsonStringToLookup($paymentCreateResponse);
+				$paymentID = $paymentCreateResponseAsLookup["id"];
+				$paymentRetrievedAsJSON = $paypalClient->paymentGetByID($paymentID);
+				echo ("paymentRetrievedAsJSON is " . $paymentRetrievedAsJSON);
+				$paymentRetrievedAsLookup = JSONEncoder::jsonStringToLookup($paymentRetrievedAsJSON);
+				$payerID = $paymentRetrievedAsLookup["payer_id"];
+				$paymentExecuteResponse = $paypalClient->paymentExecuteByIDAndPayerID($paymentID, $payerID);
 				echo("paymentExecuteResponse is: " . $paymentExecuteResponse);
 				echo "<br /><br />";
-				$paymentResponseAsLookup = JSONEncoder::jsonStringToLookup($paymentResponse);
 				$paypalPaymentID = $paymentResponseAsLookup["id"];
 				$verificationResponse = $paypalClient->paymentVerifyByID($paypalPaymentID);
 				echo ("verificationResponse is: " . $verificationResponse);
