@@ -32,6 +32,16 @@ class Order
 		$this->timeUpdated = $now;
 		$this->timeCompleted = $now;
 		$this->paymentID = $paymentID;
+
+		$persistenceClient = $_SESSION["PersistenceClient"];	
+		$licenses = $this->toLicenses();
+		foreach ($licenses as $license)
+		{
+			$persistenceClient->licenseSave($license);
+		}
+
+		$session = $_SESSION["Session"];
+		$session->user->refresh();
 	}
 
 	public function priceSubtotal($productsAll)
@@ -78,7 +88,6 @@ class Order
 				$i--;
 			}
 		}
-
 	}
 
 	public function toLicenses()

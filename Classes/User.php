@@ -74,6 +74,16 @@ class User
 		}
 		return $returnValue;
 	}
+
+	public function refresh()
+	{
+		$session = $_SESSION["Session"];
+		$persistenceClient = $_SESSION["PersistenceClient"];
+
+		$this->licenses = $persistenceClient->licensesGetByUserID($this->userID);
+
+		$session->user = $this;
+	}
 }
 
 ?>

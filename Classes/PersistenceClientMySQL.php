@@ -637,13 +637,13 @@ class PersistenceClientMySQL
 		return $userFound;
 	}
 
-	private function licensesGetByUserID($userID)
+	public function licensesGetByUserID($userID)
 	{
 		$returnValues = array();
 
 		$databaseConnection = $this->connect();
 
-		$queryText = "select * from License where UserID = ?";
+		$queryText = "select * from License where UserID = ? order by ProductID";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $userID);
 		$queryCommand->execute();

@@ -1,6 +1,6 @@
 use Store;
 
-grant select, update, insert, delete on *.* to 'web'@'localhost' identified by '[redacted]';
+grant select, update, insert, delete on *.* to 'web'@'localhost' identified by 'Password42';
 
 insert into Product (Name, ImagePath, Price, ContentPath) values ('Product1', "../Images/Product1.png", 1.00, "../Content/Product1/Content.php");
 insert into Product (Name, ImagePath, Price, ContentPath) values ('Product2', "../Images/Product2.png", 2.00, "../Content/Product2/Content.php");

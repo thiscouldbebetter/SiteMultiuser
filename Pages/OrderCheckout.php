@@ -4,8 +4,13 @@
 <html>
 <head>
 	<?php PageWriter::elementHeadWrite("Order Checkout"); ?>
-	<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+	<!-- Square -->
+	<script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+	<script type="text/javascript" src="Square/sqpaymentform-basic.js"></script>
+	<link rel="stylesheet" type="text/css" href="Square/sqpaymentform-basic.css">
 </head>
+
 <body>
 
 	<?php PageWriter::headerWrite(); ?>
@@ -20,7 +25,6 @@
 				$orderCurrent = $userLoggedIn->orderCurrent;
 				$productBatchesInOrder = $orderCurrent->productBatches;
 				$persistenceClient = $_SESSION["PersistenceClient"];
-				$paypalClient = PaypalClient::fromConfiguration($configuration);
 				$productsAll = $persistenceClient->productsGetAll();
 				$numberOfBatches = count($productBatchesInOrder);
 
@@ -83,46 +87,67 @@
 
 		<div id="divStatusMessage">This order is ready for payment.</div>
 
-		<div id="paypal-button"></div>
+		<!-- Square -->
 
-		<script>
-			paypal.Button.render({
-				env: '<?php if ($paypalClient->isProductionModeEnabled) { echo "production"; } else { echo "sandbox"; } ?>',
-				commit: true, // Show a 'Pay Now' button
-				payment: function() 
-				{
-					return paypal.request.post
-					(
-						"OrderPaymentCreate.php"
-					).then
-					(
-						function(data) 
-						{
-							return data.id;
-						}
-					);
-				},
-				onAuthorize: function(data) 
-				{
-					return paypal.request.post
-					(
-						"OrderPaymentExecute.php", 
-						{
-							paymentID: data.paymentID,
-							payerID:   data.payerID
-						}
-					).then
-					(
-						function() 
-						{
-							window.location = "OrderVerify.php";
-						}
-					);
+		<br />
+		<div>Pay with Square:</div>
+
+		<!-- hack -->
+		<br /><br /><br /><br /><br /><br /><br /><br />
+
+		<div id="form-container">
+		  <div id="sq-ccbox">
+			<!--
+			  Be sure to replace the action attribute of the form with the path of
+			  the Transaction API charge endpoint URL you want to POST the nonce to
+			  (for example, "/process-card")
+			-->
+			<form id="nonce-form" novalidate action="OrderPaymentExecuteSquare.php" method="post">
+			  <fieldset>
+				<span class="label">Card Number:</span>
+				<div id="sq-card-number"></div>
+
+				<div class="third">
+				  <span class="label">Expiration:</span>
+				  <div id="sq-expiration-date"></div>
+				</div>
+
+				<div class="third">
+				  <span class="label">CVV:</span>
+				  <div id="sq-cvv"></div>
+				</div>
+
+				<div class="third">
+				  <span class="label">Postal Code:</span>
+				  <div id="sq-postal-code"></div>
+				</div>
+			  </fieldset>
+
+			  <button id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)">Pay with Square</button>
+
+			  <div id="error"></div>
+
+			  <!--
+				After a nonce is generated it will be assigned to this hidden input field.
+			  -->
+			  <input type="hidden" id="card-nonce" name="nonce">
+			</form>
+		  </div> <!-- end #sq-ccbox -->
+
+		</div> <!-- end #form-container -->
+
+		<br />
+
+		<script type="text/javascript">
+			document.addEventListener("DOMContentLoaded", function(event) {
+				if (SqPaymentForm.isSupportedBrowser()) {
+				  paymentForm.build();
+				  paymentForm.recalculateSize();
 				}
-
-			}, '#paypal-button');
+			});		
 		</script>
-	<br />
+
+		<!-- end Square -->
 
 		<a href="User.php">Back to Account Details</a><br />
 
