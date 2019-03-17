@@ -30,7 +30,7 @@
 
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
-			$orderCurrent = $userLoggedIn->orderCurrent;    
+			$orderCurrent = $userLoggedIn->orderCurrent;
 			$persistenceClient = $_SESSION["PersistenceClient"];
 						
 			$paymentClientConfigString = "{}";
@@ -38,17 +38,19 @@
 
 			$paymentID = $paymentClient->payForOrderWithCardNonce($orderCurrent, $nonce);
 			
-			if ($paymentID == true)
+			if ($paymentID != null)
 			{
 				$orderCurrent->complete($paymentID);
+				$persistenceClient->orderSave($orderCurrent);
+				$userLoggedIn->orderCurrent = Order::fromUserID($orderCurrent->userID);
 				echo "Payment successful!";
-				echo "<br />";
+				echo "<br /><br />";
 				echo "<a href='UserLicenses.php'>Show All User Licenses</a>";
 			}
 			else
 			{
 				echo "Payment failed!  The order could not be completed.";
-				echo "<br />";
+				echo "<br /><br />";
 				echo "<a href='OrderCheckout.php'>Back to Checkout</a>";
 			}
 		?>

@@ -214,13 +214,18 @@ class PersistenceClientMySQL
 			die("Could not connect to database.");
 		}
 
+		// Cannot pass function calls to bind_param directly?
+		$timeStartedAsString = $this->dateToString($order->timeStarted);
+		$timeUpdatedAsString = $this->dateToString($order->timeUpdated);
+		$timeCompletedAsString = $this->dateToString($order->timeCompleted);
+
 		if ($order->orderID == null)
 		{
 			$queryText =
 				"insert into _Order (UserID, PromotionID, Status, TimeStarted, TimeUpdated, TimeCompleted, PaymentID)"
 				. " values (?, ?, ?, ?, ?, ?, ?)";
 			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-			$queryCommand->bind_param("issssss", $order->userID, $order->promotionID, $order->status, $this->dateToString($order->timeStarted), $this->dateToString($order->timeUpdated), $this->dateToString($order->timeCompleted), $order->paymentID);
+			$queryCommand->bind_param("issssss", $order->userID, $order->promotionID, $order->status, $timeStartedAsString, $timeUpdatedAsString, $timeCompletedAsString, $order->paymentID);
 		}
 		else
 		{
@@ -228,7 +233,7 @@ class PersistenceClientMySQL
 				"update _Order set UserID = ?, PromotionID = ?, Status = ?, TimeStarted = ?, TimeUpdated = ?, TimeCompleted = ?, PaymentID = ?"
 				. " where OrderID = ?";
 			$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-			$queryCommand->bind_param("issssssi", $order->userID, $order->promotionID, $order->status, $this->dateToString($order->timeStarted), $this->dateToString($order->timeUpdated), $this->dateToString($order->timeCompleted), $order->paymentID, $order->orderID);
+			$queryCommand->bind_param("issssssi", $order->userID, $order->promotionID, $order->status, $timeStartedAsString, $timeUpdatedAsString, $timeCompletedAsString, $order->paymentID, $order->orderID);
 		}
 
 		$didSaveSucceed = $queryCommand->execute();
@@ -249,7 +254,7 @@ class PersistenceClientMySQL
 		$orderProducts = $order->productBatches;
 		foreach ($orderProducts as $productBatch)
 		{
-			$productBatch->orderID = $orderID;
+			$productBatch->orderID = $order->orderID;
 			$this->orderProductSave($productBatch);
 		}
 
@@ -346,7 +351,7 @@ class PersistenceClientMySQL
 			"insert into Order_Product (OrderID, ProductID, Quantity)"
 			. " values (?, ?, ?)";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
-		$queryCommand->bind_param("ssi", $orderProduct->orderID, $orderProduct->productID, $orderProduct->quantity);
+		$queryCommand->bind_param("isi", $orderProduct->orderID, $orderProduct->productID, $orderProduct->quantity);
 		$didSaveSucceed = $queryCommand->execute();
 
 		if ($didSaveSucceed == false)
@@ -412,14 +417,32 @@ class PersistenceClientMySQL
 		return $returnValues;
 	}
 
-	public function productsSearch($productNamePartial)
+	public function productsSearch($productNamePartial, $productsPerPage, $pageIndex)
 	{
+		if ($productsPerPage == null)
+		{
+			$productsPerPage = 1000000;
+		}
+		if ($pageIndex == null)
+		{
+			$pageIndex = 0;
+		}
+		$pageOffsetInProducts = $pageIndex * $productsPerPage;
+
 		$returnValues = array();
 
 		$databaseConnection = $this->connect();
 
-		$queryText = "select * from Product where Name like '%" . $productNamePartial . "%'";
+		$productNamePartial = "%" . $productNamePartial . "%";
+
+		$queryText =
+			"select * from Product"
+			. " where Name like ?"
+			. " order by Name"
+			. " limit ?, ?";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("sii", $productNamePartial, $pageOffsetInProducts, $productsPerPage);
+
 		$queryCommand->execute();
 		$queryCommand->bind_result($productID, $name, $imagePath, $price, $contentPath);
 
@@ -432,6 +455,31 @@ class PersistenceClientMySQL
 		$databaseConnection->close();
 
 		return $returnValues;
+	}
+
+	public function productsSearchCount($productNamePartial)
+	{
+		$databaseConnection = $this->connect();
+
+		$productNamePartial = "%" . $productNamePartial . "%";
+
+		$queryText =
+			"select count('x') from Product"
+			. " where Name like ?";
+		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
+		$queryCommand->bind_param("s", $productNamePartial);
+
+		$queryCommand->execute();
+		$queryCommand->bind_result($productCount);
+
+		while ($queryCommand->fetch())
+		{
+			$returnValue = $productCount;
+		}
+
+		$databaseConnection->close();
+
+		return $returnValue;
 	}
 
 	public function promotionGetByCode($promotionCode)

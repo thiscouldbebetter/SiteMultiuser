@@ -2,14 +2,50 @@ use Store;
 
 grant select, update, insert, delete on *.* to 'web'@'localhost' identified by 'Password42';
 
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product1', "../Images/Product1.png", 1.00, "../Content/Product1/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product2', "../Images/Product2.png", 2.00, "../Content/Product2/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product3', "../Images/Product3.png", 3.00, "../Content/Product3/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product4', "../Images/Product4.png", 4.00, "../Content/Product4/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product5', "../Images/Product5.png", 5.00, "../Content/Product5/Content.php");
-insert into Product (Name, ImagePath, Price, ContentPath) values ('Product6', "../Images/Product6.png", 6.00, "../Content/Product6/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product01', "../Images/Red.png", 	1.00, "../Content/Product01/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product02', "../Images/Orange.png", 	2.00, "../Content/Product02/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product03', "../Images/Yellow.png", 	3.00, "../Content/Product03/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product04', "../Images/Green.png", 	4.00, "../Content/Product04/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product05', "../Images/Blue.png", 	5.00, "../Content/Product05/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product06', "../Images/Violet.png", 	6.00, "../Content/Product06/Content.php");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product07', "../Images/Black.png", 	7.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product08', "../Images/Gray.png", 	0.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product09', "../Images/White.png", 	8.00, "");
 
-insert into Promotion (Description, Discount, Code) values ('Save $0 on Product1 when you buy Product2.', 0.00, "12341234-1234-1234-1234-123412341234");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product10', "../Images/Red.png", 	1.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product11', "../Images/Orange.png", 	2.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product12', "../Images/Yellow.png", 	3.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product13', "../Images/Green.png", 	4.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product14', "../Images/Blue.png", 	5.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product15', "../Images/Violet.png", 	6.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product16', "../Images/Black.png", 	7.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product17', "../Images/Gray.png", 	0.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product18', "../Images/White.png", 	8.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product19', "../Images/Brown.png", 	9.00, "");
+
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product20', "../Images/Red.png", 	1.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product21', "../Images/Orange.png", 	2.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product22', "../Images/Yellow.png", 	3.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product23', "../Images/Green.png", 	4.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product24', "../Images/Blue.png", 	5.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product25', "../Images/Violet.png", 	6.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product26', "../Images/Black.png", 	7.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product27', "../Images/Gray.png", 	0.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product28', "../Images/White.png", 	8.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product29', "../Images/Brown.png", 	9.00, "");
+
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product30', "../Images/Red.png", 	1.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product31', "../Images/Orange.png", 	2.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product32', "../Images/Yellow.png", 	3.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product33', "../Images/Green.png", 	4.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product34', "../Images/Blue.png", 	5.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product35', "../Images/Violet.png", 	6.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product36', "../Images/Black.png", 	7.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product37', "../Images/Gray.png", 	0.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product38', "../Images/White.png", 	8.00, "");
+insert into Product (Name, ImagePath, Price, ContentPath) values ('Product39', "../Images/Brown.png", 	9.00, "");
+
+insert into Promotion (Description, Discount, Code) values ('Save $1 on Product1 when you buy Product2.', 1.00, "12341234-1234-1234-1234-123412341234");
 insert into Promotion_Product (PromotionID, ProductID) values (1, 1);
 insert into Promotion_Product (PromotionID, ProductID) values (1, 2);
 

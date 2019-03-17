@@ -36,22 +36,6 @@ class PaymentClientSquare
 				
 		// Adapted from
 		/// https://docs.connect.squareup.com/payments/sqpaymentform/setup#step-8-take-a-payment		
-
-		/*
-		curl --header "Content-Type: application/json" \
-			 --header "Authorization: YOUR_ACCESS_TOKEN" \
-			 --header "Accept: application/json"\
-			 --request POST \
-			 --data '{
-				"idempotency_key": "UUID",
-				"amount_money": {
-				  "amount": CHARGE_AMOUNT,
-				  "currency": "CURRENCY_CODE"
-				},
-				"card_nonce": "CARD_NONCE_FROM_PAYMENT_FORM"
-			  }' \
-			  https://connect.squareup.com/v2/locations/{YOUR_LOCATION_ID}/transactions
-		*/		
 		
 		$idempotencyKey = MathHelper::randomCodeGenerate();
 		$currencyCode = "USD";
@@ -82,19 +66,25 @@ class PaymentClientSquare
 		(
 			$paymentCreateURL, "POST", $headersAsStrings, $requestBody
 		);
-		//echo "paymentCreateResponse is " . $paymentCreateResponse;
 		
-		$responseAsLookup = JSONEncoder::jsonStringToLookup($paymentCreateResponse);
-		
-		if (isset($responseAsLookup["errors"]) == false)
+		if ($paymentCreateResponse == "")
 		{
-			$paymentID = "todo"; // todo
+			$paymentID = null;
 		}
 		else
 		{
-			$errors = $responseAsLookup["errors"];
-			//echo "errors is " . $errors[0]["detail"];
-			$paymentID = null;
+			$responseAsLookup = JSONEncoder::jsonStringToLookup($paymentCreateResponse);
+
+			if (isset($responseAsLookup["errors"]))
+			{
+				$errors = $responseAsLookup["errors"];
+				//echo "errors is " . $errors[0]["detail"];
+				$paymentID = null;
+			}
+			else
+			{
+				$paymentID = $responseAsLookup["transaction"]["id"];
+			}
 		}
 
 		return $paymentID;

@@ -23,8 +23,7 @@ class User
 		$this->isActive = $isActive;
 		$this->licenses = $licenses;
 
-		$now = new DateTime();
-		$this->orderCurrent = new Order(null, $this->userID, null, "InProgress", $now, $now, null, null, array());
+		$this->orderCurrent = Order::fromUserID($userID);
 	}
 
 	public static function dummy()
@@ -34,19 +33,29 @@ class User
 
 	public function isProductWithIDLicensed($productIDToCheck)
 	{
-		$returnValue = false;
+		$numberOfLicenses = $this->licenseCountForProductWithID($productIDToCheck, true);
+		$hasLicenses = ($numberOfLicenses > 0);
+		return $hasLicenses;
+	}
+
+	public function licenseCountForProductWithID($productIDToCheck, $breakAfterFirst)
+	{
+		$numberOfLicensesSoFar = 0;
 
 		foreach ($this->licenses as $license)
 		{
 			$productID = $license->productID;
 			if ($productID == $productIDToCheck)
 			{
-				$returnValue = true;
-				break;
+				$numberOfLicensesSoFar++;
+				if ($breakAfterFirst)
+				{
+					break;
+				}
 			}
 		}
 
-		return $returnValue;
+		return $numberOfLicensesSoFar;
 	}
 
 	public static function passwordHashWithSalt($passwordAsPlaintext, $passwordSalt)

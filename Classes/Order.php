@@ -25,6 +25,13 @@ class Order
 		$this->productBatches = $productBatches;
 	}
 
+	public static function fromUserID($userID)
+	{
+		$now = new DateTime();
+		$returnValue = new Order(null, $userID, null, "InProgress", $now, $now, null, null, array());
+		return $returnValue;
+	}
+
 	public function complete($paymentID)
 	{
 		$this->status = "Complete";
