@@ -24,7 +24,7 @@ class Session
 		if (isset($_SESSION) == false)
 		{
 			session_start();
-			$configuration = include("Configuration.php");
+			$configuration = include($_SERVER["DOCUMENT_ROOT"] . "/Store/Configuration.php");
 			$persistenceClient = new PersistenceClientMySQL
 			(
 				$configuration["DatabaseServerName"],

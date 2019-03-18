@@ -9,7 +9,7 @@ class PageWriter
 
 	public static function elementHeadWrite($pageTitle)
 	{
-		$configuration = include("Configuration.php");
+		$configuration = include($_SERVER["DOCUMENT_ROOT"] . "/Store/Configuration.php");
 		$siteTitle = $configuration["SiteTitle"];
 		echo("<title>" . $siteTitle . " - " . $pageTitle . "</title>");
 		echo("<link rel='stylesheet' href='Style.css'>");
@@ -44,7 +44,7 @@ class PageWriter
 		{
 			echo "You do not yet have a license to access this content.  ";
 			echo "You can buy a license by clicking the link below.<br />";
-			echo "<a href='../../Product.php?productID=" . $productIDToVerify . "'>View Product</a>";
+			echo "<a href='../../Pages/Product.php?productID=" . $productIDToVerify . "'>View Product</a>";
 			die();
 		}
 	}

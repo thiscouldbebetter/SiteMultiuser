@@ -1,6 +1,6 @@
 <html>
 <?php include("Classes/PageWriter.php"); ?>
-<?php $configuration = include("Pages/Configuration.php"); ?>
+<?php $configuration = include("Configuration.php"); ?>
 
 <head>
 	<title><?php echo ($configuration["SiteTitle"]); ?> - Welcome</title>
