@@ -12,19 +12,18 @@ class PaymentClientSquare
 		$this->accessToken = $accessToken;
 		$this->locationID = $locationID;
 	}
-	
+
 	public static function fromConfigString($credentialsAsJSON)
-	{		
+	{
 		$credentialsAsLookup = JSONEncoder::jsonStringToLookup($credentialsAsJSON);
 		$accessToken = $credentialsAsLookup["accessToken"];
 		$locationID = $credentialsAsLookup["locationID"];
-	
 		return new PaymentClientSquare
 		(
 			$accessToken, $locationID
 		);
 	}
-	
+
 	public function payForOrderWithCardNonce($order, $cardNonce)
 	{
 		$paymentItemsAsLookups = array();
@@ -33,10 +32,10 @@ class PaymentClientSquare
 		$productsAll = $persistenceClient->productsGetAll();
 		$priceSubtotal = $order->priceSubtotal($productsAll);
 		$priceTotal = $order->priceTotal($productsAll);
-				
+
 		// Adapted from
-		/// https://docs.connect.squareup.com/payments/sqpaymentform/setup#step-8-take-a-payment		
-		
+		/// https://docs.connect.squareup.com/payments/sqpaymentform/setup#step-8-take-a-payment
+
 		$idempotencyKey = MathHelper::randomCodeGenerate();
 		$currencyCode = "USD";
 		$priceTotalInCents = $priceTotal * 100;
@@ -54,7 +53,7 @@ class PaymentClientSquare
 		);
 
 		$requestBody = JSONEncoder::lookupToJSONString($requestAsLookup);
-		
+
 		$headersAsStrings = array
 		(
 			"Content-Type: application/json",
@@ -66,7 +65,7 @@ class PaymentClientSquare
 		(
 			$paymentCreateURL, "POST", $headersAsStrings, $requestBody
 		);
-		
+
 		if ($paymentCreateResponse == "")
 		{
 			$paymentID = null;
@@ -74,11 +73,9 @@ class PaymentClientSquare
 		else
 		{
 			$responseAsLookup = JSONEncoder::jsonStringToLookup($paymentCreateResponse);
-
 			if (isset($responseAsLookup["errors"]))
 			{
 				$errors = $responseAsLookup["errors"];
-				//echo "errors is " . $errors[0]["detail"];
 				$paymentID = null;
 			}
 			else
@@ -89,5 +86,5 @@ class PaymentClientSquare
 
 		return $paymentID;
 	}
-}	
+}
 ?>

@@ -40,7 +40,7 @@ class Order
 		$this->timeCompleted = $now;
 		$this->paymentID = $paymentID;
 
-		$persistenceClient = $_SESSION["PersistenceClient"];	
+		$persistenceClient = $_SESSION["PersistenceClient"];
 		$licenses = $this->toLicenses();
 		foreach ($licenses as $license)
 		{

@@ -8,7 +8,19 @@
 	<!-- Square -->
 	<script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
 	<script type="text/javascript" src="Square/sqpaymentform-basic.js"></script>
-	<link rel="stylesheet" type="text/css" href="Square/sqpaymentform-basic.css">
+	<script type="text/javascript">
+		<?php
+			$configString = $configuration["PaymentClientConfig"];
+			$configLookup = JSONEncoder::jsonStringToLookup($configString);
+			$applicationID = $configLookup["applicationID"];
+			$locationID = $configLookup["locationID"];
+			$lookupRedacted = array("applicationID" => $applicationID, "locationID" => $locationID);
+			$configStringRedacted = JSONEncoder::lookupToJSONString($lookupRedacted);
+		?>
+		var paymentClientConfigStringRedacted = '<?php echo $configStringRedacted ?>';
+		setupPaymentScriptFromConfigString(paymentClientConfigStringRedacted);
+	</script>
+
 </head>
 
 <body>
@@ -91,9 +103,6 @@
 
 		<br />
 		<div>Pay with Square:</div>
-
-		<!-- hack -->
-		<br /><br /><br /><br /><br /><br /><br /><br />
 
 		<div id="form-container">
 		  <div id="sq-ccbox">

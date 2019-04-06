@@ -33,8 +33,7 @@
 			$orderCurrent = $userLoggedIn->orderCurrent;
 			$persistenceClient = $_SESSION["PersistenceClient"];
 						
-			$paymentClientConfigString = "{}";
-			$paymentClient = PaymentClient::fromConfigString($paymentClientConfigString);
+			$paymentClient = PaymentClient::fromConfigString();
 
 			$paymentID = $paymentClient->payForOrderWithCardNonce($orderCurrent, $nonce);
 			

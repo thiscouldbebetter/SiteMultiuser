@@ -6,7 +6,7 @@ class JSONEncoder
 	{
 		$lookup = json_decode
 		(
-			$jsonString, 
+			$jsonString,
 			true // Deserialize to associative array.
 		);
 		return $lookup;
