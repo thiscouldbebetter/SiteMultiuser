@@ -49,6 +49,8 @@
 			else
 			{
 				echo "Payment failed!  The order could not be completed.";
+				$configuration = include($_SERVER["DOCUMENT_ROOT"] . "/Store/Configuration.php");
+				echo "  For help, email " . $configuration["EmailAddressHelp"] . ".";
 				echo "<br /><br />";
 				echo "<a href='OrderCheckout.php'>Back to Checkout</a>";
 			}

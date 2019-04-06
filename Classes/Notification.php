@@ -25,7 +25,9 @@ class Notification
 		$isEmailEnabled = $configuration["EmailEnabled"];
 		if ($isEmailEnabled == true)
 		{
-			mail($this->addressee, $this->subject, $this->body);
+			$emailAddressNotify = $configuration["EmailAddressNotify"];
+			$fromAsHeaders = "From: " . $emailAddressNotify;
+			mail($this->addressee, $this->subject, $this->body, $fromAsHeaders);
 			$now = new DateTime();
 			$this->timeSent = $now;
 			$persistenceClient->notificationSave($this);
