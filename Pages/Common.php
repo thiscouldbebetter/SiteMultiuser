@@ -2,10 +2,10 @@
 
 $configuration = include("../Configuration.php");
 $documentRoot = $_SERVER["DOCUMENT_ROOT"] . "/";
-$storeDirectory = $configuration["StoreDirectory"];
-$storeRoot = $documentRoot . $storeDirectory . "/";
-$classRoot = $storeRoot . "Classes/";
-$includePaths = $storeRoot . ":" . $classRoot;
+$appDirectory = $configuration["AppDirectory"];
+$appRoot = $documentRoot . $appDirectory . "/";
+$classRoot = $appRoot . "Classes/";
+$includePaths = $appRoot . ":" . $classRoot;
 set_include_path($includePaths);
 
 include("License.php");
