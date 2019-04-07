@@ -1,25 +1,29 @@
 <?php
 
-$siteRoot = $_SERVER["DOCUMENT_ROOT"] . "/Store/";
-$classRoot = $siteRoot . "Classes/";
-include($classRoot . "License.php");
-include($classRoot . "LicenseTransferType.php");
-include($classRoot . "MathHelper.php");
-include($classRoot . "Notification.php");
-include($classRoot . "Order.php");
-include($classRoot . "Order_Product.php");
-include($classRoot . "PageWriter.php");
-include($classRoot . "PaymentClient.php");
-include($classRoot . "PaymentClientSquare.php");
-include($classRoot . "PersistenceClientMySQL.php");
-include($classRoot . "Product.php");
-include($classRoot . "Promotion.php");
-include($classRoot . "Promotion_Product.php");
-include($classRoot . "Session.php");
-include($classRoot . "User.php");
-include($classRoot . "WebClient.php");
+$configuration = include("../Configuration.php");
+$documentRoot = $_SERVER["DOCUMENT_ROOT"] . "/";
+$storeDirectory = $configuration["StoreDirectory"];
+$storeRoot = $documentRoot . $storeDirectory . "/";
+$classRoot = $storeRoot . "Classes/";
+$includePaths = $storeRoot . ":" . $classRoot;
+set_include_path($includePaths);
 
-$configuration = include($siteRoot . "Configuration.php");
+include("License.php");
+include("LicenseTransferType.php");
+include("MathHelper.php");
+include("Notification.php");
+include("Order.php");
+include("Order_Product.php");
+include("PageWriter.php");
+include("PaymentClient.php");
+include("PaymentClientSquare.php");
+include("PersistenceClientMySQL.php");
+include("Product.php");
+include("Promotion.php");
+include("Promotion_Product.php");
+include("Session.php");
+include("User.php");
+include("WebClient.php");
 
 Session::start($configuration);
 
