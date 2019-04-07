@@ -4,7 +4,7 @@ class PaymentClient
 	public static function fromConfigString()
 	{
 		// hack - Assuming Square.
-		$configuration = include($_SERVER["DOCUMENT_ROOT"] . "/Store/Configuration.php");
+		$configuration = $_SESSION["Configuration"];
 		$configString = $configuration["PaymentClientConfig"];
 		return PaymentClientSquare::fromConfigString($configString);
 	}

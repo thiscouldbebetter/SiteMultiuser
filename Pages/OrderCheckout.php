@@ -7,19 +7,17 @@
 
 	<!-- Square -->
 	<script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
-	<script type="text/javascript" src="Square/sqpaymentform-basic.js"></script>
 	<script type="text/javascript">
 		<?php
 			$configString = $configuration["PaymentClientConfig"];
 			$configLookup = JSONEncoder::jsonStringToLookup($configString);
 			$applicationID = $configLookup["applicationID"];
 			$locationID = $configLookup["locationID"];
-			$lookupRedacted = array("applicationID" => $applicationID, "locationID" => $locationID);
-			$configStringRedacted = JSONEncoder::lookupToJSONString($lookupRedacted);
 		?>
-		var paymentClientConfigStringRedacted = '<?php echo $configStringRedacted ?>';
-		setupPaymentScriptFromConfigString(paymentClientConfigStringRedacted);
+		var applicationId = "<?php echo $applicationID; ?>";
+		var locationId = "<?php echo $locationID; ?>";
 	</script>
+	<script type="text/javascript" src="Square/sqpaymentform-basic.js"></script>
 
 </head>
 

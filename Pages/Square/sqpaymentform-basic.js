@@ -1,16 +1,3 @@
-// Set the application ID
-var applicationId = "REPLACE_ME";
-
-// Set the location ID
-var locationId = "REPLACE_ME";
-
-function setupPaymentScriptFromConfigString(paymentClientConfigString)
-{
-	var paymentClientConfigLookup = JSON.parse(paymentClientConfigString);
-	applicationID = paymentClientConfigLookup["applicationID"];
-	locationID = paymentClientConfigLookup["locationID"];
-}
-
 function buildForm(form) {
   if (SqPaymentForm.isSupportedBrowser()) {
     form.build();
