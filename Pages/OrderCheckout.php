@@ -153,7 +153,7 @@
 				  paymentForm.build();
 				  paymentForm.recalculateSize();
 				}
-			});		
+			});
 		</script>
 
 		<!-- end Square -->

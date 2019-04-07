@@ -30,7 +30,7 @@
 		$productsFound =
 			$persistenceClient->productsSearch($productNamePartial, $productsPerPage, $pageIndex);
 
-		$numberOfPages = ceil($numberOfProductsFound / $productsPerPage);		
+		$numberOfPages = ceil($numberOfProductsFound / $productsPerPage);
 	?>
 
 	<div class="divCentered">

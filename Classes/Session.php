@@ -19,12 +19,12 @@ class Session
 		$this->timeEnded = $timeEnded;
 	}
 
-	public static function start()
+	public static function start($configuration)
 	{
 		if (isset($_SESSION) == false)
 		{
 			session_start();
-			$configuration = include($_SERVER["DOCUMENT_ROOT"] . "/Store/Configuration.php");
+
 			$persistenceClient = new PersistenceClientMySQL
 			(
 				$configuration["DatabaseServerName"],
@@ -32,6 +32,8 @@ class Session
 				$configuration["DatabasePassword"],
 				$configuration["DatabaseName"]
 			);
+
+			$_SESSION["Configuration"] = $configuration;
 			$_SESSION["PersistenceClient"] = $persistenceClient;
 		}
 	}

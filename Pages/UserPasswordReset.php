@@ -77,7 +77,6 @@
 						$notificationToSend = new Notification(null, $userFound->emailAddress, "Password Reset", $notificationMessage, $now, null);
 						$persistenceClient->notificationSave($notificationToSend);
 						$notificationToSend->sendAsEmail($persistenceClient);
-
 						header("Location: UserPasswordChange.php");
 
 						PageWriter::displayStatusMessage("A password reset link has been sent via email to the specified address.");

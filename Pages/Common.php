@@ -21,6 +21,6 @@ include($classRoot . "WebClient.php");
 
 $configuration = include($siteRoot . "Configuration.php");
 
-Session::start();
+Session::start($configuration);
 
 ?>

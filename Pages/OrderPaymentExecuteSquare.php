@@ -3,20 +3,20 @@
 
 <html>
 <head>
-	<?php PageWriter::elementHeadWrite("Order Payment"); ?>	
+	<?php PageWriter::elementHeadWrite("Order Payment"); ?>
 </head>
-	
+
 <body>
 
 	<?php PageWriter::headerWrite(); ?>
 
 	<div class="divCentered">
-	
+
 		<?php
 
 			// The following code was adapted from an example at the URL
 			// https://docs.connect.squareup.com/payments/sqpaymentform/setup
-			
+
 			// Fail if the payment form didn't send a value for `nonce` to the server
 			$nonce = $_POST['nonce'];
 			if (is_null($nonce)) {
@@ -25,18 +25,18 @@
 			  http_response_code(422);
 			  return;
 			}
-			
+
 			// end code from Square
 
 			$session = $_SESSION["Session"];
 			$userLoggedIn = $session->user;
 			$orderCurrent = $userLoggedIn->orderCurrent;
 			$persistenceClient = $_SESSION["PersistenceClient"];
-						
+
 			$paymentClient = PaymentClient::fromConfigString();
 
 			$paymentID = $paymentClient->payForOrderWithCardNonce($orderCurrent, $nonce);
-			
+
 			if ($paymentID != null)
 			{
 				$orderCurrent->complete($paymentID);
@@ -49,18 +49,18 @@
 			else
 			{
 				echo "Payment failed!  The order could not be completed.";
-				$configuration = include($_SERVER["DOCUMENT_ROOT"] . "/Store/Configuration.php");
+				$configuration = $_SESSION["Configuration"];
 				echo "  For help, email " . $configuration["EmailAddressHelp"] . ".";
 				echo "<br /><br />";
 				echo "<a href='OrderCheckout.php'>Back to Checkout</a>";
 			}
 		?>
-		
+
 		<br />
-				
-	</div>	
+
+	</div>
 
 	<?php PageWriter::footerWrite(); ?>
-		
+
 </body>
 </html>

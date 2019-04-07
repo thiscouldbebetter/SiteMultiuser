@@ -21,7 +21,7 @@ class Notification
 
 	public function sendAsEmail($persistenceClient)
 	{
-		$configuration = include($_SERVER["DOCUMENT_ROOT"] . "/Store/Configuration.php");
+		$configuration = $_SESSION["Configuration"];
 		$isEmailEnabled = $configuration["EmailEnabled"];
 		if ($isEmailEnabled == true)
 		{

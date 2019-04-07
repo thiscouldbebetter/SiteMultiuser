@@ -1,5 +1,4 @@
 <html>
-<?php include("Classes/PageWriter.php"); ?>
 <?php $configuration = include("Configuration.php"); ?>
 
 <head>

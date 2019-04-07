@@ -1,6 +1,6 @@
 <?php include($_SERVER["DOCUMENT_ROOT"] . "/Store/Pages/Common.php"); ?>
 <?php Session::verify(); ?>
-<?php PageWriter::licenseVerifyForProductID(3); ?>
+<?php ContentHelper::licenseVerifyForProductID(3); ?>
 
 <html>
 <body>
