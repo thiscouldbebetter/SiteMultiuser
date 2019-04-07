@@ -2,6 +2,7 @@
 
 return array
 (
+	"AppDirectory" => "Store",
 	"DatabaseServerName" => "localhost",
 	"DatabaseUsername" => "web",
 	"DatabasePassword" => "[redacted]",
@@ -11,7 +12,6 @@ return array
 	"EmailAddressNotify" => "notify@onlinestore.test",
 	"PaymentClientConfig" => "{ \"type\": \"Square\", \"accessToken\": \"[redacted]\", \"applicationID\": \"[redacted]\", \"locationID\": \"[redacted]\"}",
 	"SiteTitle" => "Online Store",
-	"StoreDirectory" => "Store",
 );
 
 ?>
