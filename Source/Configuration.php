@@ -2,7 +2,7 @@
 
 return array
 (
-	"AppDirectory" => "Store",
+	"AppDirectory" => "Store/Source",
 	"DatabaseServerName" => "localhost",
 	"DatabaseUsername" => "web",
 	"DatabasePassword" => "[redacted]",
@@ -10,7 +10,7 @@ return array
 	"EmailEnabled" => false,
 	"EmailAddressHelp" => "help@onlinestore.test",
 	"EmailAddressNotify" => "notify@onlinestore.test",
-	"ErrorReportingEnabled" => true,
+	"ErrorReportingEnabled" => false,
 	"PaymentClientConfig" => "{ \"type\": \"Square\", \"accessToken\": \"[redacted]\", \"applicationID\": \"[redacted]\", \"locationID\": \"[redacted]\"}",
 	"SiteTitle" => "Online Store",
 );

@@ -23,9 +23,9 @@
 				else
 				{
 					$productName = $product->name;
-					echo "<label>" . $productName . "</label><br />";
-					echo "<img src='" .$product->imagePath . "' /><br />";
-					echo "<label>Price: " . $product->price . "</label><br/>";
+					echo "<label>" . $productName . "</label><br /><br />";
+					echo "<img src='" .$product->imagePath . "' /><br /><br />";
+					echo "<label>Price: $" . $product->price . "</label><br/><br />";
 					if ($product->isActive)
 					{
 						echo
