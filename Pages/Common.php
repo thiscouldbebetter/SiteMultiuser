@@ -1,6 +1,10 @@
 <?php
 
 $configuration = include("../Configuration.php");
+
+$errorReportingEnabled = $configuration["ErrorReportingEnabled"];
+error_reporting($errorReportingEnabled ? 1 : 0);
+
 $documentRoot = $_SERVER["DOCUMENT_ROOT"] . "/";
 $appDirectory = $configuration["AppDirectory"];
 $appRoot = $documentRoot . $appDirectory . "/";

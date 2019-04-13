@@ -12,24 +12,39 @@
 		<label><b>Product Details:</b></label><br />
 		<br />
 		<div style="text-align:center">
-		<label>
-		<?php
-			$persistenceClient = $_SESSION["PersistenceClient"];
-			$productID = $_GET["productID"];
-			$product = $persistenceClient->productGetByID($productID);
-			$productName = $product->name;
-			echo $productName;
-		?>
-		</label><br />
-		<br />
-		<img src='<?php echo($product->imagePath); ?>' /><br />
-		<br />
-		<label>Price: $<?php echo($product->price); ?></label><br/>
+			<?php
+				$persistenceClient = $_SESSION["PersistenceClient"];
+				$productID = $_GET["productID"];
+				$product = $persistenceClient->productGetByID($productID);
+				if ($product == null)
+				{
+					echo "No product with the specified ID could be found.";
+				}
+				else
+				{
+					$productName = $product->name;
+					echo "<label>" . $productName . "</label><br />";
+					echo "<img src='" .$product->imagePath . "' /><br />";
+					echo "<label>Price: " . $product->price . "</label><br/>";
+					if ($product->isActive)
+					{
+						echo
+							"<a href='OrderProductQuantitySet.php?productID=" . $productID . "&quantity=1'>"
+							. "Add Product to Current Order"
+							. "</a>";
+					}
+					else
+					{
+						echo "<label>This product is no longer available for purchase.</label>";
+					}
+				}
+			?>
+
+			<br />
+
 		</div>
 		<br />
-		<a href='OrderProductQuantitySet.php?productID=<?php echo($productID); ?>&quantity=1'>Add Product to Current Order</a><br />
-		<br />
-		</label>
+
 		<a href="ProductSummary.php">Browse Other Products</a>
 	</div>
 

@@ -46,31 +46,38 @@
 				else
 				{
 					$persistenceClient = $_SESSION["PersistenceClient"];
-					$userFound = $persistenceClient->userGetByUsername($usernameEntered);
+					try 
+					{
+						$userFound = $persistenceClient->userGetByUsername($usernameEntered);
 
-					if ($userFound == null)
-					{
-						PageWriter::displayStatusMessage("Username or password not valid.");
-					}
-					else
-					{
-						$passwordEnteredHashed = $userFound->passwordHash($passwordEntered);
-						if ($userFound->passwordHashed != $passwordEnteredHashed)
+						if ($userFound == null)
 						{
 							PageWriter::displayStatusMessage("Username or password not valid.");
 						}
 						else
 						{
-							$deviceAddress = $_SERVER["SERVER_ADDR"];
-							$now = new DateTime();
-							$sessionNew = new Session(null, $userFound, $deviceAddress, $now, $now, null);
-							$_SESSION["Session"] = $sessionNew;
-							$persistenceClient->sessionSave($sessionNew);
+							$passwordEnteredHashed = $userFound->passwordHash($passwordEntered);
+							if ($userFound->passwordHashed != $passwordEnteredHashed)
+							{
+								PageWriter::displayStatusMessage("Username or password not valid.");
+							}
+							else
+							{
+								$deviceAddress = $_SERVER["SERVER_ADDR"];
+								$now = new DateTime();
+								$sessionNew = new Session(null, $userFound, $deviceAddress, $now, $now, null);
+								$_SESSION["Session"] = $sessionNew;
+								$persistenceClient->sessionSave($sessionNew);
 
-							header("Location: User.php");
+								header("Location: User.php");
 
-							$databaseConnection->close();
+								$databaseConnection->close();
+							}
 						}
+					}
+					catch (Exception $ex)
+					{
+						PageWriter::displayStatusMessage("An error occurred attempting to retrieve user information from database.  Database settings may be misconfigured.");
 					}
 				}
 			}

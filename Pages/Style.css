@@ -2,6 +2,10 @@ body {
 	text-align: center;
 }
 
+thead {
+	text-align: left;
+}
+
 .divCentered {
 	border:2px solid;
 	border-radius:16px;
@@ -9,4 +13,9 @@ body {
 	margin:0px auto;
 	padding:32px;
 	text-align:left;
+}
+
+.thumbnail {
+	width: auto;
+	height: 50%;
 }

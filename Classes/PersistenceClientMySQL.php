@@ -382,11 +382,11 @@ class PersistenceClientMySQL
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("i", $productID);
 		$queryCommand->execute();
-		$queryCommand->bind_result($productID, $name, $imagePath, $price, $contentPath);
+		$queryCommand->bind_result($productID, $name, $imagePath, $price, $contentPath, $isActive);
 
 		while ($queryCommand->fetch())
 		{
-			$returnValue = new Product($productID, $name, $imagePath, $price, $contentPath);
+			$returnValue = new Product($productID, $name, $imagePath, $price, $contentPath, $isActive);
 			break;
 		}
 
@@ -404,11 +404,11 @@ class PersistenceClientMySQL
 		$queryText = "select * from Product";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->execute();
-		$queryCommand->bind_result($productID, $name, $imagePath, $price, $contentPath);
+		$queryCommand->bind_result($productID, $name, $imagePath, $price, $contentPath, $isActive);
 
 		while ($queryCommand->fetch())
 		{
-			$product = new Product($productID, $name, $imagePath, $price, $contentPath);
+			$product = new Product($productID, $name, $imagePath, $price, $contentPath, $isActive);
 			$returnValues[$productID] = $product;
 		}
 
@@ -438,17 +438,18 @@ class PersistenceClientMySQL
 		$queryText =
 			"select * from Product"
 			. " where Name like ?"
+			. " and IsActive = true"
 			. " order by Name"
 			. " limit ?, ?";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("sii", $productNamePartial, $pageOffsetInProducts, $productsPerPage);
 
 		$queryCommand->execute();
-		$queryCommand->bind_result($productID, $name, $imagePath, $price, $contentPath);
+		$queryCommand->bind_result($productID, $name, $imagePath, $price, $contentPath, $isActive);
 
 		while ($queryCommand->fetch())
 		{
-			$product = new Product($productID, $name, $imagePath, $price, $contentPath);
+			$product = new Product($productID, $name, $imagePath, $price, $contentPath, $isActive);
 			$returnValues[$productID] = $product;
 		}
 
@@ -465,7 +466,8 @@ class PersistenceClientMySQL
 
 		$queryText =
 			"select count('x') from Product"
-			. " where Name like ?";
+			. " where Name like ?"
+			. " and IsActive = true";
 		$queryCommand = mysqli_prepare($databaseConnection, $queryText);
 		$queryCommand->bind_param("s", $productNamePartial);
 

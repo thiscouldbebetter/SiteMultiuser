@@ -24,12 +24,10 @@
 		$productsPerPage = (isset($_POST["ProductsPerPage"]) ? $_POST["ProductsPerPage"] : 10);
 		$pageNumber = (isset($_POST["PageNumber"]) ? $_POST["PageNumber"] : 1);
 		$pageIndex = $pageNumber - 1;
-
 		$numberOfProductsFound =
 			$persistenceClient->productsSearchCount($productNamePartial);
 		$productsFound =
 			$persistenceClient->productsSearch($productNamePartial, $productsPerPage, $pageIndex);
-
 		$numberOfPages = ceil($numberOfProductsFound / $productsPerPage);
 	?>
 
@@ -98,9 +96,9 @@
 
 				<table style="border:1px solid" width="100%">
 					<thead>
+						<th>Image</th>
 						<th>Name</th>
 						<th>Price</th>
-						<th>Details</th>
 						<th>Owned</th>
 					</thead>
 					<?php
@@ -108,20 +106,22 @@
 						{
 							$tableRow = "<tr>";
 
+							$productID = $product->productID;
+
+							$productImagePath = $product->imagePath;
+							$tableCell = "<td><img class='thumbnail' src='" . $productImagePath . "'></td>";
+							$tableRow = $tableRow . $tableCell;
+
 							$productName = $product->name;
-							$tableCell = "<td>" . $productName . "</td>";
+							$tableCell = "<td><a href='Product.php?productID=" . $productID . "'>" . $productName . "</a></td>";
 							$tableRow = $tableRow . $tableCell;
 
 							$productPrice = $product->price;
 							$tableCell = "<td>$" . $productPrice . "</td>";
 							$tableRow = $tableRow . $tableCell;
 
-							$productID = $product->productID;
-							$tableCell = "<td><a href='Product.php?productID=" . $productID . "'>Details</a></td>";
-							$tableRow = $tableRow . $tableCell;
-
 							$numberOfLicensesHeld = $userLoggedIn->licenseCountForProductWithID($productID, false);
-							$tableCell = ($numberOfLicensesHeld > 0 ? $numberOfLicensesHeld : "");
+							$tableCell = ($numberOfLicensesHeld > 0 ? $numberOfLicensesHeld : "-");
 							$tableCell = "<td>". $tableCell . "</td>";
 							$tableRow = $tableRow . $tableCell;
 

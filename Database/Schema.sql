@@ -2,7 +2,7 @@ drop database Store;
 create database Store;
 use Store;
 
-create table Product (ProductID int not null auto_increment, Name text not null, ImagePath text not null, Price decimal not null, ContentPath text not null, primary key (ProductID) );
+create table Product (ProductID int not null auto_increment, Name text not null, ImagePath text not null, Price decimal not null, ContentPath text not null, IsActive boolean not null, primary key (ProductID) );
 
 create table User (UserID int not null auto_increment, Username text not null, EmailAddress text not null, PasswordSalt text not null, PasswordHashed text not null, PasswordResetCode text, IsActive boolean not null, primary key (UserID) );
 
