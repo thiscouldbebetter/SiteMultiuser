@@ -1,7 +1,5 @@
 use Store;
 
-grant select, update, insert, delete on *.* to 'web'@'localhost' identified by 'Password42';
-
 /* ProductID, Name, ImagePath, Price, ContentPath, IsActive */
 insert into Product select 1, 'Product01', '../Images/Red.png', 	1.00, '../Content/Product01/Content.php', true;
 insert into Product select 2, 'Product02', '../Images/Orange.png', 	2.00, '../Content/Product02/Content.php', true;

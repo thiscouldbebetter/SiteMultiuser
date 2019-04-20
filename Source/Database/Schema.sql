@@ -1,6 +1,8 @@
-drop database Store;
+drop database if exists Store;
 create database Store;
 use Store;
+
+/* Tables */
 
 create table Product (ProductID int not null auto_increment, Name text not null, ImagePath text not null, Price decimal not null, ContentPath text not null, IsActive boolean not null, primary key (ProductID) );
 
@@ -24,3 +26,17 @@ create table Session(SessionID int not null auto_increment, UserID int, DeviceAd
 
 create table Promotion (PromotionID int not null auto_increment, Description text not null, Discount decimal not null, Code text not null, primary key (PromotionID) );
 create table Promotion_Product (PromotionProductID int not null auto_increment, PromotionID int not null, ProductID int not null, primary key (PromotionProductID), foreign key (PromotionID) references Promotion(PromotionID), foreign key (ProductID) references Product(ProductID) );
+
+/* Users */
+
+create user if not exists 'web'@'localhost' identified by 'Password42';
+
+grant select on *.* to 'web'@'localhost';
+grant insert, update on License to 'web'@'localhost';
+grant insert, update on Notification to 'web'@'localhost';
+grant insert, update on _Order to 'web'@'localhost';
+grant insert, update on Order_Product to 'web'@'localhost';
+grant insert, update on Session to 'web'@'localhost';
+grant insert, update on User to 'web'@'localhost';
+
+flush privileges;
