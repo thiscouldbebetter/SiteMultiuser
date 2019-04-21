@@ -44,7 +44,7 @@
 
 		<br />
 
-		<a href="ProductSummary.php">Browse Available Products</a><br />
+		<a href="ProductSearch.php">Browse Available Products</a><br />
 		<br />
 		<a href="UserLogout.php">Log Out</a><br />
 		<a href="UserDelete.php">Delete Account</a><br />

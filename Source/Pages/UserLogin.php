@@ -46,7 +46,7 @@
 				else
 				{
 					$persistenceClient = $_SESSION["PersistenceClient"];
-					try 
+					try
 					{
 						$userFound = $persistenceClient->userGetByUsername($usernameEntered);
 

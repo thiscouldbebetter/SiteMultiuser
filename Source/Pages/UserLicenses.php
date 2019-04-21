@@ -94,7 +94,7 @@
 
 		</div>
 		<br />
-		<a href="ProductSummary.php">Browse Available Products</a><br />
+		<a href="ProductSearch.php">Browse Available Products</a><br />
 		<a href='User.php'>Back to Account Details</a><br />
 
 	</div>

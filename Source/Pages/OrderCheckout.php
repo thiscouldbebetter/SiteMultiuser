@@ -1,4 +1,4 @@
-<?php include "Common.php"; ?>
+<?php include("Common.php"); ?>
 <?php Session::verify(); ?>
 
 <html>
@@ -9,7 +9,7 @@
 	<script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
 	<script type="text/javascript">
 		<?php
-			$configString = $configuration["PaymentClientConfig"];
+			$configString = $configuration->paymentClientConfig;
 			$configLookup = JSONEncoder::jsonStringToLookup($configString);
 			$applicationID = $configLookup["applicationID"];
 			$locationID = $configLookup["locationID"];

@@ -24,13 +24,12 @@ class Session
 		if (isset($_SESSION) == false)
 		{
 			session_start();
-
 			$persistenceClient = new PersistenceClientMySQL
 			(
-				$configuration["DatabaseServerName"],
-				$configuration["DatabaseUsername"],
-				$configuration["DatabasePassword"],
-				$configuration["DatabaseName"]
+				$configuration->databaseServerName,
+				$configuration->databaseUsername,
+				$configuration->databasePassword,
+				$configuration->databaseName
 			);
 
 			$_SESSION["Configuration"] = $configuration;
@@ -48,33 +47,37 @@ class Session
 		session_destroy();
 	}
 
-	public static function verify()
+	public static function verify($configuration)
 	{
+		$isSessionVerified = false;
+		$messageToShow = null;
+
+		$appDirectory = $configuration->appDirectory;
+		$loginPageAddress = "/" . $appDirectory;
+
 		$messageSessionExpired =
-			"Your session has expired (or no session was ever established)."
-			. " <a href='UserLogin.php'>Log In Again</a>";
+			"Your session has expired, or no session was ever established."
+			. "  You may need to return to the home page and try to log in again."
+			. " <a href='" . $loginPageAddress . "'>Home</a>";
 
 		if (isset($_SESSION["Session"]) == false)
 		{
-			echo $messageSessionExpired;
-			die();
+			$messageToShow = $messageSessionExpired;
 		}
 		else
 		{
-			$persistenceClient = $_SESSION["PersistenceClient"];
 			$sessionCurrent = $_SESSION["Session"];
 			$userLoggedIn = $sessionCurrent->user;
 			$userID = $userLoggedIn->userID;
+			$persistenceClient = $_SESSION["PersistenceClient"];
 			$sessionStored = $persistenceClient->sessionGetCurrentByUserID($userID);
 			if ($sessionStored == null)
 			{
-				echo $messageSessionExpired;
-				die();
+				$messageToShow = $messageSessionExpired;
 			}
 			else if ($sessionCurrent->sessionID != $sessionStored->sessionID)
 			{
-				echo $messageSessionExpired;
-				die();
+				$messageToShow = $messageSessionExpired;
 			}
 			else
 			{
@@ -84,14 +87,23 @@ class Session
 				$deviceAddressStored = $sessionStored->deviceAddress;
 				if ($deviceAddressCurrent != $deviceAddressStored)
 				{
-					echo "A separate session has been started using your account from another device.";
-					die();
+					$messageToShow = "A separate session has been started using your account from another device.";
 				}
 				else
 				{
-					$persistenceClient->sessionSave($sessionCurrent);
+					$isSessionVerified = true;
 				}
 			}
+		}
+
+		if ($isSessionVerified)
+		{
+			$persistenceClient->sessionSave($sessionCurrent);
+		}
+		else
+		{
+			echo $messageToShow;
+			die();
 		}
 	}
 }

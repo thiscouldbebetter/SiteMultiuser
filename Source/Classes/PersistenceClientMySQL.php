@@ -12,7 +12,6 @@ class PersistenceClientMySQL
 
 	private function connect()
 	{
-		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 		$databaseConnection = new mysqli($this->databaseServerName, $this->databaseUsername, $this->databasePassword, $this->databaseName);
 		return $databaseConnection;
 	}

@@ -5,7 +5,7 @@ class PaymentClient
 	{
 		// hack - Assuming Square.
 		$configuration = $_SESSION["Configuration"];
-		$configString = $configuration["PaymentClientConfig"];
+		$configString = $configuration->paymentClientConfig;
 		return PaymentClientSquare::fromConfigString($configString);
 	}
 }

@@ -1,4 +1,4 @@
-<?php include "Common.php"; ?>
+<?php include("Common.php"); ?>
 
 <html>
 
@@ -45,7 +45,7 @@
 		</div>
 		<br />
 
-		<a href="ProductSummary.php">Browse Other Products</a>
+		<a href="ProductSearch.php">Browse Other Products</a>
 	</div>
 
 	<?php PageWriter::footerWrite(); ?>

@@ -22,10 +22,10 @@ class Notification
 	public function sendAsEmail($persistenceClient)
 	{
 		$configuration = $_SESSION["Configuration"];
-		$isEmailEnabled = $configuration["EmailEnabled"];
+		$isEmailEnabled = $configuration->emailEnabled;
 		if ($isEmailEnabled == true)
 		{
-			$emailAddressNotify = $configuration["EmailAddressNotify"];
+			$emailAddressNotify = $configuration->emailAddressNotify;
 			$fromAsHeaders = "From: " . $emailAddressNotify;
 			mail($this->addressee, $this->subject, $this->body, $fromAsHeaders);
 			$now = new DateTime();

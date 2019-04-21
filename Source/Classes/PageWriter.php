@@ -10,7 +10,7 @@ class PageWriter
 	public static function elementHeadWrite($pageTitle)
 	{
 		$configuration = $_SESSION["Configuration"];
-		$siteTitle = $configuration["SiteTitle"];
+		$siteTitle = $configuration->siteTitle;
 		echo("<title>" . $siteTitle . " - " . $pageTitle . "</title>");
 		echo("<link rel='stylesheet' href='Style.css'>");
 	}

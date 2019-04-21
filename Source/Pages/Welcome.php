@@ -2,7 +2,7 @@
 <?php $configuration = include("../Configuration.php"); ?>
 
 <head>
-	<title><?php echo ($configuration["SiteTitle"]); ?> - Welcome</title>
+	<title><?php echo ($configuration->siteTitle); ?> - Welcome</title>
 	<link rel='stylesheet' href='Style.css'>
 </head>
 

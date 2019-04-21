@@ -1,4 +1,4 @@
-<?php include "Common.php"; ?>
+<?php include("Common.php"); ?>
 <?php Session::verify(); ?>
 
 <html>
@@ -50,7 +50,7 @@
 			{
 				echo "Payment failed!  The order could not be completed.";
 				$configuration = $_SESSION["Configuration"];
-				echo "  For help, email " . $configuration["EmailAddressHelp"] . ".";
+				echo "  For help, email " . $configuration->emailAddressHelp . ".";
 				echo "<br /><br />";
 				echo "<a href='OrderCheckout.php'>Back to Checkout</a>";
 			}

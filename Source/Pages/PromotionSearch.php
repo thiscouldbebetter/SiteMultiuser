@@ -1,4 +1,4 @@
-<?php include "Common.php"; ?>
+<?php include("Common.php"); ?>
 <?php Session::verify(); ?>
 
 <html>
@@ -43,7 +43,7 @@
 		</div>
 		<br />
 		<a href="OrderDetails.php">Back to Order</a><br />
-		<a href="ProductSummary.php">Browse Products</a>
+		<a href="ProductSearch.php">Browse Products</a>
 	</div>
 
 	<?php PageWriter::footerWrite(); ?>
