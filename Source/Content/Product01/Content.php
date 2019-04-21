@@ -1,6 +1,7 @@
-<?php include($_SERVER["DOCUMENT_ROOT"] . "/Store/Pages/Common.php"); ?>
-<?php Session::verify(); ?>
-<?php ContentHelper::licenseVerifyForProductID(1); ?>
+<?php
+	include("../Common.php");
+	ContentHelper::licenseVerifyForProductID(1);
+?>
 
 <html>
 <body>

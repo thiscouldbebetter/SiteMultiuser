@@ -1,6 +1,6 @@
 <?php
 
-public class ContentHelper
+class ContentHelper
 {
 	public static function licenseVerifyForProductID($productIDToVerify)
 	{
