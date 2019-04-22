@@ -3,7 +3,7 @@
 
 <html>
 
-<head><?php PageWriter::elementHeadWrite("Order Details"); ?></head>
+<head><?php PageWriter::elementHeadWrite("Order History"); ?></head>
 
 <body>
 

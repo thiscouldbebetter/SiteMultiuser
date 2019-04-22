@@ -85,7 +85,6 @@
 				}
 			?>
 			<br />
-			<br />
 			<label><b>Promotion:</b></label><br /><br />
 			<label>
 				<?php

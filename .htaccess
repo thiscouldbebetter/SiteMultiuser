@@ -1,0 +1,7 @@
+# This prevents web users from browsing the directory structure.
+Options -Indexes
+
+# This prevents web users from accessing certain files directly.
+<FilesMatch "^.+\.(txt)$">
+Deny from all
+</FilesMatch>

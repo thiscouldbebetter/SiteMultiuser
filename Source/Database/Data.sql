@@ -1,12 +1,12 @@
 use Store;
 
 /* ProductID, Name, ImagePath, Price, ContentPath, IsActive */
-insert into Product select 1, 'Product01', '../Images/Red.png', 	1.00, '../Content/Product01/Content.php', true;
-insert into Product select 2, 'Product02', '../Images/Orange.png', 	2.00, '../Content/Product02/Content.php', true;
-insert into Product select 3, 'Product03', '../Images/Yellow.png', 	3.00, '../Content/Product03/Content.php', true;
-insert into Product select 4, 'Product04', '../Images/Green.png', 	4.00, '../Content/Product04/Content.php', true;
-insert into Product select 5, 'Product05', '../Images/Blue.png', 	5.00, '../Content/Product05/Content.php', true;
-insert into Product select 6, 'Product06', '../Images/Violet.png', 	6.00, '../Content/Product06/Content.php', true;
+insert into Product select 1, 'Product01', '../Images/Red.png', 	1.00, 'Product01', true;
+insert into Product select 2, 'Product02', '../Images/Orange.png', 	2.00, 'Product02', true;
+insert into Product select 3, 'Product03', '../Images/Yellow.png', 	3.00, 'Product03', true;
+insert into Product select 4, 'Product04', '../Images/Green.png', 	4.00, 'Product04', true;
+insert into Product select 5, 'Product05', '../Images/Blue.png', 	5.00, 'Product05', true;
+insert into Product select 6, 'Product06', '../Images/Violet.png', 	6.00, 'Product06', true;
 insert into Product select 7, 'Product07', '../Images/Black.png', 	7.00, '', true;
 insert into Product select 8, 'Product08', '../Images/Gray.png', 	0.00, '', true;
 insert into Product select 9, 'Product09', '../Images/White.png', 	8.00, '', true;

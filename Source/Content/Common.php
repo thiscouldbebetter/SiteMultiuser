@@ -1,6 +1,6 @@
 <?php
 
-$configuration = include("../../Configuration.php");
+$configuration = include("../Configuration.php");
 
 include("ContentHelper.php");
 include("License.php");

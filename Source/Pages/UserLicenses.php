@@ -41,7 +41,7 @@
 						$licenseID = $license->licenseID;
 						if ($transferTypeID == null)
 						{
-							$contentLink = "<a href='" . $product->contentPath . "'>Content</a>";
+							$contentLink = "<a href='../Content/Content.php?productID=" . $productID. "'>Content</a>";
 							$transferLink = "<a href='LicenseTransfer.php?licenseID=" . $licenseID . "'>Transfer</a>";
 							$productNameAndTransferData = $productNameAndTransferData . $contentLink . " " . $transferLink;
 						}
