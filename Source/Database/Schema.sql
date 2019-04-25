@@ -29,8 +29,6 @@ create table Promotion_Product (PromotionProductID int not null auto_increment, 
 
 /* Users */
 
-create user if not exists 'web'@'localhost' identified by 'Password42';
-
 grant select on *.* to 'web'@'localhost';
 grant insert, update on License to 'web'@'localhost';
 grant insert, update on Notification to 'web'@'localhost';
