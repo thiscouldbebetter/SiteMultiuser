@@ -48,10 +48,8 @@
 					echo "</ul>";
 				}
 			?>
-			<br />
-			<br />
-		</div><br />
-
+		</div>
+		<br />
 		<a href='User.php'>Back to Account Details</a><br />
 
 	</div>

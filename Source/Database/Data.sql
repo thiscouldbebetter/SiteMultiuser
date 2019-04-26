@@ -1,7 +1,7 @@
 use Store;
 
 /* ProductID, Name, ImagePath, Price, ContentPath, IsActive */
-insert into Product select 1, 'Product01', '../Images/Red.png', 	1.00, 'Product01', true;
+insert into Product select 1, 'Product01', '../Images/Red.png', 	0, 'Product01', true;
 insert into Product select 2, 'Product02', '../Images/Orange.png', 	2.00, 'Product02', true;
 insert into Product select 3, 'Product03', '../Images/Yellow.png', 	3.00, 'Product03', true;
 insert into Product select 4, 'Product04', '../Images/Green.png', 	4.00, 'Product04', true;

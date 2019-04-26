@@ -58,6 +58,13 @@ class User
 		return $numberOfLicensesSoFar;
 	}
 
+	public function orderCurrentComplete($paymentID, $persistenceClient)
+	{
+		$this->orderCurrent->complete($paymentID);
+		$persistenceClient->orderSave($this->orderCurrent);
+		$this->orderCurrent = Order::fromUserID($this->userID);
+	}
+
 	public static function passwordHashWithSalt($passwordAsPlaintext, $passwordSalt)
 	{
 		$passwordSalted = $passwordAsPlaintext . $passwordSalt;

@@ -39,9 +39,7 @@
 
 			if ($paymentID != null)
 			{
-				$orderCurrent->complete($paymentID);
-				$persistenceClient->orderSave($orderCurrent);
-				$userLoggedIn->orderCurrent = Order::fromUserID($orderCurrent->userID);
+				$userLoggedIn->orderCurrentComplete($paymentID, $persistenceClient);
 				echo "Payment successful!";
 				echo "<br /><br />";
 				echo "<a href='UserLicenses.php'>Show All User Licenses</a>";

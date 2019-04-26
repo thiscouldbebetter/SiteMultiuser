@@ -95,66 +95,79 @@
 
 		<a href="OrderDetails.php">Modify Order</a><br /><br />
 
-		<div id="divStatusMessage">This order is ready for payment.</div>
+		<?php if ( count($orderCurrent->productBatches) == 0) : ?>
 
-		<!-- Square -->
+			<div id="divStatusMessage">There are no products in this order!</div>
+			<br />
 
-		<br />
-		<div>Pay with Square:</div>
+		<?php elseif ($orderCurrent->priceTotal($productsAll) == 0) : ?>
 
-		<div id="form-container">
-		  <div id="sq-ccbox">
-			<!--
-			  Be sure to replace the action attribute of the form with the path of
-			  the Transaction API charge endpoint URL you want to POST the nonce to
-			  (for example, "/process-card")
-			-->
-			<form id="nonce-form" novalidate action="OrderPaymentExecuteSquare.php" method="post">
-			  <fieldset>
-				<span class="label">Card Number:</span>
-				<div id="sq-card-number"></div>
+			<div id="divStatusMessage">This order is free, and requires no payment.</div>
+			<br />
+			<a href="OrderPaymentExecuteFree.php">Complete Order</a><br />
 
-				<div class="third">
-				  <span class="label">Expiration:</span>
-				  <div id="sq-expiration-date"></div>
-				</div>
+		<?php else : ?>
+			<div id="divStatusMessage">This order is ready for payment.</div>
+			<br />
 
-				<div class="third">
-				  <span class="label">CVV:</span>
-				  <div id="sq-cvv"></div>
-				</div>
+			<!-- Square -->
 
-				<div class="third">
-				  <span class="label">Postal Code:</span>
-				  <div id="sq-postal-code"></div>
-				</div>
-			  </fieldset>
+			<div>Pay with Square:</div>
 
-			  <button id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)">Pay with Square</button>
+			<div id="form-container">
+			  <div id="sq-ccbox">
+				<!--
+				  Be sure to replace the action attribute of the form with the path of
+				  the Transaction API charge endpoint URL you want to POST the nonce to
+				  (for example, "/process-card")
+				-->
+				<form id="nonce-form" novalidate action="OrderPaymentExecuteSquare.php" method="post">
+				  <fieldset>
+					<span class="label">Card Number:</span>
+					<div id="sq-card-number"></div>
 
-			  <div id="error"></div>
+					<div class="third">
+					  <span class="label">Expiration:</span>
+					  <div id="sq-expiration-date"></div>
+					</div>
 
-			  <!--
-				After a nonce is generated it will be assigned to this hidden input field.
-			  -->
-			  <input type="hidden" id="card-nonce" name="nonce">
-			</form>
-		  </div> <!-- end #sq-ccbox -->
+					<div class="third">
+					  <span class="label">CVV:</span>
+					  <div id="sq-cvv"></div>
+					</div>
 
-		</div> <!-- end #form-container -->
+					<div class="third">
+					  <span class="label">Postal Code:</span>
+					  <div id="sq-postal-code"></div>
+					</div>
+				  </fieldset>
 
-		<br />
+				  <button id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)">Pay with Square</button>
 
-		<script type="text/javascript">
-			document.addEventListener("DOMContentLoaded", function(event) {
-				if (SqPaymentForm.isSupportedBrowser()) {
-				  paymentForm.build();
-				  paymentForm.recalculateSize();
-				}
-			});
-		</script>
+				  <div id="error"></div>
 
-		<!-- end Square -->
+				  <!--
+					After a nonce is generated it will be assigned to this hidden input field.
+				  -->
+				  <input type="hidden" id="card-nonce" name="nonce">
+				</form>
+			  </div> <!-- end #sq-ccbox -->
+
+			</div> <!-- end #form-container -->
+
+			<br />
+
+			<script type="text/javascript">
+				document.addEventListener("DOMContentLoaded", function(event) {
+					if (SqPaymentForm.isSupportedBrowser()) {
+					  paymentForm.build();
+					  paymentForm.recalculateSize();
+					}
+				});
+			</script>
+
+			<!-- end Square -->
+		<?php endif; ?>
 
 		<a href="User.php">Back to Account Details</a><br />
 
