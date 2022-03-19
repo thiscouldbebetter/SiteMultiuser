@@ -1,5 +1,5 @@
 <?php include("Common.php"); ?>
-<?php Session::verify(); ?>
+<?php Session::verify($configuration); ?>
 
 <html>
 <head>

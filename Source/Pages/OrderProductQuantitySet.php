@@ -1,5 +1,5 @@
 <?php include("Common.php"); ?>
-
+<?php Session::verify($configuration); ?>
 <html>
 
 <head><?php PageWriter::elementHeadWrite("Order Quantity Change"); ?></head>

@@ -2,22 +2,22 @@
 
 $configuration = include("../Configuration.php");
 
-include("License.php");
-include("LicenseTransferType.php");
-include("MathHelper.php");
-include("Notification.php");
-include("Order.php");
-include("Order_Product.php");
-include("PageWriter.php");
-include("PaymentClient.php");
-include("PaymentClientSquare.php");
-include("PersistenceClientMySQL.php");
-include("Product.php");
-include("Promotion.php");
-include("Promotion_Product.php");
-include("Session.php");
-include("User.php");
-include("WebClient.php");
+include("../Classes/License.php");
+include("../Classes/LicenseTransferType.php");
+include("../Classes/MathHelper.php");
+include("../Classes/Notification.php");
+include("../Classes/Order.php");
+include("../Classes/Order_Product.php");
+include("../Classes/PageWriter.php");
+include("../Classes/PaymentClient.php");
+include("../Classes/PaymentClientSquare.php");
+include("../Classes/PersistenceClientMySQL.php");
+include("../Classes/Product.php");
+include("../Classes/Promotion.php");
+include("../Classes/Promotion_Product.php");
+include("../Classes/Session.php");
+include("../Classes/User.php");
+include("../Classes/WebClient.php");
 
 Session::start($configuration);
 
