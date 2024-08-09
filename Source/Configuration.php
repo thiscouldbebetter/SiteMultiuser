@@ -7,7 +7,7 @@ class Configuration
 		$this->appDirectory = "Store/Source";
 		$this->databaseServerName = "localhost";
 		$this->databaseUsername = "web";
-		$this->databasePassword = "[redacted]";
+		$this->databasePassword = "web";
 		$this->databaseName = "Store";
 		$this->emailAddressHelp = "help@onlinestore.test";
 		$this->emailAddressNotify = "notify@onlinestore.test";
