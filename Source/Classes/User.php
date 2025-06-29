@@ -9,10 +9,8 @@ class User
 	public $passwordHashed;
 	public $passwordResetCode;
 	public $isActive;
-	public $licenses;
-	public $orderCurrent;
 
-	public function __construct($userID, $username, $emailAddress, $passwordSalt, $passwordHashed, $passwordResetCode, $isActive, $licenses)
+	public function __construct($userID, $username, $emailAddress, $passwordSalt, $passwordHashed, $passwordResetCode, $isActive)
 	{
 		$this->userID = $userID;
 		$this->username = $username;
@@ -20,49 +18,13 @@ class User
 		$this->passwordSalt = $passwordSalt;
 		$this->passwordHashed = $passwordHashed;
 		$this->passwordResetCode = $passwordResetCode;
-		$this->isActive = $isActive;
-		$this->licenses = $licenses;
 
 		$this->orderCurrent = Order::fromUserID($userID);
 	}
 
 	public static function dummy()
 	{
-		return new User(null, null, null, null, null, null, true, array() );
-	}
-
-	public function isProductWithIDLicensed($productIDToCheck)
-	{
-		$numberOfLicenses = $this->licenseCountForProductWithID($productIDToCheck, true);
-		$hasLicenses = ($numberOfLicenses > 0);
-		return $hasLicenses;
-	}
-
-	public function licenseCountForProductWithID($productIDToCheck, $breakAfterFirst)
-	{
-		$numberOfLicensesSoFar = 0;
-
-		foreach ($this->licenses as $license)
-		{
-			$productID = $license->productID;
-			if ($productID == $productIDToCheck)
-			{
-				$numberOfLicensesSoFar++;
-				if ($breakAfterFirst)
-				{
-					break;
-				}
-			}
-		}
-
-		return $numberOfLicensesSoFar;
-	}
-
-	public function orderCurrentComplete($paymentID, $persistenceClient)
-	{
-		$this->orderCurrent->complete($paymentID);
-		$persistenceClient->orderSave($this->orderCurrent);
-		$this->orderCurrent = Order::fromUserID($this->userID);
+		return new User(null, null, null, null, null, null, true);
 	}
 
 	public static function passwordHashWithSalt($passwordAsPlaintext, $passwordSalt)

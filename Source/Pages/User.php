@@ -20,32 +20,6 @@
 		?>
 		</label><br /><br />
 
-		<label>Licenses:</label>
-		<?php
-			$licensesOwned = $userLoggedIn->licenses;
-			$numberOfLicensesOwned = count($licensesOwned);
-			$persistenceClient = $_SESSION["PersistenceClient"];
-			$transfersIncoming = $persistenceClient->licensesGetByTransferTarget($userLoggedIn->username, $userLoggedIn->emailAddress);
-			$numberOfTransfersIncoming = count($transfersIncoming);
-			echo("(" . $numberOfLicensesOwned . " owned, " . $numberOfTransfersIncoming . " incoming transfers) ");
-			echo("<a href='UserLicenses.php'>Details</a>");
-		?>
-		<br /><br />
-
-		<label>Current Order:</label>
-		<?php
-			$orderCurrent = $userLoggedIn->orderCurrent;
-			$productBatchesInOrder = $orderCurrent->productBatches;
-			$numberOfBatches = count($productBatchesInOrder);
-			echo("(" . $numberOfBatches . " item(s)) ");
-		?>
-		<a href='OrderDetails.php'>Details</a><span> </span>
-		<a href='OrderHistory.php'>History</a><br />
-
-		<br />
-
-		<a href="ProductSearch.php">Browse Available Products</a><br />
-		<br />
 		<a href="UserLogout.php">Log Out</a><br />
 		<a href="UserDelete.php">Delete Account</a><br />
 

@@ -4,17 +4,16 @@ class Configuration
 {
 	public function __construct()
 	{
-		$this->appDirectory = "Store/Source";
+		$this->appDirectory = "Site/Source";
 		$this->databaseServerName = "localhost";
 		$this->databaseUsername = "web";
 		$this->databasePassword = "[redacted]";
-		$this->databaseName = "Store";
-		$this->emailAddressHelp = "help@onlinestore.test";
-		$this->emailAddressNotify = "notify@onlinestore.test";
+		$this->databaseName = "Site";
+		$this->emailAddressHelp = "help@site.test";
+		$this->emailAddressNotify = "notify@site.test";
 		$this->emailEnabled = false;
 		$this->errorReportingEnabled = true;
-		$this->paymentClientConfig = "{ \"type\": \"Square\", \"accessToken\": \"[redacted]\", \"applicationID\": \"[redacted]\", \"locationID\": \"[redacted]\"}";
-		$this->siteTitle = "Online Store";
+		$this->siteTitle = "Multiuser Site";
 
 		$this->applyToEnvironment();
 	}

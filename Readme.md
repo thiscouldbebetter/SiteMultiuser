@@ -1,7 +1,7 @@
-Online Store
-============
+Online Multiuser Site
+=====================
 
-A simple e-commerce site in PHP.
+A simple website in PHP that supports multiple users.
 
 Screenshots
 -----------
@@ -9,11 +9,6 @@ Screenshots
 ![Welcome](/Screenshots/Screenshot-Welcome.png?raw=true "Welcome")
 ![UserLogin](/Screenshots/Screenshot-UserLogin.png?raw=true "User Login")
 ![UserDetail](/Screenshots/Screenshot-UserDetail.png?raw=true "User Detail")
-![ProductSearch](/Screenshots/Screenshot-ProductSearch.png?raw=true "Product Search")
-![ProductDetail](/Screenshots/Screenshot-ProductDetail.png?raw=true "Product Detail")
-![OrderDetail](/Screenshots/Screenshot-OrderDetail.png?raw=true "Order Detail")
-![OrderCheckout](/Screenshots/Screenshot-OrderCheckout.png?raw=true "Order Checkout")
-
 
 Installing and Running on Linux
 -------------------------------
