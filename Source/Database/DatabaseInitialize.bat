@@ -5,14 +5,18 @@ echo.
 
 echo Script begins.
 
-set /p "hostName=Host name (default is 'localhost'): "
-set /p "adminUsername=Database admin username (default is 'root'): " 
+set hostName=localhost
+set adminUsername=root
+
+set /p "hostName=Host name (default is '%hostName%'): "
+set /p "adminUsername=Database admin username (default is '%adminUsername%'): " 
 set /p "adminPassword=Database admin password (will be changed to this from '' if never yet set): "
 echo.
 
-echo About to prompt to reset admin user password (this will fail if already set)...
-mysqladmin -h %hostName% -u %adminUsername% password %adminPassword%
-echo ...done prompting to reset admin user password.
+echo About to set admin user password (this will fail if already set)...
+set sqlCommand="alter user %adminUsername%@%hostName% identified by '%adminPassword%';"
+mysql -h localhost -u root -e %sqlCommand%
+echo ...done setting admin user password.
 echo.
 
 set /p "webPassword=Unprivileged 'web' user password to set: " 
