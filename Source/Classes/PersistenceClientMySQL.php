@@ -227,12 +227,10 @@ class PersistenceClientMySQL
 		{
 			$queryCommand->fetch();
 
-			$licenses = $this->licensesGetByUserID($userID);
-
 			$userFound = new User
 			(
 				$userID, $username, $emailAddress, $passwordSalt,
-				$passwordHashed, $passwordResetCode, $isActive, $licenses
+				$passwordHashed, $passwordResetCode, $isActive
 			);
 		}
 

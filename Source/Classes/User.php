@@ -18,8 +18,6 @@ class User
 		$this->passwordSalt = $passwordSalt;
 		$this->passwordHashed = $passwordHashed;
 		$this->passwordResetCode = $passwordResetCode;
-
-		$this->orderCurrent = Order::fromUserID($userID);
 	}
 
 	public static function dummy()
@@ -57,8 +55,6 @@ class User
 	{
 		$session = $_SESSION["Session"];
 		$persistenceClient = $_SESSION["PersistenceClient"];
-
-		$this->licenses = $persistenceClient->licensesGetByUserID($this->userID);
 
 		$session->user = $this;
 	}
